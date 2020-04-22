@@ -17,8 +17,10 @@ export default class ExactRecipes extends React.Component {
   {
     console.log("got dishnameCalled");
     this.state = {
-      name : dish
+      name : dish.dish_name
     };
+    console.log("got dishnameCalled");
+    
   }
 
   componentDidMount() {
@@ -27,10 +29,8 @@ export default class ExactRecipes extends React.Component {
       {
         method: "GET"
       }).then(res => {
-        console.log("res");
         return res.json();
       }, err => {
-        console.log("err1");
         console.log(err);
       }).then(dishList => {
         console.log(dishList);

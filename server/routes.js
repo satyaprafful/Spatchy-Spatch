@@ -7,10 +7,12 @@ var mysql = require('mysql');
 /* ---- Q3 (Best Genres) ---- */
 function dishName(req, res) {
   var connection = mysql.createConnection({
-    host     : process.env.RDS_HOSTNAME,
-    user     : process.env.RDS_USERNAME,
-    password : process.env.RDS_PASSWORD,
-    port     : process.env.RDS_PORT
+    host     : 'database2.calom4x7svhj.us-east-1.rds.amazonaws.com',
+    user     : 'admin',
+    password : 'admin123',
+    port     : 3306,
+    database : 'database2',
+    insecureAuth : true
   });
 
   connection.connect(function(err) {
@@ -24,7 +26,7 @@ function dishName(req, res) {
 
   var query = `
   SELECT *
-  FROM Dishes
+  FROM Dish
   LIMIT 1;`;
 
   connection.query(query, function(err, rows, fields) {
