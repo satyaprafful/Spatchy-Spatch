@@ -11,7 +11,12 @@
     "react-bootstrap": "^1.0.0",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "ejs": "latest",
+    "aws-sdk": "latest",
+    "express": "latest",
+    "body-parser": "latest",
+    "mysql": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
