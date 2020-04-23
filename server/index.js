@@ -15,9 +15,28 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 /* ---- test route ---- */
-app.get('/dishes/:dishName', (req, res) => { 
-	routes.dishName(req,res)}
-);  // expectes req.params.genre
+app.get('/dishes', routes.dishName); 
+
+/* ---- Nutrition Queries ---- */
+// sends min protein/cal, gets back recipes
+app.get('/protein/:proteinRatio', (req, res) => { 
+	routes.getHighProtein(req,res)}
+); 
+
+// sends min fat/cal, gets back recipes
+app.get('/nutrition/fat/:fatRaio', (req, res) => { 
+	routes.getHighFat(req,res)}
+); 
+
+// sends max sodium, gets back recipes
+app.get('/nutrition/sodium/:sodiumLimit', (req, res) => { 
+	routes.getLowSodium(req,res)}
+); 
+
+// sends max cal, gets back recipes
+app.get('/nutrition/cal/:calLimit', (req, res) => { 
+	routes.getLowCal(req,res)}
+); 
 
 
 
