@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 /* ---------------------------------------------------------------- */
 
 
-/* ----  ---- */
+/* ---- test route ---- */
 app.get('/dishes/:dishName', (req, res) => { 
 	routes.dishName(req,res)}
 );  // expectes req.params.genre

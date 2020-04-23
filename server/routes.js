@@ -4,7 +4,7 @@ var mysql = require('mysql');
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
 
-/* ---- Q3 (Best Genres) ---- */
+/* ---- Test Quering MySQL database ---- */
 function dishName(req, res) {
   var connection = mysql.createConnection({
     host     : 'database2.calom4x7svhj.us-east-1.rds.amazonaws.com',
