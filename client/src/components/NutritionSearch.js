@@ -10,8 +10,7 @@ export default class NutritionSearch extends React.Component {
       recipes: []
     };
 
-    this.proteinSearch = this.proteinSearch.bind(this);
-    this.proteinSearch();
+    // this.proteinSearch = this.proteinSearch.bind(this);
   }
 
   // low sodium = 140mg/serving
@@ -46,9 +45,9 @@ export default class NutritionSearch extends React.Component {
     return proteinRatio;
   }
 
-  proteinSearch()
+  componentDidMount()
   {
-    fetch("http://localhost:8081/nutrition/protein/" + this.getUserProteinRatio(),
+    fetch("http://localhost:8081/protein/" + this.getUserProteinRatio(),
       {
         method: "GET"
       }).then(res => {
@@ -72,9 +71,7 @@ export default class NutritionSearch extends React.Component {
         console.log(err);
       });
   }
-
-
-
+  
   render() {    
     return (
       <div className="Nutrition Search">

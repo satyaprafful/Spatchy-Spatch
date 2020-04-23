@@ -15,13 +15,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 /* ---- test route ---- */
-app.get('/dishes/:dishName', (req, res) => { 
-	routes.dishName(req,res)}
-); 
+app.get('/dishes', routes.dishName); 
 
 /* ---- Nutrition Queries ---- */
 // sends min protein/cal, gets back recipes
-app.get('/nutrition/protein/:proteinRatio', (req, res) => { 
+app.get('/protein/:proteinRatio', (req, res) => { 
 	routes.getHighProtein(req,res)}
 ); 
 

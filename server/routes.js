@@ -32,7 +32,7 @@ function getDBConnect()
 /* -------------------------------------------------- */
 
 /* ---- Test Quering MySQL database ---- */
-function dishName(req, res) {
+function dishName() {
   var connection = getDBConnect()
 
   var query = `
@@ -55,8 +55,9 @@ function getHighProtein(req, res) {
   var connection = getDBConnect();
   var inputRatio = req.params.proteinRatio;
 
+
   var query = `
-  SELECT title AS name
+  SELECT title
   FROM Recipe R
   WHERE R.protein/(R.calories + 1) >= '${inputRatio}'
   ORDER BY R.rating
@@ -77,7 +78,7 @@ function getHighFat(req, res) {
   var inputRatio = req.params.fatRatio;
 
   var query = `
-  SELECT title AS name
+  SELECT title
   FROM Recipe R
   WHERE R.fat/(R.calories + 1) >= '${inputRatio}'
   ORDER BY R.rating
@@ -98,7 +99,7 @@ function getLowSodium(req, res) {
   var limit = req.params.sodiumLimit;
 
   var query = `
-  SELECT title AS name
+  SELECT title 
   FROM Recipe R
   WHERE R.sodium < '${limit}'
   ORDER BY R.rating
@@ -119,7 +120,7 @@ function getLowCal(req, res) {
   var limit = req.params.calLimit;
 
   var query = `
-  SELECT title AS name
+  SELECT title 
   FROM Recipe R
   WHERE R.calories < '${limit}'
   ORDER BY R.rating
@@ -137,5 +138,9 @@ function getLowCal(req, res) {
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
-  dishName: dishName
+  dishName: dishName,
+  getLowSodium: getLowSodium,
+  getHighFat: getHighFat,
+  getHighProtein: getHighProtein,
+  getLowCal: getLowCal
 }
