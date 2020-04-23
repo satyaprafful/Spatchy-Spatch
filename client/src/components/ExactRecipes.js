@@ -6,25 +6,22 @@ import PageNavbar from './PageNavbar';
 export default class ExactRecipes extends React.Component {
   constructor(props) {
     super(props);
+    // default dish, before querying database
     this.state = {
       name : "Lentil Soup"
     }
-
-    console.log("yo");
   }
 
   gotDishName(dish)
   {
-    console.log("got dishnameCalled");
-    this.state = {
+    this.setState ({
       name : dish.dish_name
-    };
-    console.log("got dishnameCalled");
-    
+    });
+    console.log(this.state.name);
+    this.render();
   }
 
   componentDidMount() {
-    console.log("mounted");
     fetch("http://localhost:8081/dishes/dishName",
       {
         method: "GET"
@@ -32,14 +29,10 @@ export default class ExactRecipes extends React.Component {
         return res.json();
       }, err => {
         console.log(err);
-      }).then(dishList => {
-        console.log(dishList);
-        dishList.map((dish, i) => 
-          this.gotDishName(dish)
-          );
+      }).then(dish => {
+        this.gotDishName(dish[0]);
+        this.render();
       }, err => {
-        // Print the error if there is one.
-        console.log("err2");
         console.log(err);
       });
   }
