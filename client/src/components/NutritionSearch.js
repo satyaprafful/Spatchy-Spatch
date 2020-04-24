@@ -47,7 +47,6 @@ export default class NutritionSearch extends React.Component {
 
   componentDidMount()
   {
-    console.log("tadfoto");
     fetch("http://localhost:8081/protein/" + this.getUserProteinRatio(),
       {
         method: "GET"
@@ -56,7 +55,6 @@ export default class NutritionSearch extends React.Component {
       }, err => {
         console.log(err);
       }).then(recipesList => {
-        console.log("toto");
         console.log(recipesList); //delete this
 
         let recipesDiv = recipesList.map((recipeObj, i) => 
