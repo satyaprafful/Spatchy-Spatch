@@ -36,8 +36,11 @@ app.get('/nutrition/sodium/:sodiumLimit', (req, res) => {
 // sends max cal, gets back recipes
 app.get('/nutrition/cal/:calLimit', (req, res) => { 
 	routes.getLowCal(req,res)}
-); 
+);
 
+app.get('/ingredients/', (req, res) => {
+	routes.getValRecipes(req,res)}
+);
 
 
 app.listen(8081, () => {
