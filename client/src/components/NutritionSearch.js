@@ -55,7 +55,6 @@ export default class NutritionSearch extends React.Component {
       }, err => {
         console.log(err);
       }).then(recipesList => {
-
         console.log(recipesList); //delete this
 
         let recipesDiv = recipesList.map((recipeObj, i) => 
