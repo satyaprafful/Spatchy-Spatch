@@ -1,215 +1,215 @@
-ingrID	name	price	amount	unit
-0	allspice	0	0	unit
-1	almond	0	0	unit
-2	anchovy	1.82	2.0	unit
-3	anise	0	0	unit
-4	apple	0.099083	1	lb
-203	apple sauce	0.062833	1	lb
-5	apricot	0.67	1.0	unit
-6	artichoke	1.25	1.0	unit
-7	arugula	2.49	7.0	oz
-8	asiago	0	0	unit
-9	asparagus	2.0	1.0	lb
-10	available	0	0	unit
-11	avocado	2.1	1.0	unit
-12	bacon	0.427833	1	lb
-204	baguette	0	0	unit
-13	baking powder	0	0	unit
-14	baking soda	0	0	unit
-15	banana	0.053333	1	lb
-16	basil	1.98	1.0	cup
-17	bass	10.0	1.0	lb
-18	bay leaf	0	0	unit
-19	bbq sauce	0	0	unit
-20	bean	0.081667	1	lb
-21	beef	0.148	1	lb
-205	beer	0	0	unit
-206	beet	0	0	unit
-22	blue cheese	0	0	unit
-23	blueberry	0	0	unit
-24	bourbon	0.55975	0	
-25	bourbon whiskey	0.55975	0	
-26	bread	0.130833	1	lb
-27	broccoli	0.171417	1	lb
-28	broth	0.76	2.0	cup
-29	burrata	4.99	8.0	oz
-30	butter	0.178167	1	lb
-31	cabbage	0.030667	1	lb
-32	camembert	5.99	8.8	oz
-33	capers	3.0	9.0	tbsp
-34	caraway	5.22	0.5	cup
-35	cardamom	0	0	unit
-36	carrot	0.03525	1	lb
-207	cauliflower	0	0	unit
-37	cayenne	0	0	unit
-38	celery	0.04025	1	lb
-39	cheddar	0.448833	1	lb
-208	cheddar cheese	0.448833	1	lb
-40	cherry	0	0	unit
-41	chicken	0.11975	1	lb
-209	chicken breast	0.21525	1	lb
-42	chicken leg	0.121	1	lb
-43	chile	0	0	unit
-44	chili	0	0	unit
-45	chive	0	0	unit
-46	chocolate	0.196667	1	lb
-48	chuck roast	0.13225	1	lb
-49	cilantro	0	0	unit
-50	cinnamon	0	0	unit
-210	clam	0	0	unit
-51	clove	0	0	unit
-52	cocoa	0	0	unit
-53	coconut	0	0	unit
-54	coffee	0.35175	1	lb
-55	colby	0	0	unit
-56	cookie	0.275417	1	lb
-57	coriander	0	0	unit
-58	corn	0.04175	1	lb
-59	cottage cheese	0	0	unit
-211	couscous	0	0	unit
-60	cracker	0.063667	1	lb
-61	cranberry	0	0	unit
-62	cream cheese	0	0	unit
-212	crème fraîche	0	0	unit
-63	cucumber	0.05925	1	lb
-64	cumin	0	0	unit
-65	currant	0	0	unit
-66	curry	0	0	unit
-67	dill	0	0	unit
-68	egg	0.12225	1	dozen
-71	fennel	0	0	unit
-72	feta	0	0	unit
-73	fish	0	0	unit
-74	flour	0.03275	1	lb
-75	fontina	0	0	unit
-76	garlic	0	0	unit
-77	gelatin	0	0	unit
-78	gin	0	0	unit
-79	ginger	0	0	unit
-80	goat cheese	0	0	unit
-81	gorgonzola	0	0	unit
-82	gouda	0	0	unit
-83	grape	0.064	1	lb
-84	greens	0	0	unit
-213	ground beef	0.35025	1	lb
-85	ground chuck	0.148	1	lb
-86	gruyère	0	0	unit
-87	halibut	0	0	unit
-88	ham	0.134917	1	lb
-89	havarti	0	0	unit
-214	hazelnut	0	0	unit
-90	heavy cream	0	0	unit
-91	hoisin sauce	0	0	unit
-92	honey	0	0	unit
-93	hot sauce	0	0	unit
-94	ice cream	0.427333	0	
-95	ice cube	0	0	unit
-96	jalapeño	0	0	unit
-97	jelly	0.078	1	lb
-215	kale	0	0	unit
-98	ketchup	0	0	unit
-99	lamb	0.297667	1	lb
-100	lemon	0.199583	1	lb
-101	lentil	0	0	unit
-102	lettuce	0.059	1	lb
-103	lime	0	0	unit
-104	linguini	0	0	unit
-105	macaroni	0.114667	1	lb
-216	mango	0	0	unit
-106	maple syrup	0	0	unit
-107	margarine	0.061417	1	lb
-108	mascarpone	0	0	unit
-109	mayonnaise	0	0	unit
-110	milk	0.149167	0	
-111	mint	0	0	unit
-112	molasses	0	0	unit
-113	monterey jack	0	0	unit
-114	mozzarella	0	0	unit
-115	mushroom	0.180333	1	lb
-116	mustard	0	0	unit
-117	noodle	0	0	unit
-118	nutmeg	0	0	unit
-217	oats	0	0	unit
-119	oil	0.061417	0	unit
-120	olive	0	0	unit
-121	onion	0.026833	1	lb
-122	optional	0	0	unit
-123	orange	0.11075	1	lb
-125	oregano	0	0	unit
-126	oyster sauce	0	0	unit
-127	paprika	0	0	unit
-128	parmesan	0	0	unit
-129	parsley	0	0	unit
-130	pasta	0	0	unit
-131	pea	0	0	unit
-132	peach	0.1715	1	lb
-133	peanut	0.178	1	lb
-134	pear	0.055833	1	lb
-135	pecan	0	0	unit
-136	penne	0	0	unit
-137	pepper	0.055667	0	unit
-138	phyllo pastry	0	0	unit
-218	pine nut	0	0	unit
-140	poppy	0	0	unit
-141	pork	0.143083	1	lb
-143	potato	0.017583	1	lb
-219	potato chip	0.44375	0	
-220	prosciutto	0	0	unit
-144	provolone	0	0	unit
-145	puff pastry	0	0	unit
-146	pumpkin	0	0	unit
-147	radish	0.075833	1	lb
-148	raisin	0	0	unit
-149	raspberry	0	0	unit
-150	ravioli	0	0	unit
-151	rib roast	0.254583	1	lb
-152	rice	0.106083	1	lb
-153	ricotta	0	0	unit
-154	rigatoni	0	0	unit
-155	roll	0.059	1	lb
-156	romano cheese	0	0	unit
-158	rosemary	0	0	unit
-221	round roast	0.440417	1	lb
-159	rum	0	0	unit
-160	sage	0	0	unit
-161	salmon	0	0	unit
-162	salt	0	0	unit
-163	sausage	0.17725	1	lb
-164	scallion	0.106	1	lb
-165	scallop	0	0	unit
-166	sesame	0	0	unit
-167	shallot	0	0	unit
-168	sherry	0	0	unit
-169	short rib	0.205333	1	lb
-170	shortening	0.072167	1	lb
-171	shrimp	0	0	unit
-172	sour cream	0	0	unit
-173	soy sauce	0	0	unit
-174	spaghetti	0.0665	1	lb
-175	spinach	0	0	unit
-176	steak	0.126333	1	lb
-177	strawberry	0	0	unit
-178	sugar	0.051083	1	lb
-179	swiss	0	0	unit
-180	tabasco	0	0	unit
-181	tarragon	0	0	unit
-182	tartar	0	0	unit
-183	tea	0	0	unit
-185	thyme	0	0	unit
-186	tomato	0.15	1	lb
-187	tuna	0.171667	1	lb
-188	turkey	0.082	1	lb
-189	turmeric	0	0	unit
-190	vanilla	0	0	unit
-191	veal	0	0	unit
-192	vinegar	0	0	unit
-193	vodka	0.462083	0	
-194	walnut	0	0	unit
-195	water	0	0	unit
-196	whipped cream	0	0	unit
-197	whipping cream	0	0	unit
-198	wine	1.0115	0	
-199	worcestershire	0	0	unit
-200	yeast	0	0	unit
-201	yogurt	0.047667	0	
-202	zucchini	0	0	unit
+ingrID	name	price	amount	unit	isHousehold
+0	allspice	0	0	unit	1
+1	almond	0	0	unit	0
+2	anchovy	1.82	2.0	unit	0
+3	anise	0	0	unit	1
+4	apple	0.099083	1	lb	0
+203	apple sauce	0.062833	1	lb	0
+5	apricot	0.67	1.0	unit	0
+6	artichoke	1.25	1.0	unit	0
+7	arugula	2.49	7.0	oz	0
+8	asiago	0	0	unit	0
+9	asparagus	2.0	1.0	lb	0
+10	available	0	0	unit	0
+11	avocado	2.1	1.0	unit	0
+12	bacon	0.427833	1	lb	0
+204	baguette	0	0	unit	0
+13	baking powder	0	0	unit	1
+14	baking soda	0	0	unit	1
+15	banana	0.053333	1	lb	0
+16	basil	1.98	1.0	cup	0
+17	bass	10.0	1.0	lb	0
+18	bay leaf	0	0	unit	1
+19	bbq sauce	0	0	unit	1
+20	bean	0.081667	1	lb	0
+21	beef	0.148	1	lb	0
+205	beer	0	0	unit	0
+206	beet	0	0	unit	0
+22	blue cheese	0	0	unit	0
+23	blueberry	0	0	unit	0
+24	bourbon	0.55975	0		0
+25	bourbon whiskey	0.55975	0		0
+26	bread	0.130833	1	lb	0
+27	broccoli	0.171417	1	lb	0
+28	broth	0.76	2.0	cup	0
+29	burrata	4.99	8.0	oz	0
+30	butter	0.178167	1	lb	0
+31	cabbage	0.030667	1	lb	0
+32	camembert	5.99	8.8	oz	0
+33	capers	3.0	9.0	tbsp	0
+34	caraway	5.22	0.5	cup	0
+35	cardamom	0	0	unit	1
+36	carrot	0.03525	1	lb	0
+207	cauliflower	0	0	unit	0
+37	cayenne	0	0	unit	1
+38	celery	0.04025	1	lb	0
+39	cheddar	0.448833	1	lb	0
+208	cheddar cheese	0.448833	1	lb	0
+40	cherry	0	0	unit	0
+41	chicken	0.11975	1	lb	0
+209	chicken breast	0.21525	1	lb	0
+42	chicken leg	0.121	1	lb	0
+43	chile	0	0	unit	0
+44	chili	0	0	unit	0
+45	chive	0	0	unit	0
+46	chocolate	0.196667	1	lb	0
+48	chuck roast	0.13225	1	lb	0
+49	cilantro	0	0	unit	1
+50	cinnamon	0	0	unit	1
+210	clam	0	0	unit	0
+51	clove	0	0	unit	1
+52	cocoa	0	0	unit	0
+53	coconut	0	0	unit	0
+54	coffee	0.35175	1	lb	0
+55	colby	0	0	unit	0
+56	cookie	0.275417	1	lb	0
+57	coriander	0	0	unit	1
+58	corn	0.04175	1	lb	0
+59	cottage cheese	0	0	unit	0
+211	couscous	0	0	unit	0
+60	cracker	0.063667	1	lb	0
+61	cranberry	0	0	unit	0
+62	cream cheese	0	0	unit	0
+212	crème fraîche	0	0	unit	0
+63	cucumber	0.05925	1	lb	0
+64	cumin	0	0	unit	1
+65	currant	0	0	unit	0
+66	curry	0	0	unit	0
+67	dill	0	0	unit	0
+68	egg	0.12225	1	dozen	0
+71	fennel	0	0	unit	0
+72	feta	0	0	unit	0
+73	fish	0	0	unit	0
+74	flour	0.03275	1	lb	0
+75	fontina	0	0	unit	0
+76	garlic	0	0	unit	1
+77	gelatin	0	0	unit	0
+78	gin	0	0	unit	0
+79	ginger	0	0	unit	1
+80	goat cheese	0	0	unit	0
+81	gorgonzola	0	0	unit	0
+82	gouda	0	0	unit	0
+83	grape	0.064	1	lb	0
+84	greens	0	0	unit	0
+213	ground beef	0.35025	1	lb	0
+85	ground chuck	0.148	1	lb	0
+86	gruyère	0	0	unit	0
+87	halibut	0	0	unit	0
+88	ham	0.134917	1	lb	0
+89	havarti	0	0	unit	0
+214	hazelnut	0	0	unit	0
+90	heavy cream	0	0	unit	0
+91	hoisin sauce	0	0	unit	1
+92	honey	0	0	unit	1
+93	hot sauce	0	0	unit	0
+94	ice cream	0.427333	0		0
+95	ice cube	0	0	unit	0
+96	jalapeño	0	0	unit	0
+97	jelly	0.078	1	lb	0
+215	kale	0	0	unit	0
+98	ketchup	0	0	unit	1
+99	lamb	0.297667	1	lb	0
+100	lemon	0.199583	1	lb	0
+101	lentil	0	0	unit	0
+102	lettuce	0.059	1	lb	0
+103	lime	0	0	unit	1
+104	linguini	0	0	unit	0
+105	macaroni	0.114667	1	lb	0
+216	mango	0	0	unit	0
+106	maple syrup	0	0	unit	0
+107	margarine	0.061417	1	lb	0
+108	mascarpone	0	0	unit	0
+109	mayonnaise	0	0	unit	1
+110	milk	0.149167	0		0
+111	mint	0	0	unit	0
+112	molasses	0	0	unit	0
+113	monterey jack	0	0	unit	0
+114	mozzarella	0	0	unit	0
+115	mushroom	0.180333	1	lb	0
+116	mustard	0	0	unit	1
+117	noodle	0	0	unit	0
+118	nutmeg	0	0	unit	1
+217	oats	0	0	unit	0
+119	oil	0.061417	0	unit	1
+120	olive	0	0	unit	0
+121	onion	0.026833	1	lb	0
+122	optional	0	0	unit	0
+123	orange	0.11075	1	lb	0
+125	oregano	0	0	unit	1
+126	oyster sauce	0	0	unit	0
+127	paprika	0	0	unit	1
+128	parmesan	0	0	unit	0
+129	parsley	0	0	unit	0
+130	pasta	0	0	unit	0
+131	pea	0	0	unit	0
+132	peach	0.1715	1	lb	0
+133	peanut	0.178	1	lb	0
+134	pear	0.055833	1	lb	0
+135	pecan	0	0	unit	0
+136	penne	0	0	unit	0
+137	pepper	0.055667	0	unit	1
+138	phyllo pastry	0	0	unit	0
+218	pine nut	0	0	unit	0
+140	poppy	0	0	unit	0
+141	pork	0.143083	1	lb	0
+143	potato	0.017583	1	lb	0
+219	potato chip	0.44375	0		0
+220	prosciutto	0	0	unit	0
+144	provolone	0	0	unit	0
+145	puff pastry	0	0	unit	0
+146	pumpkin	0	0	unit	0
+147	radish	0.075833	1	lb	0
+148	raisin	0	0	unit	0
+149	raspberry	0	0	unit	0
+150	ravioli	0	0	unit	0
+151	rib roast	0.254583	1	lb	0
+152	rice	0.106083	1	lb	0
+153	ricotta	0	0	unit	0
+154	rigatoni	0	0	unit	0
+155	roll	0.059	1	lb	0
+156	romano cheese	0	0	unit	0
+158	rosemary	0	0	unit	1
+221	round roast	0.440417	1	lb	0
+159	rum	0	0	unit	0
+160	sage	0	0	unit	1
+161	salmon	0	0	unit	0
+162	salt	0	0	unit	1
+163	sausage	0.17725	1	lb	0
+164	scallion	0.106	1	lb	0
+165	scallop	0	0	unit	0
+166	sesame	0	0	unit	0
+167	shallot	0	0	unit	0
+168	sherry	0	0	unit	0
+169	short rib	0.205333	1	lb	0
+170	shortening	0.072167	1	lb	0
+171	shrimp	0	0	unit	0
+172	sour cream	0	0	unit	0
+173	soy sauce	0	0	unit	1
+174	spaghetti	0.0665	1	lb	0
+175	spinach	0	0	unit	0
+176	steak	0.126333	1	lb	0
+177	strawberry	0	0	unit	0
+178	sugar	0.051083	1	lb	0
+179	swiss	0	0	unit	0
+180	tabasco	0	0	unit	1
+181	tarragon	0	0	unit	1
+182	tartar	0	0	unit	0
+183	tea	0	0	unit	0
+185	thyme	0	0	unit	1
+186	tomato	0.15	1	lb	0
+187	tuna	0.171667	1	lb	0
+188	turkey	0.082	1	lb	0
+189	turmeric	0	0	unit	1
+190	vanilla	0	0	unit	1
+191	veal	0	0	unit	0
+192	vinegar	0	0	unit	1
+193	vodka	0.462083	0		0
+194	walnut	0	0	unit	0
+195	water	0	0	unit	1
+196	whipped cream	0	0	unit	0
+197	whipping cream	0	0	unit	0
+198	wine	1.0115	0		0
+199	worcestershire	0	0	unit	0
+200	yeast	0	0	unit	1
+201	yogurt	0.047667	0		0
+202	zucchini	0	0	unit	0
