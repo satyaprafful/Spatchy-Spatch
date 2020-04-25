@@ -13,10 +13,6 @@ export default class NutritionSearch extends React.Component {
     // this.proteinSearch = this.proteinSearch.bind(this);
   }
 
-  // low sodium = 140mg/serving
-  // low calories = <300 cal per serving
-  // keto = 75% cal from fat. Fat = 9 cal/gram. .75/9 = gram fat/total cal
-
   getUserCalPerDay()
   {
     var weight = 135; // this is hard-coded bc the user isn't set up yet  (lbs)
@@ -45,7 +41,88 @@ export default class NutritionSearch extends React.Component {
     return proteinRatio;
   }
 
-  componentDidMount()
+  fatSearch()
+  {
+    // keto = 75% cal from fat. Fat = 9 cal/gram. .75/9 = 0.0833 = gram fat/total cal
+    fetch("http://localhost:8081/nutrition/fat/" + 0.0833,
+    {
+      method: "GET"
+    }).then(res => {
+      return res.json();
+    }, err => {
+      console.log(err);
+    }).then(recipesList => {
+      console.log(recipesList); //delete this
+
+      let recipesDiv = recipesList.map((recipeObj, i) => 
+        <RecipeRow title = {recipeObj.title} />
+      );
+
+      ///This saves our HTML representation of the data into the state, which we can call in our render function
+      this.setState({
+        recipes : recipesDiv
+      });
+    }, err => {
+      // Print the error if there is one.
+      console.log(err);
+    });
+  }
+
+  sodiumSearch()
+  {
+    // low sodium = 140mg/serving
+    fetch("http://localhost:8081/nutrition/sodium/" + 140,
+    {
+      method: "GET"
+    }).then(res => {
+      return res.json();
+    }, err => {
+      console.log(err);
+    }).then(recipesList => {
+      console.log(recipesList); //delete this
+
+      let recipesDiv = recipesList.map((recipeObj, i) => 
+        <RecipeRow title = {recipeObj.title} />
+      );
+
+      ///This saves our HTML representation of the data into the state, which we can call in our render function
+      this.setState({
+        recipes : recipesDiv
+      });
+    }, err => {
+      // Print the error if there is one.
+      console.log(err);
+    });
+  }
+
+  calorieSearch()
+  {
+    // low calories = <350 cal per serving
+    fetch("http://localhost:8081/nutrition/cal/" + 350,
+    {
+      method: "GET"
+    }).then(res => {
+      return res.json();
+    }, err => {
+      console.log(err);
+    }).then(recipesList => {
+      console.log(recipesList); //delete this
+
+      let recipesDiv = recipesList.map((recipeObj, i) => 
+        <RecipeRow title = {recipeObj.title} />
+      );
+
+      ///This saves our HTML representation of the data into the state, which we can call in our render function
+      this.setState({
+        recipes : recipesDiv
+      });
+    }, err => {
+      // Print the error if there is one.
+      console.log(err);
+    });
+  }
+
+  proteinSearch()
   {
     fetch("http://localhost:8081/protein/" + this.getUserProteinRatio(),
       {
@@ -77,7 +154,16 @@ export default class NutritionSearch extends React.Component {
 
         <PageNavbar active="Nutrition" />
         <br></br>
-        This is the nutrition pate
+        <input id="High-protein diet recipes" type="button" value="High-protein diet recipes" onClick={() => this.proteinSearch() } />
+        <br></br>
+        <input id="Keto diet recipes" type="button" value="Keto diet recipes" onClick={() => this.fatSearch() } />
+        <br></br>
+        <input id="Low calorie recipes" type="button" value="Low calorie recipes" onClick={() => this.calorieSearch() } />
+        <br></br>
+        <input id="Low sodium recipes" type="button" value="Low sodium recipes" onClick={() => this.sodiumSearch() } />
+        <div className="results-container" id="results">
+                {this.state.recipes}
+              </div>
       </div>
     );
   }
