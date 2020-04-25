@@ -124,7 +124,6 @@ function getValRecipes(req, res) {
   var whereClause = "";
 
   for (var key in values) {
-<<<<<<< HEAD
     if (values.hasOwnProperty(key)) {
         if (values.hasOwnProperty(key))
         {
@@ -153,26 +152,10 @@ function getValRecipes(req, res) {
             WHERE RI.rID = R.rID AND A.ingrID IS NULL
         )
         GROUP BY R.rID
-        ORDER BY SUM(IP.isHousehold), R.rating
+        ORDER BY COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, R.rating DESC
         LIMIT 10
     ;`;
 
-=======
-    if (values.hasOwnProperty(key))
-    {
-        console.log(key, values[key]);
-        whereClause += "IP.ingrID = " + values[key] + " OR ";
-    }
-  }
-  if (whereClause.substring(whereClause.length - 4) == " OR ") {
-        whereClause = whereClause.substring(0, whereClause.length - 4);
-  }
-  var query = `
-  SELECT name
-  FROM IngrPrices IP
-  WHERE ${whereClause}
-  ;`;
->>>>>>> 0bf36bc59c327b778b53c22cee7c1d55aab1081f
 
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
@@ -184,41 +167,6 @@ function getValRecipes(req, res) {
   connection.end();
 };
 
-<<<<<<< HEAD
-=======
-//AND IP.ingrID = '${ingr2}' AND IP.ingrID = '${ingr3}' AND IP.ingrID = '${ingr4}' AND IP.ingrID = '${ingr5}'
-//   var query = `
-//    WITH Available AS (
-//        SELECT
-//        FROM IngrPrices IP
-//        WHERE IP.ingrID = '${ingr1}'
-//    )
-//    SELECT *
-//    FROM Recipe R
-//    WHERE NOT EXISTS (
-//        SELECT *
-//        FROM RIngredients RI RIGHT OUTER JOIN Available A ON RI.ingrID = A.ingrID
-//        WHERE RI.rID = R.rID AND A.ingrID == NULL
-//    )
-//    ORDER BY R.rating
-//    LIMIT 100;`;
-//
-//var query = `
-//WITH Available AS (
-//	SELECT IP.ingrID
-//    FROM IngrPrices IP
-//    WHERE IP.ingrID = '${ingr1}' OR IP.ingrID = '${ingr2}' OR IP.ingrID = '${ingr3}' OR IP.ingrID = '${ingr4}' OR IP.ingrID = '${ingr5}'
-//)
-//SELECT title
-//FROM Recipe R
-//WHERE NOT EXISTS (
-//	SELECT *
-//	FROM RIngredients RI LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
-//	WHERE RI.rID = R.rID AND A.ingrID IS NULL
-//)
-//ORDER BY R.rating
-//LIMIT 100
-//`;
 
 /* ---- Login Routes ---- */
 function signupUser(req, res) {
