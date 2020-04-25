@@ -1,22 +1,345 @@
 import React from 'react';
+import {Container, Row, Col, Accordion, Card, Button, Form} from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
+import Select from 'react-select'
 
 
 export default class DishSearch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {}
+    this.state.statesList = []
+    this.state.cityList = []
+    this.state.selected_state = ''
+    this.state.selected_city = ''
+    this.state.results = []
+    this.state.dishSearch = ''
+
+    //-----------Binds---------------//
+    this.getCities = this.getCities.bind(this) 
+    this.getRestaurantsBasic = this.getRestaurantsBasic.bind(this) 
+    this.dishHandleSubmit = this.dishHandleSubmit.bind(this) 
+    this.dishHandleChange = this.dishHandleChange.bind(this) 
+    this.getDishSearch = this.getDishSearch.bind(this)
   }
+
+  componentDidMount(){
+      fetch("http://localhost:8081/states/",
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(resultList => {
+          console.log(resultList); 
+          let statesList = resultList.map((state, i) => {
+            const container = {};
+
+            container.value = state.rest_state;
+            container.label = state.rest_state;
+            return container;
+          });
+
+          ///This saves our HTML representation of the data into the state, which we can call in our render function
+          this.setState({
+            statesList : statesList
+          });
+        }, err => {
+          // Print the error if there is one.
+          console.log(err);
+        });
+  }
+
+
+  dishHandleChange(e){
+    this.setState({dishSearch: e.target.value});
+  }
+
+  dishHandleSubmit(e){    
+    this.getDishSearch();
+}
+
+  getCities(city){
+    var url_query = "http://localhost:8081/cities/"+ city
+    console.log(this.state.selected_state);
+    console.log(city);
+
+    fetch( url_query,
+    {
+      method: "GET"
+    }).then(res => {
+      return res.json();
+    }, err => {
+      console.log(err);
+    }).then(resultList => {
+      console.log(resultList); 
+      let cityList = resultList.map((city, i) => {
+        const container = {};
+
+        container.value = city.rest_city;
+        container.label = city.rest_city;
+        return container;
+      });
+
+      ///This saves our HTML representation of the data into the state, which we can call in our render function
+      this.setState({
+        cityList : cityList
+      });
+    }, err => {
+      // Print the error if there is one.
+      console.log(err);
+    });
+  }
+
+    getRestaurantsBasic(state, city){
+        var url_query = "http://localhost:8081/restaurants/"+ state + "/" + city + "/"    
+        fetch( url_query,
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(resultList => {
+          console.log(resultList); 
+          let restList = resultList.map((rest, i) => {
+              let cuisine = (rest.rest_cuisine == "N/A" ? '' : " || " + rest.rest_cuisine.substring(1, rest.rest_cuisine.length - 1));
+            //   let website = (rest.rest_website == "N/A" ? "N/A" : 'allmenus.com/' + rest.rest_website.substring(9))
+            let src1 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg";
+            let src2 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg";
+            return (
+                <Row><Col>
+                    <Accordion>
+                        <Card>
+                        <Card.Header>
+                            <Accordion.Toggle as={Card.Header} eventKey="0">
+                                {(i+1) + ". " + rest.rest_name + cuisine}
+                            </Accordion.Toggle>
+                        </Card.Header>
+                        <Accordion.Collapse eventKey="0">
+                            <Card.Body>
+                                <Row>
+                                    <Col>
+                                    Restaurant Address: {rest.rest_address}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                      Restaurant Website:  {rest.rest_website == "N/A" ? "N/A" :  <a href={rest.rest_website} target="_blank">{" Go to Link"}</a>}
+                                    </Col>
+                                </Row> 
+                                <Row>
+                                    <Col>
+                                        <img 
+                                            src= {src1}
+                                            alt="new"
+                                            width="200" 
+                                            height="200"
+                                        />
+                                    </Col>
+                                    <Col>
+                                    <img 
+                                            src= {src2}
+                                            alt="new"
+                                            width="200" 
+                                            height="200"
+                                        />
+                                    </Col>
+                                </Row>
+
+                            </Card.Body>
+                        </Accordion.Collapse>
+                        </Card>
+                    </Accordion>
+                </Col></Row>
+            )
+          });
+          //This saves our HTML representation of the data into the state, which we can call in our render function
+          this.setState({
+            results : restList
+          });
+        }, err => {
+          // Print the error if there is one.
+          console.log(err);
+        });   
+    }
+
+    getDishSearch(){
+        var url_query = "http://localhost:8081/dishes/"+ this.state.selected_state + "/" + this.state.selected_city + "/" + this.state.dishSearch   
+        console.log(url_query);
+        fetch( url_query,
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(resultList => {
+          console.log(resultList); 
+          let restList = resultList.map((rest, i) => {
+              let dish_name= (rest.dish_name == "N/A" ? '' : " || " + rest.dish_name);
+            //   let website = (rest.rest_website == "N/A" ? "N/A" : 'allmenus.com/' + rest.rest_website.substring(9))
+            let src1 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg";
+            let src2 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg";
+            return (
+                <Row><Col>
+                    <Accordion>
+                        <Card>
+                        <Card.Header>
+                            <Accordion.Toggle as={Card.Header} eventKey="0">
+                                {(i+1) + ". " + rest.rest_name + dish_name}
+                            </Accordion.Toggle>
+                        </Card.Header>
+                        <Accordion.Collapse eventKey="0">
+                            <Card.Body>
+                                <Row>
+                                    <Col>
+                                        <strong>Dish Name</strong>: {rest.dish_name}
+                                    </Col>
+                                    <Col>
+                                    <strong>Dish Price:</strong> ${rest.dish_price}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                    <strong>Dish Category:</strong> {rest.dish_category}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <strong>Dish Description:</strong> {rest.dish_description}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                    <strong>Restaurant Cuisine:</strong> {(rest.rest_cuisine == "N/A" ? 'N/A' : rest.rest_cuisine.substring(1, rest.rest_cuisine.length - 1))}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                    <strong>Restaurant Address:</strong> {rest.rest_address}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                    <strong>Restaurant Website:</strong>  {rest.rest_website == "N/A" ? "N/A" :  <a href={rest.rest_website} target="_blank">{" Go to Link"}</a>}
+                                    </Col>
+                                </Row> 
+                                <Row>
+                                    <Col>
+                                        <img 
+                                            src= {src1}
+                                            alt="new"
+                                            width="200" 
+                                            height="200"
+                                        />
+                                    </Col>
+                                    <Col>
+                                    <img 
+                                            src= {src2}
+                                            alt="new"
+                                            width="200" 
+                                            height="200"
+                                        />
+                                    </Col>
+                                </Row>
+
+                            </Card.Body>
+                        </Accordion.Collapse>
+                        </Card>
+                    </Accordion>
+                </Col></Row>
+            )
+          });
+          //This saves our HTML representation of the data into the state, which we can call in our render function
+          this.setState({
+            results : restList
+          });
+        }, err => {
+          // Print the error if there is one.
+          console.log(err);
+        });   
+    }
 
   render() {    
     return (
       <div className="DishSearch">
-
         <PageNavbar active="DISHES" />
         <br></br>
-        Praff's page
+      <Container>
+        <Row>
+          <Col><strong>Where are you from?</strong></Col>
+          <Col>
+            <Select 
+                options={this.state.statesList} 
+                defaultValue={{ label: "Select State", value: 0}}
+                onChange={(e => {
+                    this.setState({
+                        selected_state: e.label,
+                    });
+                    {this.getCities(e.label)}
+                 })}
+            />            
+          </Col>
+        </Row>
+        <br></br>
+        <Row>
+          <Col><strong>Choose the cities near you!</strong></Col>
+          <Col>
+            <Select 
+                options={this.state.cityList} 
+                defaultValue={{ label: "Cities.." , value: 0}}
+                onChange={e => {
+                    this.setState({
+                        selected_city: e.label
+                    });{this.getRestaurantsBasic(this.state.selected_state, e.label)}
+                 }}
+            />            
+          </Col>
+        </Row>
+        <ColoredLine color = 'gray'/>
+      </Container>
+      <Container>
+        <strong>Look for your favourite dishes here! </strong>
+        <p></p>
+        <Row>
+            <Col>
+                <form>
+                    <input type="text" name="dish" size="37" placeholder="Pesto Pasta, Chicken Burgers, Pancakes ..." value={this.state.dishSearch} onChange={this.dishHandleChange}/>
+                    <button type="button" onClick={this.dishHandleSubmit}>Search!</button>
+                </form>
+            </Col>
+        </Row>
+        <ColoredLine color = 'gray'/>    
+      </Container>
+
+        {/* Results Accordian */}
+      <Container>
+        {this.state.results.length == 0 ? 'Nothing found yet, Try Another Search!' : 'Here are some results near you!'} 
+        {this.state.results}            
+      </Container>
+
+
       </div>
     );
   }
 }
+
+const ColoredLine = ({ color }) => (
+    <hr
+        style={{
+            color: color,
+            backgroundColor: color,
+            height: 1
+        }}
+    />
+);
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+  }

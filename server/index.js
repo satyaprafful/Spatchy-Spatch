@@ -48,7 +48,22 @@ app.post('/login', (req, res) => {
 	routes.loginUser(req, res)}
 );
 
+/* ---- Dishes/Restaurant Queries ---- */
+app.get('/states/', (req, res) => {
+	routes.getStates(req,res)}
+);
 
+app.get('/cities/:state', (req, res) => {
+	routes.getCities(req,res)}
+);
+
+app.get('/restaurants/:state/:city', (req, res) => {
+	routes.getRestaurantsBasic(req,res)}
+);
+
+app.get('/dishes/:state/:city/:search', (req, res) => {
+	routes.getDishSearch(req,res)}
+);
 
 app.listen(8081, () => {
 	console.log(`Server listening on PORT 8081`);

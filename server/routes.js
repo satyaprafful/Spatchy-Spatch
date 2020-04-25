@@ -137,7 +137,6 @@ function getValRecipes(req, res) {
         whereClause = whereClause.substring(0, whereClause.length - 4);
    }
 
-
     var query = `
         WITH Available AS (
             SELECT IP.ingrID
@@ -237,6 +236,80 @@ function loginUser(req, res) {
 };
 
 
+/* -------------------------- Dish / Restaurant Routes --------------------- */
+
+function getStates(req, res) {
+  var connection = getDBConnect();
+
+  var query = `Select DISTINCT(rest_state) FROM Restaurant`;
+
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      console.log("HELLo");
+      console.log(rows);
+      res.json(rows);
+    }
+  });
+  connection.end();
+};
+
+function getCities(req, res) {
+  var connection = getDBConnect();
+  var state = req.params.state;
+  var query = `Select DISTINCT(rest_city) FROM Restaurant WHERE rest_state = '${state}'`;
+
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      console.log(rows);
+      res.json(rows);
+    }
+  });
+  connection.end();
+};
+
+function getRestaurantsBasic(req, res) {
+  var connection = getDBConnect();
+  var state = req.params.state;
+  var city = req.params.city;
+  var query = `SELECT * FROM Restaurant 
+               WHERE rest_state = '${state}' AND rest_city = '${city}'
+               ORDER BY RAND()
+               LIMIT 10`;
+
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      console.log(rows);
+      res.json(rows);
+    }
+  });
+  connection.end();
+};
+
+function getDishSearch(req, res) {
+  var connection = getDBConnect();
+  var state = req.params.state;
+  var city = req.params.city;
+  var search = req.params.search;
+
+  var query = `WITH nearby_restaurants AS (SELECT * FROM Restaurant WHERE rest_state = '${state}')
+                SELECT *
+                FROM Dish d JOIN Serves s ON s.dish_id = d.dish_id JOIN nearby_restaurants r ON r.rest_id = s.rest_id
+                WHERE REGEXP_LIKE(d.dish_name, '${search}')
+                LIMIT 10`;
+
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      console.log(rows);
+      res.json(rows);
+    }
+  });
+  connection.end();
+};
+
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
@@ -246,5 +319,9 @@ module.exports = {
   getLowCal: getLowCal,
   getValRecipes: getValRecipes,
   signupUser: signupUser,
-  loginUser: loginUser
+  loginUser: loginUser,
+  getStates: getStates,
+  getCities: getCities,
+  getRestaurantsBasic: getRestaurantsBasic,
+  getDishSearch: getDishSearch
 }
