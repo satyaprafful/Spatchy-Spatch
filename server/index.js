@@ -13,10 +13,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 /* ------------------- Route handler registration ----------------- */
 /* ---------------------------------------------------------------- */
 
-
-/* ---- test route ---- */
-app.get('/dishes', routes.dishName); 
-
 /* ---- Nutrition Queries ---- */
 // sends min protein/cal, gets back recipes
 app.get('/protein/:proteinRatio', (req, res) => { 
@@ -38,6 +34,7 @@ app.get('/nutrition/cal/:calLimit', (req, res) => {
 	routes.getLowCal(req,res)}
 );
 
+/* ---- Ingredient Queries ---- */
 app.get('/ingredients/', (req, res) => {
 	routes.getValRecipes(req,res)}
 );

@@ -32,36 +32,15 @@ function getDBConnect()
 /* -------------------------------------------------- */
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
-
-/* ---- Test Quering MySQL database ---- */
-function dishName() {
-  var connection = getDBConnect()
-
-  var query = `
-  SELECT *
-  FROM Dish
-  LIMIT 1;`;
-
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-  
-  connection.end();
-};
-
-/* ---- Real Queries ---- */
 function getHighProtein(req, res) {
   var connection = getDBConnect();
   var inputRatio = req.params.proteinRatio;
 
 
   var query = `
-  SELECT title
+  SELECT *
   FROM Recipe R
-  WHERE R.protein/(R.calories + 1) >= '${inputRatio}'
+  WHERE R.protein/(R.calories + 1) >= '${inputRatio}' AND R.protein >= 5
   ORDER BY R.rating
   LIMIT 10`;
 
@@ -80,7 +59,7 @@ function getHighFat(req, res) {
   var inputRatio = req.params.fatRatio;
 
   var query = `
-  SELECT title
+  SELECT *
   FROM Recipe R
   WHERE R.fat/(R.calories + 1) >= '${inputRatio}'
   ORDER BY R.rating
@@ -101,7 +80,7 @@ function getLowSodium(req, res) {
   var limit = req.params.sodiumLimit;
 
   var query = `
-  SELECT title 
+  SELECT * 
   FROM Recipe R
   WHERE R.sodium < '${limit}'
   ORDER BY R.rating
@@ -122,9 +101,9 @@ function getLowCal(req, res) {
   var limit = req.params.calLimit;
 
   var query = `
-  SELECT title 
+  SELECT * 
   FROM Recipe R
-  WHERE R.calories < '${limit}'
+  WHERE R.calories < '${limit}' AND R.calories > 100
   ORDER BY R.rating
   LIMIT 10`;
 
@@ -140,48 +119,25 @@ function getLowCal(req, res) {
 
 function getValRecipes(req, res) {
   var connection = getDBConnect();
-//  var ingr1 = req.params.ingr1;
-//  var ingr2 = req.params.ingr2;
-//  var ingr3 = req.params.ingr3;
-//  var ingr4 = req.params.ingr4;
-//  var ingr5 = req.params.ingr5;
-
   var values = req.query;
-  console.log(values);
 
   var whereClause = "";
 
   for (var key in values) {
-    if (values.hasOwnProperty(key)) {
+    if (values.hasOwnProperty(key)) 
+    {
         console.log(key, values[key]);
         whereClause += "IP.ingrID = " + values[key] + " OR ";
-   }
+    }
   }
-
-   if (whereClause.substring(whereClause.length - 4) == " OR ") {
+  if (whereClause.substring(whereClause.length - 4) == " OR ") {
         whereClause = whereClause.substring(0, whereClause.length - 4);
-   }
-
-
-     var query = `
-      SELECT name
-      FROM IngrPrices IP
-      WHERE ${whereClause}
-      ;`;
-
-//      console.log(query);
-
-//var query = `
-//      SELECT name
-//      FROM IngrPrices IP
-//      WHERE IP.ingrID = '${ingr1}' OR IP.ingrID = '${ingr2}' OR IP.ingrID = '${ingr3}' OR IP.ingrID = '${ingr4}' OR IP.ingrID = '${ingr5}'
-//  ;`;
-
-//  var query = `
-//      SELECT name
-//      FROM IngrPrices IP
-//      LIMIT 5
-//  ;`;
+  }
+  var query = `
+  SELECT name
+  FROM IngrPrices IP
+  WHERE ${whereClause}
+  ;`;
 
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
@@ -297,9 +253,9 @@ function loginUser(req, res) {
 
 
 
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
-  dishName: dishName,
   getLowSodium: getLowSodium,
   getHighFat: getHighFat,
   getHighProtein: getHighProtein,
