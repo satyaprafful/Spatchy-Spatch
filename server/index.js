@@ -42,6 +42,16 @@ app.get('/ingredients/', (req, res) => {
 	routes.getValRecipes(req,res)}
 );
 
+/* ---- Login Routes ---- */
+app.post('/signup', (req, res) => {
+	routes.signupUser(req, res)}
+);
+
+app.post('/login', (req, res) => {
+	routes.loginUser(req, res)}
+);
+
+
 
 app.listen(8081, () => {
 	console.log(`Server listening on PORT 8081`);
