@@ -26,6 +26,7 @@ export default class IngrSearch extends React.Component {
 
     this.handleIngrIDChange = this.handleIngrIDChange.bind(this);
     this.submitIngr = this.submitIngr.bind(this);
+    this.submitBudget = this.submitBudget.bind(this);
 
 	}
 
@@ -63,10 +64,6 @@ export default class IngrSearch extends React.Component {
       }).then(recipesList => {
 
         console.log(recipesList); //delete this
-
-//        let recipesDiv = recipesList.map((recipeObj, i) =>
-//          <RecipeRow title = {recipeObj.title} key= {recipeObj.rID} />
-//        );
 
         let recipesDiv = recipesList.map((recipe, i) => {
             var raw = recipe.ingr_descr;
@@ -134,6 +131,90 @@ export default class IngrSearch extends React.Component {
         console.log(err);
       });
   }
+
+
+  submitBudget()
+  {
+    fetch("http://localhost:8081/budget/" + this.parseIngrList(),
+      {
+        method: "GET"
+      }).then(res => {
+        return res.json();
+      }, err => {
+        console.log(err);
+      }).then(recipesList => {
+
+        console.log(recipesList); //delete this
+
+        let recipesDiv = recipesList.map((recipe, i) => {
+            var raw = recipe.ingr_descr;
+            var ingrArr = raw.substring(1,raw.length-1).split(",")
+
+            let ingrDivs = ingrArr.map((tuple, i) => {
+                var curr = ingrArr[i];
+                curr = curr.replace(/\'/g, "");
+
+                return  <Row>
+                             <Col>
+                                  {curr}
+                             </Col>
+                        </Row>
+                }
+            )
+
+            var cost = recipe.recipe_cost;
+            var rounded = cost.toFixed(2);
+
+            return (
+                <Row><Col>
+                    <Accordion>
+                        <Card>
+                        <Card.Header>
+                            <Accordion.Toggle as={Card.Header} eventKey="0">
+                                {(i+1) + ". " + recipe.title + " (" + rounded + "$)"}
+                            </Accordion.Toggle>
+                        </Card.Header>
+                        <Accordion.Collapse eventKey="0">
+                            <Card.Body>
+                                <Row>
+                                    <Col>
+                                        <strong>Recipe Name:</strong> {recipe.title}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                    <strong>Rating:</strong> {recipe.rating}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                    <strong>Description:</strong> {recipe.recipe_descr}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <strong>Ingredients:</strong> {ingrDivs}
+                                    </Col>
+                                </Row>
+
+                            </Card.Body>
+                        </Accordion.Collapse>
+                        </Card>
+                    </Accordion>
+                </Col></Row>
+            )
+        });
+
+        ///This saves our HTML representation of the data into the state, which we can call in our render function
+        this.setState({
+          recRecipes : recipesDiv
+        });
+      }, err => {
+        // Print the error if there is one.
+        console.log(err);
+      });
+  }
+
 
   componentDidMount() {
 
@@ -257,8 +338,14 @@ export default class IngrSearch extends React.Component {
                                 </div>
                             </div>
                         <br></br>
-			    	    <button id="submitBtn" className="submit-btn" onClick={this.submitIngr}>Submit</button>
-                        <br></br>
+                        <Row>
+                            <Col>
+                                <button id="submitBtn" className="submit-btn" onClick={this.submitIngr}>Search All Recipes</button>
+                            </Col>
+                            <Col>
+                                <button id="budgetBtn" className="budget-btn" onClick={this.submitBudget}>Search Budget-Friendly Recipes</button>
+                            </Col>
+                        </Row>
                     <div className="header-container">
                         <div className="h6">Here are some suggested recipes ...</div>
                         <div className="headers">

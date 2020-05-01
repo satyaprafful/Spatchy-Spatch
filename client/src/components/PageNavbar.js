@@ -11,7 +11,7 @@ export default class PageNavbar extends React.Component {
 	}
 
 	componentDidMount() {
-		const pageList = ['Login', 'Ingredient Search', 'Nutrition Search', 'Dish Search', 'Budget Search'];
+		const pageList = ['Login', 'Ingredient Search', 'Nutrition Search', 'Dish Search'];
 
 		let navbarDivs = pageList.map((page, i) => {
 			if (this.props.active === page) {
@@ -30,7 +30,7 @@ export default class PageNavbar extends React.Component {
 		return (
 			<div className="PageNavbar">
 				<nav className="navbar navbar-expand-lg navbar-light bg-light">
-			      <span className="navbar-brand center">Test NavBAr</span>
+			      <span className="navbar-brand center">Test NavBar</span>
 				  	<div className="navbar-nav">
 			       	 {this.state.navDivs}
 			        </div>

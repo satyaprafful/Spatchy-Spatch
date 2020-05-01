@@ -39,6 +39,10 @@ app.get('/ingredients/', (req, res) => {
 	routes.getValRecipes(req,res)}
 );
 
+app.get('/budget/', (req, res) => {
+	routes.getBudgetRecipes(req,res)}
+);
+
 /* ---- Login Routes ---- */
 app.post('/signup', (req, res) => {
 	routes.signupUser(req, res)}

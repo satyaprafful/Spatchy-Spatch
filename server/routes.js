@@ -117,6 +117,8 @@ function getLowCal(req, res) {
   connection.end();
 };
 
+
+/* ---- Ingr Search Routes ---- */
 function getValRecipes(req, res) {
   var connection = getDBConnect();
   var values = req.query;
@@ -152,6 +154,61 @@ function getValRecipes(req, res) {
         )
         GROUP BY R.rID
         ORDER BY COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, R.rating DESC
+        LIMIT 10
+    ;`;
+
+
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+
+  connection.end();
+};
+
+
+function getBudgetRecipes(req, res) {
+  var connection = getDBConnect();
+  var values = req.query;
+
+  var whereClause = "";
+
+  for (var key in values) {
+    if (values.hasOwnProperty(key)) {
+        if (values.hasOwnProperty(key))
+        {
+            console.log(key, values[key]);
+            whereClause += "IP.ingrID = " + values[key] + " OR ";
+        }
+    }
+  }
+
+  if (whereClause.substring(whereClause.length - 4) == " OR ") {
+        whereClause = whereClause.substring(0, whereClause.length - 4);
+   }
+
+    var query = `
+        WITH Available AS (
+            SELECT IP.ingrID
+            FROM IngrPrices IP
+            WHERE ${whereClause} OR IP.isHousehold = 1
+        ), ValidRecipes AS (
+            SELECT R.rID, R.title, R.rating, R.recipe_descr, R.ingr_descr
+            FROM Recipe R JOIN RIngredients RI JOIN IngrPrices IP ON R.rID = RI.rID AND RI.ingrID = IP.ingrID
+            WHERE NOT EXISTS (
+                SELECT *
+                FROM RIngredients RI LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
+                WHERE RI.rID = R.rID AND A.ingrID IS NULL
+            )
+            GROUP BY R.rID
+        )
+        SELECT DISTINCT VR.title, SUM(IP.price) as recipe_cost, VR.rating, VR.recipe_descr, VR.ingr_descr
+        FROM RIngredients RI JOIN IngrPrices IP JOIN ValidRecipes VR ON RI.ingrID = IP.ingrID AND VR.rID = RI.rID
+        GROUP BY VR.rID
+        HAVING recipe_cost > 0
+        ORDER BY recipe_cost, COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, VR.rating DESC
         LIMIT 10
     ;`;
 
@@ -318,6 +375,7 @@ module.exports = {
   getHighProtein: getHighProtein,
   getLowCal: getLowCal,
   getValRecipes: getValRecipes,
+  getBudgetRecipes: getBudgetRecipes,
   signupUser: signupUser,
   loginUser: loginUser,
   getStates: getStates,
