@@ -3,6 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
 import Gallery from 'react-grid-gallery';
 import {Container, Row, Col, Accordion, Card, Button, Form} from 'react-bootstrap';
+import { TwitterTimelineEmbed } from 'react-twitter-embed';
+import '../App.css';
 
 
 export default class Home extends React.Component {
@@ -11,9 +13,11 @@ export default class Home extends React.Component {
     this.state = {
       posters: [],
       theme_word: '',
+      feed_username: ' ',
       username: "Satya"
     }
-    this.getRandomTheme = this.getRandomTheme.bind(this)
+    this.getRandomTheme = this.getRandomTheme.bind(this);
+    // this.getRandomTwitterFeed = this.getRandomTwitterFeed.bind(this);
   }
 
   componentDidMount(){
@@ -57,8 +61,8 @@ export default class Home extends React.Component {
               let website = rest_array[index].restaurant.url
               restObj.src = img_url
               restObj.thumbnail = img_url
-              restObj['thumbnailWidth'] = 300
-              restObj['thumbnailHeight'] = 330
+              restObj['thumbnailWidth'] = 500
+              restObj['thumbnailHeight'] = 550
               restObj['caption'] = rest_array[index].restaurant.name
               restObj['tags'] = [{value: <a href={website} target="_blank">{"Link"}</a>, title: rest_array[index].restaurant.cuisines}]
               out_array.push(restObj);
@@ -95,6 +99,12 @@ getRandomTheme(){
   return theme;
 }
 
+// getRandomTwitterFeed(){
+//   var feed = feeds[Math.floor(Math.random() * feeds.length)];
+//   this.setState({feed_username : feed})
+//   return feed;
+// }
+
 
 setCustomTags (i) {
     return (
@@ -109,6 +119,13 @@ setCustomTags (i) {
 }
 
   render() {    
+
+    const buttonStyle = {
+      backgroundColor: "#E98074",
+      color: "#D8C3A5"
+    };
+
+
     var images = this.state.posters.map((i) => {
         i.customOverlay = (
                 <div style={captionStyle}>
@@ -125,20 +142,64 @@ setCustomTags (i) {
           <PageNavbar active="Home" />
           <br></br>
           <Container>
-          Hey <strong>{this.state.username}</strong>, Explore <strong>{this.state.theme_word}</strong> today?
+            <Row>
+            <Col>
+                <Container>
+              Explore <strong>{this.state.theme_word}</strong> today?
+              </Container>
+            <br></br>
+              <Container>
+              <Row>
+                <Col>
+                <Gallery
+                  images={images}
+                  enableImageSelection={false}/>
+                </Col>
+              </Row>
+              </Container>
+            </Col>
+            <Col>
+              <img src={require('../resources/baby-yoda-clean.png')} class="img-fluid" ></img>
+              <Container>
+                <br></br>
+                Hey <strong>{this.state.username}</strong>!
+              </Container>
+              <Container>
+                What would you like to do today?
+              </Container>
+              <br></br>
+              <div class="col-auto" >
+                <a class="btn btn-lg btn-block" type="submit" style={buttonStyle} href={'/Ingredient Search'} >Ingredient Search</a>
+              </div>
+              <br></br>
+              <div class="col-auto" >
+                <a class="btn btn-lg btn-block" type="submit" style={buttonStyle} href={'/Nutrition Search'} >Nutrition Search</a>
+              </div>
+              <br></br>
+              <div class="col-auto" >
+                <a class="btn btn-lg btn-block" type="submit" style={buttonStyle} href={'/Dish Search'} >Dish Search</a>
+              </div>
+              <br></br>
+              <div class="col-auto" >
+                <a class="btn btn-lg btn-block" type="submit" style={buttonStyle} >Edit User Information</a>
+              </div>
+            </Col>
+            <Col>
+            <Container>
+              Get <strong>inspired!</strong>
+              </Container>
+              <div className="selfCenter standardWidth">
+              <TwitterTimelineEmbed
+                sourceType="profile"
+                screenName="tastykitchen"
+                options={{height: 1315}}
+              />
+            </div>
+            </Col>
+            </Row>
           </Container>
         </div>
-        <br></br>
-        <div>
-          <Container>
-          <Row>
-            <Col>
-            <Gallery
-              images={images}
-              enableImageSelection={false}/>
-            </Col>
-          </Row>
-          </Container>
+        <div className="centerContent">
         </div>
       </div>
     );
