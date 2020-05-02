@@ -16,10 +16,12 @@ export default class DishSearch extends React.Component {
     this.state.selected_city = ''
     this.state.results = []
     this.state.dishSearch = ''
+    this.state.image_results = []
 
     //-----------Binds---------------//
     this.getCities = this.getCities.bind(this) 
     this.getRestaurantsBasic = this.getRestaurantsBasic.bind(this) 
+    this.getRestaurantImages = this.getRestaurantImages.bind(this) 
     this.dishHandleSubmit = this.dishHandleSubmit.bind(this) 
     this.dishHandleChange = this.dishHandleChange.bind(this) 
     this.getDishSearch = this.getDishSearch.bind(this)
@@ -94,7 +96,60 @@ export default class DishSearch extends React.Component {
     });
   }
 
-    getRestaurantsBasic(state, city){
+  getRestaurantImages(city, restaurant_name){
+    var url_query = "https://developers.zomato.com/api/v2.1/cities?q=" + city
+    console.log(url_query);
+    fetch( url_query,
+    {
+      method: "GET",
+      headers: {'user-key': '254acae745cffad9bc4ac35c4612c722'}
+    }).then(res => {
+      return res.json();
+    }, err => {
+      console.log(err);
+    }).then(resultList => {
+       return resultList.location_suggestions[0].id
+    }, err => {
+      // Print the error if there is one.
+      console.log(err);
+    }).then(zomato_city_id => {
+      var rest_query = 'https://developers.zomato.com/api/v2.1/search?entity_id=' + zomato_city_id + '&entity_type=city&q=' + restaurant_name
+      fetch( rest_query,
+        {
+          method: "GET",
+          headers: {'user-key': '254acae745cffad9bc4ac35c4612c722'}
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(resultList2 => {
+          if (resultList2.results_found > 0){
+            let ret_arr = [];
+            ret_arr.push(resultList2.restaurants[0].restaurant.featured_image);
+            ret_arr.push(resultList2.restaurants[0].restaurant.thumb);
+            console.log(ret_arr);
+            this.setState({
+              image_results : ret_arr
+            }); 
+          }
+          else {
+            let ret_arr = [];
+            ret_arr.push("https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg");
+            ret_arr.push("https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg");
+            this.setState({
+              image_results : ret_arr
+            }); 
+          }
+        }, err => {
+          // Print the error if there is one.
+          console.log(err);
+        });    
+    });
+  }
+
+
+  
+    getRestaurantsBasic(state, city, i){
         var url_query = "http://localhost:8081/restaurants/"+ state + "/" + city + "/"    
         fetch( url_query,
         {
@@ -104,12 +159,12 @@ export default class DishSearch extends React.Component {
         }, err => {
           console.log(err);
         }).then(resultList => {
-          console.log(resultList); 
           let restList = resultList.map((rest, i) => {
               let cuisine = (rest.rest_cuisine == "N/A" ? '' : " || " + rest.rest_cuisine.substring(1, rest.rest_cuisine.length - 1));
             //   let website = (rest.rest_website == "N/A" ? "N/A" : 'allmenus.com/' + rest.rest_website.substring(9))
-            let src1 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg";
-            let src2 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg";
+                let src1 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg"
+                let src2 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg"
+
             return (
                 <Row><Col>
                     <Accordion>
@@ -267,7 +322,7 @@ export default class DishSearch extends React.Component {
   render() {    
     return (
       <div className="DishSearch">
-        <PageNavbar active="DISHES" />
+        <PageNavbar active="Dish Search" />
         <br></br>
       <Container>
         <Row>

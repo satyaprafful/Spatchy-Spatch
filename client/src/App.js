@@ -9,9 +9,10 @@ import BudgetSearch from './components/BudgetSearch';
 import IngrSearch from './components/IngrSearch';
 import DishSearch from './components/DishSearch';
 import Login from './components/Login';
+import Home from './components/Home'
+import Fun from './components/Fun'
 
 export default class App extends React.Component {
-
 	render() {
 		return (
 			<div className="App">
@@ -33,6 +34,13 @@ export default class App extends React.Component {
 						/>
 						<Route
 							exact
+							path="/Home"
+							render={() => (
+								<Home/>
+							)}
+						/>						
+						<Route
+							exact
 							path="/Ingredient Search"
 							render={() => (
 								<IngrSearch />
@@ -50,6 +58,13 @@ export default class App extends React.Component {
 							path="/Dish Search"
 							render={() => (
 								<DishSearch />
+							)}
+						/>
+						<Route
+							exact
+							path="/Just For Fun"
+							render={() => (
+								<Fun />
 							)}
 						/>
 						<Route
