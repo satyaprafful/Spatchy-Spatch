@@ -43,6 +43,10 @@ app.get('/budget/', (req, res) => {
 	routes.getBudgetRecipes(req,res)}
 );
 
+app.get('/quickadd/', (req, res) => {
+	routes.getClosestIngr(req,res)}
+);
+
 /* ---- Login Routes ---- */
 app.post('/signup', (req, res) => {
 	routes.signupUser(req, res)}
