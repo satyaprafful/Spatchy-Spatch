@@ -293,7 +293,7 @@ export default class IngrSearch extends React.Component {
 
 		return (
 			<div className="IngrSearch">
-				<PageNavbar active="Ingredient based searching" />
+				<PageNavbar active="Ingredient Search" />
                 <br></br>
 			<Container>
 			    <div className="h1">IngrSearch</div>

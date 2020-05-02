@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
 
 
-export default class BudgetSearch extends React.Component {
+export default class Fun extends React.Component {
   constructor(props) {
     super(props);
     this.state = {}
@@ -11,11 +11,11 @@ export default class BudgetSearch extends React.Component {
 
   render() {    
     return (
-      <div className="BudgetSearch">
+      <div className="Fun">
 
-        <PageNavbar active="Budget based searching" />
+        <PageNavbar active="Just For Fun" />
         <br></br>
-        This is the page for broke bitches
+        Just for fun lmao 
       </div>
     );
   }

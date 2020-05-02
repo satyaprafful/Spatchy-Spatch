@@ -175,7 +175,7 @@ export default class NutritionSearch extends React.Component {
     return (
       <div className="Nutrition Search" style={{backgroundColor: "#EAE7DC", height: "100vh"}}>
 
-        <PageNavbar active="Nutrition" />
+        <PageNavbar active="Nutrition Search" />
         {/* <div className="h1"  style={{color: "#E98074"}}>Nutrition Search</div> */}
         <div className="h1"  style={{color: "#E85A4F"}}>Nutrition Search</div>
 

@@ -21,6 +21,7 @@ var PersonSchema = new Schema({
     age: {type: Number},
     city: {type: String},
     state: {type: String},
+    lastSearch: {type: String}
     });
 
 PersonSchema.methods.validateLogin = function(inputName, inputPassword) {
