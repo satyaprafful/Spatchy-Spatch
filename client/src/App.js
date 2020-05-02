@@ -5,7 +5,6 @@ import {
 	Switch
 } from 'react-router-dom';
 import NutritionSearch from './components/NutritionSearch';
-import BudgetSearch from './components/BudgetSearch';
 import IngrSearch from './components/IngrSearch';
 import DishSearch from './components/DishSearch';
 import Login from './components/Login';
@@ -44,13 +43,6 @@ export default class App extends React.Component {
 							path="/Ingredient Search"
 							render={() => (
 								<IngrSearch />
-							)}
-						/>
-						<Route
-							exact
-							path="/Budget Search"
-							render={() => (
-								<BudgetSearch />
 							)}
 						/>
 						<Route
