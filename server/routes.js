@@ -413,6 +413,46 @@ function getDishSearch(req, res) {
   connection.end();
 };
 
+function getRecommendedRecipes(req, res) {
+  var connection = getDBConnect();
+  var rID = req.params.rID;
+
+  var query = `WITH InputIngr AS (
+      SELECT ingrID
+      FROM RIngredients 
+      WHERE rID =  '${recipeID}'
+    ),
+    InputCats AS (
+      SELECT category
+      FROM RCategories 
+      WHERE rID =  '${recipeID}'
+    ),
+    Similar AS (
+      SELECT ingr.rID, COUNT(DISTINCT ingr.ingrID) AS ingrCount, COUNT(DISTINCT c.category) AS catCount
+      FROM (RIngredients ingr JOIN InputIngr inputI ON ingr.ingrID = inputI.ingrID)
+        JOIN 
+          (RCategories c JOIN InputCats inputC ON c.category = inputC.category)
+         ON ingr.rID = c.rID
+      GROUP BY ingr.rID
+    )
+    SELECT r.rID, r.title, catCount, ingrCount
+    FROM Similar JOIN Recipe r ON Similar.rID = r.rID
+    WHERE ingrCount > 1/2 * (SELECT COUNT(*)
+          FROM InputIngr)
+      AND r.rID <>  '${recipeID}'
+    ORDER BY catCount DESC, ingrCount DESC, rating DESC
+    LIMIT 5;`;
+
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      console.log(rows);
+      res.json(rows);
+    }
+  });
+  connection.end();
+};
+
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
@@ -429,4 +469,5 @@ module.exports = {
   getCities: getCities,
   getRestaurantsBasic: getRestaurantsBasic,
   getDishSearch: getDishSearch,
+  getRecommendedRecipes: getRecommendedRecipes
 }
