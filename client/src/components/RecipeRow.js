@@ -40,10 +40,7 @@ export default class RecipeRow extends React.Component {
                                 {(this.props.index+1) + ". " + this.props.title}
                             </Accordion.Toggle>
                             <Link to={{
-							  pathname: pathnameV,
-							  state: {
-							    rID: this.props.rID
-							  }
+							  pathname: pathnameV
 							}}>See Full Recipe</Link>
                         </Card.Header>
                         <Accordion.Collapse eventKey="0">

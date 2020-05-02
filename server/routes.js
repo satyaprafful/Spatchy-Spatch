@@ -43,7 +43,7 @@ function getHighProtein(req, res) {
   SELECT *
   FROM Recipe R
   WHERE R.protein/(R.calories + 1) >= '${inputRatio}' AND R.protein >= 5
-  ORDER BY R.rating
+  ORDER BY R.rating DESC
   LIMIT 10`;
 
   connection.query(query, function(err, rows, fields) {
@@ -64,7 +64,7 @@ function getHighFat(req, res) {
   SELECT *
   FROM Recipe R
   WHERE R.fat/(R.calories + 1) >= '${inputRatio}'
-  ORDER BY R.rating
+  ORDER BY R.rating DESC
   LIMIT 10`;
 
   connection.query(query, function(err, rows, fields) {
@@ -85,7 +85,7 @@ function getLowSodium(req, res) {
   SELECT * 
   FROM Recipe R
   WHERE R.sodium < '${limit}'
-  ORDER BY R.rating
+  ORDER BY R.rating DESC
   LIMIT 10`;
 
   connection.query(query, function(err, rows, fields) {
@@ -106,7 +106,7 @@ function getLowCal(req, res) {
   SELECT * 
   FROM Recipe R
   WHERE R.calories < '${limit}' AND R.calories > 100
-  ORDER BY R.rating
+  ORDER BY R.rating DESC
   LIMIT 10`;
 
   connection.query(query, function(err, rows, fields) {
@@ -464,17 +464,10 @@ function getDishSearch(req, res) {
 function getRecommendedRecipes(req, res) {
   var connection = getDBConnect();
   var recipeID = req.params.rID;
-  console.log("made it yere YEEEEY");
-  console.log("made it yere YEEEEY");
-  console.log("made it yere YEEEEY");
-  console.log("made it yere YEEEEY");
-  console.log("made it yere YEEEEY");
-  console.log("made it yere YEEEEY");
-  console.log("made it yere YEEEEY");
   var query = `WITH InputIngr AS (
       SELECT ingrID
       FROM RIngredients 
-      WHERE rID =  '${recipeID}'
+      WHERE rID = '${recipeID}'
     ),
     InputCats AS (
       SELECT category
@@ -489,11 +482,11 @@ function getRecommendedRecipes(req, res) {
          ON ingr.rID = c.rID
       GROUP BY ingr.rID
     )
-    SELECT r.rID, r.title, catCount, ingrCount
+    SELECT r.rID, r.title, r.ingr_descr, r.directions, r.rating, ingr_descr
     FROM Similar JOIN Recipe r ON Similar.rID = r.rID
     WHERE ingrCount > 1/2 * (SELECT COUNT(*)
           FROM InputIngr)
-      AND r.rID <>  '${recipeID}'
+      AND r.rID <>  v
     ORDER BY catCount DESC, ingrCount DESC, rating DESC
     LIMIT 5;`;
 
