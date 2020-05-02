@@ -47,6 +47,10 @@ app.get('/recommend/:rID', (req, res) => {
 	routes.getRecommendedRecipes(req,res)}
 );
 
+app.get('/quickadd/', (req, res) => {
+	routes.getClosestIngr(req,res)}
+);
+
 /* ---- Login Routes ---- */
 app.post('/signup', (req, res) => {
 	routes.signupUser(req, res)}

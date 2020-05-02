@@ -16,6 +16,7 @@ export default class IngrSearch extends React.Component {
     this.state = {
         ingrList: [],
         recRecipes: [],
+        recQuickAdd: [],
         fruitDivs: [],
         vegDivs: [],
         meatDivs: [],
@@ -27,14 +28,24 @@ export default class IngrSearch extends React.Component {
     this.handleIngrIDChange = this.handleIngrIDChange.bind(this);
     this.submitIngr = this.submitIngr.bind(this);
     this.submitBudget = this.submitBudget.bind(this);
+    this.findQuickAdd = this.findQuickAdd.bind(this);
 
 	}
 
 	handleIngrIDChange(e) {
-		this.setState({
-			ingrList: this.state.ingrList.concat(e.target.value)
-		});
+		var value = e.target.value;
+        var contains = this.state.ingrList.includes(value);
 
+        if (!contains) {
+            this.setState({
+                ingrList: this.state.ingrList.concat(value)
+            });
+        } else {
+            var newList = this.state.ingrList.filter(function(ingrValue){ return ingrValue != value });
+            this.setState({
+                ingrList: newList
+            });
+        }
     }
 
   parseIngrList()
@@ -52,8 +63,47 @@ export default class IngrSearch extends React.Component {
     return output;
   }
 
+
+  findQuickAdd() {
+    fetch("http://localhost:8081/quickadd/" + this.parseIngrList(),
+    {
+        method: "GET"
+    }).then(res => {
+        return res.json();
+    }, err => {
+        console.log(err);
+    }).then(quickAddList => {
+
+        console.log("hello!");
+        console.log(quickAddList); 
+        //delete this
+
+        let quickAddDiv = quickAddList.map((quickadd, i) => {
+            
+            return (
+                <Container>
+                    <Row>
+                        Add {quickadd.name} for {quickadd.count} new recipes
+                    </Row>
+                </Container>
+            )
+        });
+
+        ///This saves our HTML representation of the data into the state, which we can call in our render function
+        this.setState({
+            recQuickAdd : quickAddDiv
+        });
+    }, err => {
+        // Print the error if there is one.
+        console.log(err);
+    });
+  }
+
+
   submitIngr()
   {
+    this.findQuickAdd();
+
     fetch("http://localhost:8081/ingredients/" + this.parseIngrList(),
       {
         method: "GET"
@@ -135,6 +185,8 @@ export default class IngrSearch extends React.Component {
 
   submitBudget()
   {
+    this.findQuickAdd();
+
     fetch("http://localhost:8081/budget/" + this.parseIngrList(),
       {
         method: "GET"
@@ -347,6 +399,9 @@ export default class IngrSearch extends React.Component {
                             </Col>
                         </Row>
                     <div className="header-container">
+                        <div className="quickadd-container" id="quickadd">
+                            {this.state.recQuickAdd}
+                        </div>
                         <div className="h6">Here are some suggested recipes ...</div>
                         <div className="headers">
                             <div className="header"><strong>Title</strong></div>

@@ -131,7 +131,6 @@ function getValRecipes(req, res) {
     if (values.hasOwnProperty(key)) {
         if (values.hasOwnProperty(key))
         {
-            console.log(key, values[key]);
             whereClause += "IP.ingrID = " + values[key] + " OR ";
         }
     }
@@ -181,7 +180,6 @@ function getBudgetRecipes(req, res) {
     if (values.hasOwnProperty(key)) {
         if (values.hasOwnProperty(key))
         {
-            console.log(key, values[key]);
             whereClause += "IP.ingrID = " + values[key] + " OR ";
         }
     }
@@ -224,6 +222,56 @@ function getBudgetRecipes(req, res) {
 
   connection.end();
 };
+
+function getClosestIngr(req, res) {
+  var connection = getDBConnect();
+  var values = req.query;
+
+  var whereClause = "";
+
+  for (var key in values) {
+    if (values.hasOwnProperty(key)) {
+        if (values.hasOwnProperty(key))
+        {
+            whereClause += "IP.ingrID = " + values[key] + " OR ";
+        }
+    }
+  }
+
+  if (whereClause.substring(whereClause.length - 4) == " OR ") {
+        whereClause = whereClause.substring(0, whereClause.length - 4);
+   }
+
+    var query = `
+        WITH Available AS (
+          SELECT IP.ingrID
+          FROM IngrPrices IP
+          WHERE ${whereClause} OR IP.isHousehold = 1
+      ), RecipeToNeededIngr AS (
+          SELECT R.rID, RI.ingrID, IP.name, COUNT(RI.ingrID) as num
+          FROM Recipe R JOIN RIngredients RI JOIN IngrPrices IP ON R.rID = RI.rID AND RI.ingrID = IP.ingrID LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
+          WHERE A.ingrID IS NULL
+          GROUP BY R.rID
+      )
+      SELECT RNI.ingrID, RNI.name, COUNT(RNI.rID) AS count
+      FROM RecipeToNeededIngr RNI
+      WHERE num = 1
+      GROUP BY RNI.ingrID
+      ORDER BY count DESC
+      LIMIT 3
+    ;`;
+
+
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+
+  connection.end();
+};
+
 
 
 /* -------------------------- Login/User Routes --------------------- */
@@ -462,6 +510,7 @@ module.exports = {
   getLowCal: getLowCal,
   getValRecipes: getValRecipes,
   getBudgetRecipes: getBudgetRecipes,
+  getClosestIngr: getClosestIngr,
   signupUser: signupUser,
   loginUser: loginUser,
   returnUser: returnUser,
