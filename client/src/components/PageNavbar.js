@@ -15,10 +15,10 @@ export default class PageNavbar extends React.Component {
 
 		let navbarDivs = pageList.map((page, i) => {
 			if (this.props.active === page) {
-				return <a className="nav-item nav-link active" key={i} href={"/" + page}>{page.charAt(0).toUpperCase() + page.substring(1, page.length)}</a>
+				return <a className="nav-item nav-link active" key={i} style={{display: "inline-block",float: "none",paddingLeft:"10px",paddingRight:"10px"}} href={"/" + page}>{page.charAt(0).toUpperCase() + page.substring(1, page.length)}</a>
 			}
 			else {
-				return <a className="nav-item nav-link" key={i} href={"/" + page}>{page.charAt(0).toUpperCase() + page.substring(1, page.length)}</a>
+				return <a className="nav-item nav-link" key={i} style={{display: "inline-block",float: "none", paddingLeft:"10px",paddingRight:"10px"}} href={"/" + page}>{page.charAt(0).toUpperCase() + page.substring(1, page.length)}</a>
 			}
 		})		
 		this.setState({
@@ -27,11 +27,25 @@ export default class PageNavbar extends React.Component {
 	}
 
 	render() {
+		const navBarStyle = {
+			float: "none",
+			margin: "0 auto",
+			display: "block",
+			textAlign: "center",
+			backgroundColor: "#EAE7DC"
+		}
+
+		const navItemStyle = {
+			display: "inline-block",
+			float: "none",
+			paddingLeft:"10px",
+			paddingRight:"10px"
+		}
+
 		return (
 			<div className="PageNavbar">
-				<nav className="navbar navbar-expand-lg navbar-light bg-light">
-			      <span className="navbar-brand center">Test NavBar</span>
-				  	<div className="navbar-nav">
+				<nav className="navbar navbar-expand-lg navbar-light" style={navBarStyle}>
+				  	<div className="navbar-nav" style={navItemStyle}>
 			       	 {this.state.navDivs}
 			        </div>
 			    </nav>

@@ -9,16 +9,18 @@ var Schema = mongoose.Schema;
 var PersonSchema = new Schema({
 	username: {type: String, required: true, unique: true},
 	password: {type: String, required: true},
-    isVegan: {type: Boolean, required: true},
-    isVegetarian: {type: Boolean, required: true},
-    isLactose: {type: Boolean, required: true},
-    isNut: {type: Boolean, required: true},
-    isGluten: {type: Boolean, required: true},
+    isVegan: {type: Boolean},
+    isVegetarian: {type: Boolean},
+    isLactose: {type: Boolean},
+    isNut: {type: Boolean},
+    isGluten: {type: Boolean},
     isWeight: {type: Number},
     heightFeet: {type: Number},
     heightInches: {type: Number},
     activityLevel: {type: String},
-    age: {type: Number}
+    age: {type: Number},
+    city: {type: String},
+    state: {type: String},
     });
 
 PersonSchema.methods.validateLogin = function(inputName, inputPassword) {

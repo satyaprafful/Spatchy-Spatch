@@ -10,11 +10,12 @@
   "author": "Gregory Kofman <kofmangregory@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "latest",
     "body-parser": "latest",
     "cors": "^2.8.5",
     "ejs": "latest",
-    "aws-sdk": "latest",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "mysql": "^2.17.1"
   }
 }

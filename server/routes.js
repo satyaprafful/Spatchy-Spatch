@@ -1,6 +1,8 @@
 var mysql = require('mysql');
 var Person = require('./models/person.js');
 const mongoose = require('mongoose');
+var session = require('express-session')
+
 
 /*  put this in a function bc right now being janky and connecting
   * to the DB before each query and ending the connection after.
@@ -224,7 +226,7 @@ function getBudgetRecipes(req, res) {
 };
 
 
-/* ---- Login Routes ---- */
+/* -------------------------- Login/User Routes --------------------- */
 function signupUser(req, res) {
   console.log(req.body.username);
   console.log(req.body.password);
@@ -249,6 +251,7 @@ function signupUser(req, res) {
 
 // console.log(schemas);
 
+//TODO: ADD ERROR HANDLING FOR WHEN USERNAME ALREADY EXISTS
 	newPerson.save( (err) => {
 		if (err) {
 			res.type('html').status(200);
@@ -258,6 +261,7 @@ function signupUser(req, res) {
 		}
 		else {
       console.log("it worked");
+      req.session.user=newPerson;
       console.log(newPerson);
 			res.json(newPerson);
 		}
@@ -271,6 +275,7 @@ function signupUser(req, res) {
   // })
 };
 
+//TODO: ADD ERROR HANDLING FOR WHEN PASSWORD IS WRONG
 function loginUser(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
@@ -286,10 +291,51 @@ function loginUser(req, res) {
         res.send(JSON.stringify({result: 'f'}));
       } else {
         console.log(user);
+        req.session.user=user;
         res.send(JSON.stringify({result: 'p'}));
       }
 		}
 	});
+};
+
+//TODO: ADD ERROR HANDLING FOR WHEN PASSWORD IS WRONG
+function returnUser(req, res) {
+  if (!req.session) {
+    var fakePerson = new Person ({
+      username: "test",
+      password: "test",
+      isVegan: true,
+      isVegetarian: false,
+      isLactose: true,
+      isNut: true,
+      isGluten: false,
+      weight: 150,
+      heightFeet: 5,
+      heightInches:  4,
+      activityLevel:  "low",
+      age:  21
+    });
+    res.send(JSON.stringify({fakePerson}));
+  }
+  if(req.session.user === undefined) {
+    console.log("probably shouldn't be here")
+    var fakePerson = new Person ({
+      username: test,
+      password: test,
+      isVegan: true,
+      isVegetarian: false,
+      isLactose: true,
+      isNut: true,
+      isGluten: false,
+      weight: 20,
+      heightFeet: 11111,
+      heightInches:  100,
+      activityLevel:  "high",
+      age:  99
+    });
+    res.send(JSON.stringify({fakePerson}));
+  }
+	res.send(JSON.stringify(req.session.user));
 };
 
 
@@ -378,8 +424,9 @@ module.exports = {
   getBudgetRecipes: getBudgetRecipes,
   signupUser: signupUser,
   loginUser: loginUser,
+  returnUser: returnUser,
   getStates: getStates,
   getCities: getCities,
   getRestaurantsBasic: getRestaurantsBasic,
-  getDishSearch: getDishSearch
+  getDishSearch: getDishSearch,
 }

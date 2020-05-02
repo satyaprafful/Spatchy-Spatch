@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
 import RecipeRow from './RecipeRow';
+import '../App.css';
 
 export default class NutritionSearch extends React.Component {
   constructor(props) {
@@ -12,6 +13,23 @@ export default class NutritionSearch extends React.Component {
 
     // this.proteinSearch = this.proteinSearch.bind(this);
   }
+
+  componentDidMount()
+  {
+    fetch("http://localhost:8081/curruser",
+    {
+      method: "GET"
+    }).then(res => {
+      return res.json();
+    }, err => {
+      console.log(err);
+    }).then(userInfo => {
+      console.log(userInfo); //delete this
+    }, err => {
+      console.log(err);
+    });
+  }
+  
 
   getUserCalPerDay()
   {
@@ -148,22 +166,45 @@ export default class NutritionSearch extends React.Component {
       });
   }
   
-  render() {    
+  render() {   
+    const buttonStyle = {
+      backgroundColor: "#E98074",
+      color: "#D8C3A5"
+    };
+
     return (
-      <div className="Nutrition Search">
+      <div className="Nutrition Search" style={{backgroundColor: "#EAE7DC", height: "100vh"}}>
 
         <PageNavbar active="Nutrition" />
+        {/* <div className="h1"  style={{color: "#E98074"}}>Nutrition Search</div> */}
+        <div className="h1"  style={{color: "#E85A4F"}}>Nutrition Search</div>
+
         <br></br>
-        <input id="High-protein diet recipes" type="button" value="High-protein diet recipes" onClick={() => this.proteinSearch() } />
+        <div class="row">
+          <div class="col-3">
+            <button class="btn btn-lg btn-block" type="submit" style={buttonStyle} onClick={() => this.proteinSearch() }>High Protein</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-lg btn-block" type="submit" style={buttonStyle} onClick={() => this.fatSearch() }>Keto</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-lg btn-block" type="submit" style={buttonStyle} onClick={() => this.calorieSearch() }>Low Calorie</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-lg btn-block" type="submit" style={buttonStyle} onClick={() => this.sodiumSearch() }>Low Sodium</button>
+          </div>
+        </div>
+        {/* <input id="High-protein diet recipes" type="button" value="High-protein diet recipes" onClick={() => this.proteinSearch() } />
         <br></br>
-        <input id="Keto diet recipes" type="button" value="Keto diet recipes" onClick={() => this.fatSearch() } />
+         <input id="Keto diet recipes" type="button" value="Keto diet recipes" style={{backgroundColor: "#ffaaab"}}onClick={() => this.fatSearch() } /> }
+        <button class="btn" type="submit" style={buttonStyle} onClick={() => this.fatSearch() }>Keto</button>
         <br></br>
         <input id="Low calorie recipes" type="button" value="Low calorie recipes" onClick={() => this.calorieSearch() } />
         <br></br>
-        <input id="Low sodium recipes" type="button" value="Low sodium recipes" onClick={() => this.sodiumSearch() } />
+        <input id="Low sodium recipes" type="button" value="Low sodium recipes" onClick={() => this.sodiumSearch() } /> */}
         <div className="results-container" id="results">
                 {this.state.recipes}
-              </div>
+          </div>
       </div>
     );
   }

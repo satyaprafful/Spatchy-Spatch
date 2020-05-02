@@ -52,6 +52,10 @@ app.post('/login', (req, res) => {
 	routes.loginUser(req, res)}
 );
 
+app.get('/curruser', (req, res) => {
+	routes.returnUser(req, res)}
+);
+
 /* ---- Dishes/Restaurant Queries ---- */
 app.get('/states/', (req, res) => {
 	routes.getStates(req,res)}
