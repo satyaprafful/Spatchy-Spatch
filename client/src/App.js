@@ -69,7 +69,7 @@ export default class App extends React.Component {
 						/>
 						<Route
 							exact
-							path="/RecipePage/:rIDD"
+							path="/RecipePage/:rID"
 							render={() => (
 								<RecipePage />
 							)}

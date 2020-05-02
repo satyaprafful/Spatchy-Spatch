@@ -117,7 +117,7 @@ export default class IngrSearch extends React.Component {
 
         let recipesDiv = recipesList.map((recipeObj, i) => 
             <RecipeRow title = {recipeObj.title}
-            ingr_desc = {recipeObj.ingr_desc} 
+            ingr_desc = {recipeObj.ingr_descr} 
             recipe_descr = {recipeObj.recipe_descr} 
             rating = {recipeObj.rating} 
             rID = {recipeObj.rID}  
