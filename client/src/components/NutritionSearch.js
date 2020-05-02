@@ -8,7 +8,8 @@ export default class NutritionSearch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      recipes: []
+      recipes: [],
+      user: null
     };
 
     // this.proteinSearch = this.proteinSearch.bind(this);
@@ -25,19 +26,44 @@ export default class NutritionSearch extends React.Component {
       console.log(err);
     }).then(userInfo => {
       console.log(userInfo); //delete this
+      this.setState({
+        user : userInfo
+      });
     }, err => {
       console.log(err);
     });
   }
   
+  parseActivityLevel(input)
+  {
+    if (input == 'low')
+      return 1;
+    if (input == 'medium')
+      return 3;
+    if (input == 'high')
+      return 5;
+    return 3; 
+  }
 
   getUserCalPerDay()
   {
-    var weight = 135; // this is hard-coded bc the user isn't set up yet  (lbs)
-    var activity = 3; // this is hard-coded bc the user isn't set up yet (scale 1-5)
-    var isWoman = 1; // this is hard-coded bc the user isn't set up yet (1 = women, 2 = man)
-    var age = 21; // this is hard-coded bc the user isn't set up yet (in yrs)
-    var height = 66; // this is hard-coded bc the user isn't set up yet (inches)
+    if (this.state.user != null)
+    {
+      var weight = this.state.user.weight; // this is hard-coded bc the user isn't set up yet  (lbs)
+      var activity = this.parseActivityLevel(this.state.user.activity); // this is hard-coded bc the user isn't set up yet (scale 1-5)
+      var isWoman = true;
+      var age = this.state.user.age; // this is hard-coded bc the user isn't set up yet (in yrs)
+      var height = this.state.user.heightFeet * 12 + this.state.user.heightFeetInches; 
+    }
+    else
+    {
+      var weight = 135; // this is hard-coded bc the user isn't set up yet  (lbs)
+      var activity = 3; // this is hard-coded bc the user isn't set up yet (scale 1-5)
+      var isWoman = 1; // this is hard-coded bc the user isn't set up yet (1 = women, 2 = man)
+      var age = 21; // this is hard-coded bc the user isn't set up yet (in yrs)
+      var height = 66; // this is hard-coded bc the user isn't set up yet (inches)
+    }
+    
 
     var calPerDay = 0;
     // Harris-Benedict BMR equation
@@ -53,6 +79,10 @@ export default class NutritionSearch extends React.Component {
   getUserProteinRatio()
   {
     var weight = 135; // this is hard-coded bc the user isn't set up yet  (lbs)
+    if (this.state.user != null)
+    {
+      var weight = this.state.user.weight; // this is hard-coded bc the user isn't set up yet  (lbs)
+    }
 
     var proteinPerDay = weight * .7; // .7 = gram protein/lb body weight/day
     var proteinRatio = proteinPerDay/this.getUserCalPerDay(); 
@@ -73,7 +103,13 @@ export default class NutritionSearch extends React.Component {
       console.log(recipesList); //delete this
 
       let recipesDiv = recipesList.map((recipeObj, i) => 
-        <RecipeRow title = {recipeObj.title} />
+        <RecipeRow title = {recipeObj.title}
+            ingr_desc = {recipeObj.ingr_desc} 
+            recipe_descr = {recipeObj.recipe_descr} 
+            rating = {recipeObj.rating} 
+            rID = {recipeObj.rID}  
+            index = {i}
+            />
       );
 
       ///This saves our HTML representation of the data into the state, which we can call in our render function
@@ -100,7 +136,13 @@ export default class NutritionSearch extends React.Component {
       console.log(recipesList); //delete this
 
       let recipesDiv = recipesList.map((recipeObj, i) => 
-        <RecipeRow title = {recipeObj.title} />
+        <RecipeRow title = {recipeObj.title}
+            ingr_desc = {recipeObj.ingr_desc} 
+            recipe_descr = {recipeObj.recipe_descr} 
+            rating = {recipeObj.rating} 
+            rID = {recipeObj.rID}  
+            index = {i}
+            />
       );
 
       ///This saves our HTML representation of the data into the state, which we can call in our render function
@@ -127,7 +169,13 @@ export default class NutritionSearch extends React.Component {
       console.log(recipesList); //delete this
 
       let recipesDiv = recipesList.map((recipeObj, i) => 
-        <RecipeRow title = {recipeObj.title} />
+        <RecipeRow title = {recipeObj.title}
+            ingr_desc = {recipeObj.ingr_desc} 
+            recipe_descr = {recipeObj.recipe_descr} 
+            rating = {recipeObj.rating} 
+            rID = {recipeObj.rID}  
+            index = {i}
+            />
       );
 
       ///This saves our HTML representation of the data into the state, which we can call in our render function
@@ -153,7 +201,13 @@ export default class NutritionSearch extends React.Component {
         console.log(recipesList); //delete this
 
         let recipesDiv = recipesList.map((recipeObj, i) => 
-          <RecipeRow title = {recipeObj.title} />
+          <RecipeRow title = {recipeObj.title}
+            ingr_desc = {recipeObj.ingr_desc} 
+            recipe_descr = {recipeObj.recipe_descr} 
+            rating = {recipeObj.rating} 
+            rID = {recipeObj.rID}  
+            index = {i}
+            />
         );
 
         ///This saves our HTML representation of the data into the state, which we can call in our render function

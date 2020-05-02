@@ -43,7 +43,10 @@ app.get('/budget/', (req, res) => {
 	routes.getBudgetRecipes(req,res)}
 );
 
-app.get('/recommend/:rID', (req, res) => {
+app.get('/recipe/full/:rID', (req, res) => {
+	routes.getFullRecipe(req,res)}
+);
+app.get('/recipe/recommend/:rID', (req, res) => {
 	routes.getRecommendedRecipes(req,res)}
 );
 

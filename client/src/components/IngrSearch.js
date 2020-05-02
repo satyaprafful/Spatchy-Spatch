@@ -115,62 +115,15 @@ export default class IngrSearch extends React.Component {
 
         console.log(recipesList); //delete this
 
-        let recipesDiv = recipesList.map((recipe, i) => {
-            var raw = recipe.ingr_descr;
-            var ingrArr = raw.substring(1,raw.length-1).split(",")
-
-            let ingrDivs = ingrArr.map((tuple, i) => {
-                var curr = ingrArr[i];
-                curr = curr.replace(/\'/g, "");
-
-                return  <Row>
-                             <Col>
-                                  {curr}
-                             </Col>
-                        </Row>
-                }
-            )
-
-
-            return (
-                <Row><Col>
-                    <Accordion>
-                        <Card>
-                        <Card.Header>
-                            <Accordion.Toggle as={Card.Header} eventKey="0">
-                                {(i+1) + ". " + recipe.title}
-                            </Accordion.Toggle>
-                        </Card.Header>
-                        <Accordion.Collapse eventKey="0">
-                            <Card.Body>
-                                <Row>
-                                    <Col>
-                                        <strong>Recipe Name:</strong>: {recipe.title}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                    <strong>Rating:</strong> {recipe.rating}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                    <strong>Description:</strong> {recipe.recipe_descr}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <strong>Ingredients:</strong> {ingrDivs}
-                                    </Col>
-                                </Row>
-
-                            </Card.Body>
-                        </Accordion.Collapse>
-                        </Card>
-                    </Accordion>
-                </Col></Row>
-            )
-        });
+        let recipesDiv = recipesList.map((recipeObj, i) => 
+            <RecipeRow title = {recipeObj.title}
+            ingr_desc = {recipeObj.ingr_desc} 
+            recipe_descr = {recipeObj.recipe_descr} 
+            rating = {recipeObj.rating} 
+            rID = {recipeObj.rID}  
+            index = {i}
+            />
+        );
 
         ///This saves our HTML representation of the data into the state, which we can call in our render function
         this.setState({
@@ -198,65 +151,15 @@ export default class IngrSearch extends React.Component {
 
         console.log(recipesList); //delete this
 
-        let recipesDiv = recipesList.map((recipe, i) => {
-            var raw = recipe.ingr_descr;
-            var ingrArr = raw.substring(1,raw.length-1).split(",")
-
-            let ingrDivs = ingrArr.map((tuple, i) => {
-                var curr = ingrArr[i];
-                curr = curr.replace(/\'/g, "");
-
-                return  <Row>
-                             <Col>
-                                  {curr}
-                             </Col>
-                        </Row>
-                }
-            )
-
-            var cost = recipe.recipe_cost;
-            var rounded = cost.toFixed(2);
-
-            return (
-                <Row><Col>
-                    <Accordion>
-                        <Card>
-                        <Card.Header>
-                            <Accordion.Toggle as={Card.Header} eventKey="0">
-                                {(i+1) + ". " + recipe.title + " (" + rounded + "$)"}
-                            </Accordion.Toggle>
-                        </Card.Header>
-                        <Accordion.Collapse eventKey="0">
-                            <Card.Body>
-                                <Row>
-                                    <Col>
-                                        <strong>Recipe Name:</strong> {recipe.title}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                    <strong>Rating:</strong> {recipe.rating}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                    <strong>Description:</strong> {recipe.recipe_descr}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <strong>Ingredients:</strong> {ingrDivs}
-                                    </Col>
-                                </Row>
-
-                            </Card.Body>
-                        </Accordion.Collapse>
-                        </Card>
-                    </Accordion>
-                </Col></Row>
-            )
-        });
-
+        let recipesDiv = recipesList.map((recipeObj, i) => 
+            <RecipeRow title = {recipeObj.title}
+            ingr_desc = {recipeObj.ingr_desc} 
+            recipe_descr = {recipeObj.recipe_descr} 
+            rating = {recipeObj.rating} 
+            rID = {recipeObj.rID}  
+            index = {i}
+            />
+        );
         ///This saves our HTML representation of the data into the state, which we can call in our render function
         this.setState({
           recRecipes : recipesDiv
@@ -269,17 +172,6 @@ export default class IngrSearch extends React.Component {
 
 
   componentDidMount() {
-
-//  FULL INGREDIENT LISTS:
-//        const meatIngrList = [['bacon', 12], ['beef', 21], ['chicken', 41], ['chicken breast', 209], ['chicken leg', 42], ['chuck roast', 48], ['ground beef', 213], ['ground chuck', 85], ['ham', 88], ['lamb', 99], ['pork', 141], ['prosciutto', 220], ['rib roast', 151], ['round roast', 221], ['sausage', 163], ['short rib', 169], ['steak', 176], ['turkey', 188], ['veal', 191], ['anchovy', 2],['bass', 17], ['clam', 210], ['fish', 73], ['salmon', 161], ['scallop', 165], ['shrimp', 171], ['tuna', 187]];
-//        const vegIngrList = [['artichoke', 6], ['arugula', 7], ['asparagus', 9], ['avocado', 11], ['bean', 20], ['beet', 206], ['blueberry', 23], ['broccoli', 27], ['cabbage', 31], ['carrot', 36], ['cauliflower', 207], ['celery', 38], ['corn', 58], ['cucumber', 63], ['garlic', 76], ['greens', 84], ['jalapeño', 96], ['kale', 215], ['lemon', 100], ['lentil', 101], ['lettuce', 102], ['lime', 103], ['mushroom', 115], ['olive', 120], ['onion', 121], ['pea', 131], ['pepper', 137], ['potato', 143], ['pumpkin', 146], ['radish', 147], ['scallion', 164], ['shallot', 167], ['spinach', 175], ['tomato', 186], ['zucchini', 202]];
-//        const fruitIngrList = [['apple', 4], ['apricot', 5], ['banana', 15], ['cherry', 40], ['cranberry', 61], ['currant', 65], ['grape', 83], ['mango', 216], ['orange', 123], ['peach', 132], ['pear', 134], ['raspberry', 149], ['strawberry', 177]];
-//        const dairyIngrList = [['asiago', 8], ['blue cheese', 22], ['burrata', 29], ['butter', 30], ['camembert', 32], ['cheddar', 39], ['cheddar cheese', 208], ['colby', 55], ['cottage cheese', 59], ['cream cheese', 62], ['crème fraîche', 212], ['feta', 72], ['fontina', 75], ['goat cheese', 80], ['gorgonzola', 81], ['gouda', 82], ['gruyère', 86], ['halibut', 87], ['havarti', 89], ['heavy cream', 90], ['ice cream', 94], ['margarine', 107], ['mascarpone', 108], ['milk', 110], ['monterey jack', 113], ['mozzarella', 114], ['parmesan', 128], ['provolone', 144], ['ricotta', 153], ['romano cheese', 156], ['sour cream', 172], ['swiss', 179], ['whipped cream', 196], ['yogurt', 201]];
-//        const grainIngrList = [['baguette', 204], ['bread', 26], ['couscous', 211], ['cracker', 60], ['linguini', 104], ['macaroni', 105], ['noodle', 117], ['oats', 217], ['pasta', 130], ['penne', 136], ['ravioli', 150], ['rice', 152], ['rigatoni', 154], ['spaghetti', 174]];
-//        const otherIngrList = [['almond', 1], ['apple sauce', 203], ['beer', 205], ['bourbon', 24], ['broth', 28], ['capers', 33], ['chocolate', 46], ['cocoa', 52], ['coconut', 53], ['coffee', 54], ['cookie', 56], ['curry', 66], ['egg', 68], ['gelatin', 77], ['gin', 78], ['hazelnut', 214], ['honey', 92], ['jelly', 97], ['maple syrup', 106], ['peanut', 133], ['pecan', 135], ['phyllo pastry', 138], ['pine nut', 218], ['potato chip', 219], ['puff pastry', 145], ['raisin', 148], ['rum', 159], ['sherry', 168], ['vodka', 193], ['walnut', 194], ['wine', 198]];
-
-
-// SHORTENED INGREDIENT LISTS:
         const vegIngrList = [['artichoke', 6], ['arugula', 7], ['asparagus', 9], ['avocado', 11], ['bean', 20], ['beet', 206], ['blueberry', 23], ['broccoli', 27], ['cabbage', 31], ['carrot', 36], ['cauliflower', 207], ['celery', 38], ['corn', 58]];
         const meatIngrList = [['bacon', 12], ['beef', 21], ['chicken', 41], ['chicken breast', 209], ['chicken leg', 42], ['chuck roast', 48], ['ground beef', 213], ['ground chuck', 85], ['ham', 88], ['lamb', 99], ['pork', 141], ['prosciutto', 220], ['rib roast', 151]];
         const dairyIngrList = [['asiago', 8], ['blue cheese', 22], ['burrata', 29], ['butter', 30], ['camembert', 32], ['cheddar', 39], ['cheddar cheese', 208], ['colby', 55], ['cottage cheese', 59], ['cream cheese', 62], ['crème fraîche', 212], ['feta', 72], ['fontina', 75]];

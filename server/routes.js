@@ -463,8 +463,14 @@ function getDishSearch(req, res) {
 
 function getRecommendedRecipes(req, res) {
   var connection = getDBConnect();
-  var rID = req.params.rID;
-
+  var recipeID = req.params.rID;
+  console.log("made it yere YEEEEY");
+  console.log("made it yere YEEEEY");
+  console.log("made it yere YEEEEY");
+  console.log("made it yere YEEEEY");
+  console.log("made it yere YEEEEY");
+  console.log("made it yere YEEEEY");
+  console.log("made it yere YEEEEY");
   var query = `WITH InputIngr AS (
       SELECT ingrID
       FROM RIngredients 
@@ -501,6 +507,22 @@ function getRecommendedRecipes(req, res) {
   connection.end();
 };
 
+function getFullRecipe(req, res) {
+  var connection = getDBConnect();
+  var rID = req.params.rID;
+
+  var query = `SELECT * FROM Recipe WHERE rID = '${rID}';`;
+
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      console.log(rows);
+      res.json(rows);
+    }
+  });
+  connection.end();
+};
+
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
@@ -518,5 +540,6 @@ module.exports = {
   getCities: getCities,
   getRestaurantsBasic: getRestaurantsBasic,
   getDishSearch: getDishSearch,
-  getRecommendedRecipes: getRecommendedRecipes
+  getRecommendedRecipes: getRecommendedRecipes,
+  getFullRecipe: getFullRecipe 
 }

@@ -10,6 +10,7 @@ import DishSearch from './components/DishSearch';
 import Login from './components/Login';
 import Home from './components/Home'
 import Fun from './components/Fun'
+import RecipePage from './components/RecipePage'
 
 export default class App extends React.Component {
 	render() {
@@ -64,6 +65,13 @@ export default class App extends React.Component {
 							path="/Nutrition Search"
 							render={() => (
 								<NutritionSearch />
+							)}
+						/>
+						<Route
+							exact
+							path="/RecipePage/:rIDD"
+							render={() => (
+								<RecipePage />
 							)}
 						/>
 					</Switch>
