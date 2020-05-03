@@ -169,8 +169,7 @@ function getValRecipes(req, res) {
         WHERE RI.rID = R.rID AND A.ingrID IS NULL
       )
       GROUP BY R.rID
-      ORDER BY COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, R.rating DESC
-      LIMIT 10
+      ORDER BY COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, R.rating DESC;
     ;`;
 
 
@@ -223,7 +222,6 @@ function getBudgetRecipes(req, res) {
       GROUP BY VR.rID
       HAVING recipe_cost > 0
       ORDER BY recipe_cost, COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, VR.rating DESC
-      LIMIT 10
     ;`;
 
 

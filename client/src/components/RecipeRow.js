@@ -28,22 +28,31 @@ export default class RecipeRow extends React.Component {
 	}
 
 	render() {
-		var pathnameV = `/RecipePage/${this.props.rID}`;
+        var pathnameV = `/RecipePage/${this.props.rID}`;
+
+        var ingrStyle = {
+            textAlign: "left",
+            fontSize: "12pt"
+        };
+
+        var price = "";
+        if (this.props.price) {
+            var rounded = this.props.price.toFixed(2);
+            price = " (" + rounded + "$)";
+        }
+
 		return (
 			<div className="recipeResults">
 				<Row><Col>
                     <Accordion>
                         <Card>
-                        <Card.Header >
+                        <Card.Header style={{fontSize: "15pt"}}>
                             <Accordion.Toggle as={Card.Header} eventKey="0">
-                                {(this.props.index+1) + ". " + this.props.title}
+                                {(this.props.index+1) + ". " + this.props.title + price}
                             </Accordion.Toggle>
-                            <Link to={{
-							  pathname: pathnameV
-							}}>See Full Recipe</Link>
                         </Card.Header>
                         <Accordion.Collapse eventKey="0">
-                            <Card.Body>
+                            <Card.Body style={ingrStyle}>
                                 <Row>
                                     <Col>
                                         <strong>Recipe Name</strong>: {this.props.title}
@@ -64,7 +73,10 @@ export default class RecipeRow extends React.Component {
                                         <strong>Ingredients:</strong> {this.parseIngredients(this.props.ingr_desc)}
                                     </Col>
                                 </Row>
-
+                                <br></br>
+                                <Link to={{
+                                pathname: pathnameV
+                                }}>See Full Recipe</Link>
                             </Card.Body>
                         </Accordion.Collapse>
                         </Card>

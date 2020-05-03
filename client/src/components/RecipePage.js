@@ -150,34 +150,34 @@ export default class RecipePage extends React.Component {
         </div>
         <br></br>
         <div class="row">
-          <div class="col-6">
+          <div class="col-6" style={{right: "20%", textAlign: "right"}}>
             <strong>Rating:</strong> 
           </div>
-          <div class="col-6">
+          <div class="col-6" style={{right: "20%", textAlign: "left"}}>
             {this.state.rating}
           </div>
         </div>
         <div class="row">
-          <div class="col-6">
+          <div class="col-6" style={{right: "20%", textAlign: "right"}}>
             <strong>Description:</strong> 
           </div>
-          <div class="col-6">
+          <div class="col-6" style={{right: "20%", textAlign: "left"}}>
             {this.state.recipe_descr}
           </div>
         </div>
         <div class="row">
-          <div class="col-6">
+          <div class="col-6" style={{right: "20%", textAlign: "right"}}>
             <strong>Ingredients:</strong> 
           </div>
-          <div class="col-6">
+          <div class="col-6" style={{right: "20%", textAlign: "left"}}>
             {this.parseIngredients(this.state.ingr_desc)}
           </div>
         </div>
         <div class="row">
-          <div class="col-6">
+          <div class="col-6" style={{right: "20%", textAlign: "right"}}>
             <strong>Directions:</strong> 
           </div>
-          <div class="col-6">
+          <div class="col-6" style={{right: "20%", textAlign: "left"}}>
             {this.parseIngredients(this.state.directions)}
           </div>
         </div>

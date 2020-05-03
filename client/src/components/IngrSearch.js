@@ -5,9 +5,20 @@ import RecipeRow from './RecipeRow';
 import { Container, Row, Col, Accordion, Card, Button, Form } from 'react-bootstrap';
 import Carousel from 'react-bootstrap/Carousel'
 
-const divStyle = {
-    display: 'flex',
-    justifyContent: 'space-around'
+
+const ingrStyle = {
+    position: 'absolute', 
+    left: '18%',
+    height: "520px",
+    width: "800px",
+    textAlign: "left",
+    position: 'relative'
+};
+
+const quickAddButtonStyle = {
+    width: "300px", 
+    margin:"5px",
+    display: "center"
 };
 
 export default class IngrSearch extends React.Component {
@@ -31,11 +42,12 @@ export default class IngrSearch extends React.Component {
         this.submitBudget = this.submitBudget.bind(this);
         this.findQuickAdd = this.findQuickAdd.bind(this);
         this.ControlledCarousel = this.ControlledCarousel.bind(this);
-
+        this.handleQuickAddChange = this.handleQuickAddChange.bind(this);
     }
 
     handleIngrIDChange(e) {
         var value = e.target.value;
+        console.log(value);
         var contains = this.state.ingrList.includes(value);
 
         if (!contains) {
@@ -48,6 +60,13 @@ export default class IngrSearch extends React.Component {
                 ingrList: newList
             });
         }
+    }
+
+    handleQuickAddChange(e) {
+        var ingrID = e.target.value;
+        var element = document.getElementById(ingrID);
+        console.log(ingrID);
+        console.log(e);
     }
 
     parseIngrList() {
@@ -83,9 +102,11 @@ export default class IngrSearch extends React.Component {
 
                     return (
                         <Container>
-                            <Row>
-                                Add {quickadd.name} for {quickadd.count} new recipes
-                    </Row>
+                            <Row style={{justifyContent: "center"}}>
+                                <div class="alert alert-success" style={quickAddButtonStyle}>
+                                        Hint: add {quickadd.name} for {quickadd.count} new recipes!
+                                </div>
+                            </Row>
                         </Container>
                     )
                 });
@@ -115,7 +136,10 @@ export default class IngrSearch extends React.Component {
 
                 console.log(recipesList); //delete this
 
-                let recipesDiv = recipesList.map((recipeObj, i) =>
+                var numRecipes = recipesList.length;
+                var limitList = recipesList.slice(0,10);
+
+                let recipesDiv = limitList.map((recipeObj, i) =>
                     <RecipeRow title={recipeObj.title}
                         ingr_desc={recipeObj.ingr_descr}
                         recipe_descr={recipeObj.recipe_descr}
@@ -124,6 +148,8 @@ export default class IngrSearch extends React.Component {
                         index={i}
                     />
                 );
+
+                recipesDiv.unshift(<div className="h3">We found {numRecipes} recipes! Here are our favorites...</div>);
 
                 ///This saves our HTML representation of the data into the state, which we can call in our render function
                 this.setState({
@@ -150,15 +176,22 @@ export default class IngrSearch extends React.Component {
 
                 console.log(recipesList); //delete this
 
-                let recipesDiv = recipesList.map((recipeObj, i) =>
+                var numRecipes = recipesList.length;
+                var limitList = recipesList.slice(0,10);
+
+                let recipesDiv = limitList.map((recipeObj, i) =>
                     <RecipeRow title={recipeObj.title}
-                        ingr_desc={recipeObj.ingr_desc}
+                        ingr_desc={recipeObj.ingr_descr}
                         recipe_descr={recipeObj.recipe_descr}
                         rating={recipeObj.rating}
                         rID={recipeObj.rID}
                         index={i}
+                        price={recipeObj.recipe_cost}
                     />
                 );
+
+                recipesDiv.unshift(<div className="h3">We found {numRecipes} recipes! Here are our favorites...</div>);
+
                 ///This saves our HTML representation of the data into the state, which we can call in our render function
                 this.setState({
                     recRecipes: recipesDiv
@@ -172,54 +205,123 @@ export default class IngrSearch extends React.Component {
 
     componentDidMount() {
 
-        const vegIngrList = [['artichoke', 6], ['arugula', 7], ['asparagus', 9], ['avocado', 11], ['bean', 20], ['beet', 206], ['blueberry', 23], ['broccoli', 27], ['cabbage', 31], ['carrot', 36], ['cauliflower', 207], ['celery', 38], ['corn', 58]];
-        const meatIngrList = [['bacon', 12], ['beef', 21], ['chicken', 41], ['chicken breast', 209], ['chicken leg', 42], ['chuck roast', 48], ['ground beef', 213], ['ground chuck', 85], ['ham', 88], ['lamb', 99], ['pork', 141], ['prosciutto', 220], ['rib roast', 151]];
-        const dairyIngrList = [['asiago', 8], ['blue cheese', 22], ['burrata', 29], ['butter', 30], ['camembert', 32], ['cheddar', 39], ['cheddar cheese', 208], ['colby', 55], ['cottage cheese', 59], ['cream cheese', 62], ['crème fraîche', 212], ['feta', 72], ['fontina', 75]];
-        const otherIngrList = [['almond', 1], ['apple sauce', 203], ['beer', 205], ['bourbon', 24], ['broth', 28], ['capers', 33], ['chocolate', 46], ['cocoa', 52], ['coconut', 53], ['coffee', 54], ['cookie', 56], ['curry', 66], ['egg', 68], ['gelatin', 77]];
-        const fruitIngrList = [['apple', 4], ['apricot', 5], ['banana', 15], ['cherry', 40], ['cranberry', 61], ['currant', 65], ['grape', 83], ['mango', 216], ['orange', 123], ['peach', 132], ['pear', 134], ['raspberry', 149], ['strawberry', 177]];
+        const meatIngrList = [['bacon', 12], ['beef', 21], ['chicken', 41], ['chicken breast', 209], ['chicken leg', 42], ['chuck roast', 48], ['ground beef', 213], ['ground chuck', 85], ['ham', 88], ['lamb', 99], ['pork', 141], ['prosciutto', 220], ['rib roast', 151], ['round roast', 221], ['sausage', 163], ['short rib', 169], ['steak', 176], ['turkey', 188], ['veal', 191], ['anchovy', 2],['bass', 17], ['clam', 210], ['fish', 73], ['salmon', 161], ['scallop', 165], ['shrimp', 171], ['tuna', 187]];
+        const vegIngrList = [['artichoke', 6], ['arugula', 7], ['asparagus', 9], ['avocado', 11], ['bean', 20], ['beet', 206], ['broccoli', 27], ['cabbage', 31], ['carrot', 36], ['cauliflower', 207], ['celery', 38], ['corn', 58], ['cucumber', 63], ['garlic', 76], ['greens', 84], ['jalapeño', 96], ['kale', 215], ['lemon', 100], ['lentil', 101], ['lettuce', 102], ['lime', 103], ['mushroom', 115], ['olive', 120], ['onion', 121], ['pea', 131], ['pepper', 137], ['potato', 143], ['pumpkin', 146], ['radish', 147], ['scallion', 164], ['shallot', 167], ['spinach', 175], ['tomato', 186], ['zucchini', 202]];
+        const fruitIngrList = [['apple', 4], ['apricot', 5], ['banana', 15], ['blueberry', 23], ['cherry', 40], ['cranberry', 61], ['currant', 65], ['grape', 83], ['mango', 216], ['orange', 123], ['peach', 132], ['pear', 134], ['raspberry', 149], ['strawberry', 177]];
+        const dairyIngrList = [['asiago', 8], ['blue cheese', 22], ['burrata', 29], ['butter', 30], ['camembert', 32], ['cheddar', 39], ['colby', 55], ['cottage cheese', 59], ['cream cheese', 62], ['crème fraîche', 212], ['feta', 72], ['fontina', 75], ['goat cheese', 80], ['gorgonzola', 81], ['gouda', 82], ['gruyère', 86], ['halibut', 87], ['havarti', 89], ['heavy cream', 90], ['ice cream', 94], ['margarine', 107], ['mascarpone', 108], ['milk', 110], ['monterey jack', 113], ['mozzarella', 114], ['parmesan', 128], ['provolone', 144], ['ricotta', 153], ['romano cheese', 156], ['sour cream', 172], ['swiss', 179], ['whipped cream', 196], ['yogurt', 201]];
         const grainIngrList = [['baguette', 204], ['bread', 26], ['couscous', 211], ['cracker', 60], ['linguini', 104], ['macaroni', 105], ['noodle', 117], ['oats', 217], ['pasta', 130], ['penne', 136], ['ravioli', 150], ['rice', 152], ['rigatoni', 154], ['spaghetti', 174]];
-
+        const otherIngrList = [['almond', 1], ['apple sauce', 203], ['beer', 205], ['bourbon', 24], ['broth', 28], ['capers', 33], ['chocolate', 46], ['cocoa', 52], ['coconut', 53], ['coffee', 54], ['cookie', 56], ['curry', 66], ['egg', 68], ['gelatin', 77], ['gin', 78], ['hazelnut', 214], ['honey', 92], ['jelly', 97], ['maple syrup', 106], ['peanut', 133], ['pecan', 135], ['phyllo pastry', 138], ['pine nut', 218], ['potato chip', 219], ['puff pastry', 145], ['raisin', 148], ['rum', 159], ['sherry', 168], ['vodka', 193], ['walnut', 194], ['wine', 198]];
+ 
         let fruitDivs = fruitIngrList.map((tuple, i) => {
-            return <div class="col-6">
-                <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]} />
-                <label> {tuple[0]} </label>
-            </div>
-        })
 
-        let vegDivs = vegIngrList.map((tuple, i) => {
-            return <div class="col-6">
-                <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]} />
-                <label> {tuple[0]} </label>
-            </div>
-        })
+            return  <div class="col-3" >
+                        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+                        <div class="form-group">
+                            <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}>
+                            </input>
+                            <div class="btn-group">
+                                <label for={tuple[0]} class="btn btn-info">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    <span> </span>
+                                </label>
+                                <label for={tuple[0]} class="btn btn-default active" ><strong>{tuple[0]}</strong>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
-        let meatDivs = meatIngrList.map((tuple, i) => {
-            return <div class="col-6">
-                <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]} />
-                <label> {tuple[0]} </label>
-            </div>
-        })
+		})
 
-        let dairyDivs = dairyIngrList.map((tuple, i) => {
-            return <div class="col-6">
-                <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]} />
-                <label> {tuple[0]} </label>
-            </div>
-        })
+		let vegDivs = vegIngrList.map((tuple, i) => {
+            return  <div class="col-3" >
+                    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+                    <div class="form-group">
+                        <input type="checkbox"  id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}>
+                        </input>
+                        <div class="btn-group">
+                            <label for={tuple[0]} class="btn btn-success">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                <span> </span>
+                            </label>
+                            <label for={tuple[0]} class="btn btn-default active" ><strong>{tuple[0]}</strong>
+                            </label>
+                        </div>
+                    </div>
+                    </div>
+		})
 
-        let grainDivs = grainIngrList.map((tuple, i) => {
-            return <div class="col-6">
-                <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]} />
-                <label> {tuple[0]} </label>
-            </div>
-        })
+		let meatDivs = meatIngrList.map((tuple, i) => {
+            return  <div class="col-3" >
+                    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+                    <div class="form-group">
+                        <input type="checkbox"  id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}>
+                        </input>
+                        <div class="btn-group">
+                            <label for={tuple[0]} class="btn btn-danger">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                <span> </span>
+                            </label>
+                            <label for={tuple[0]} class="btn btn-default active" ><strong>{tuple[0]}</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+		})
 
-        let otherDivs = otherIngrList.map((tuple, i) => {
-            return <div class="col-6">
-                <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]} />
-                <label> {tuple[0]} </label>
-            </div>
-        })
+		let dairyDivs = dairyIngrList.map((tuple, i) => {
+            return  <div class="col-3" >
+                    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+                    <div class="form-group">
+                        <input type="checkbox"  id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}>
+                        </input>
+                        <div class="btn-group">
+                            <label for={tuple[0]} class="btn btn-warning">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                <span> </span>
+                            </label>
+                            <label for={tuple[0]} class="btn btn-default active" ><strong>{tuple[0]}</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+		})
+
+		let grainDivs = grainIngrList.map((tuple, i) => {
+
+            return  <div class="col-3" >
+                    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+                    <div class="form-group">
+                        <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}>
+                        </input>
+                        <div class="btn-group">
+                            <label for={tuple[0]} class="btn btn-default">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                <span> </span>
+                            </label>
+                            <label for={tuple[0]} class="btn btn-default active" ><strong>{tuple[0]}</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+		})
+
+		let otherDivs = otherIngrList.map((tuple, i) => {
+            return  <div class="col-3" >
+                    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+                    <div class="form-group">
+                        <input type="checkbox"  id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}>
+                        </input>
+                        <div class="btn-group">
+                            <label for={tuple[0]} class="btn btn-secondary">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                <span> </span>
+                            </label>
+                            <label for={tuple[0]} class="btn btn-default active" ><strong>{tuple[0]}</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+		})
 
         this.setState({
             fruitDivs: fruitDivs,
@@ -239,11 +341,11 @@ export default class IngrSearch extends React.Component {
         };
 
         return (
-            <Carousel activeIndex={index} onSelect={handleSelect}>
+            <Carousel activeIndex={index} onSelect={handleSelect} >
                 <Carousel.Item>
                     <div className='fruitOptions'>
-                        <div class="divider" /> <h5> Fruit </h5>
-                        <div className="fruit-ingr">
+                        <div class="divider" /> <h3> Fruit </h3>
+                        <div className="fruit-ingr" style={ingrStyle}>
                             <div class="row">
                                 {this.state.fruitDivs}
                             </div>
@@ -252,8 +354,8 @@ export default class IngrSearch extends React.Component {
                 </Carousel.Item>
                 <Carousel.Item>
                     <div className='vegOptions' >
-                        <div class="divider" /> <h5> Vegetables </h5>
-                        <div className="veg-ingr">
+                        <div class="divider" /> <h3> Vegetables </h3>
+                        <div className="veg-ingr" style={ingrStyle}>
                             <div class="row">
                                 {this.state.vegDivs}
                             </div>
@@ -262,8 +364,8 @@ export default class IngrSearch extends React.Component {
                 </Carousel.Item>
                 <Carousel.Item>
                     <div className='meatOptions' >
-                        <div class="divider" /> <h5> Meat/Fish </h5>
-                        <div className="meat-ingr">
+                        <div class="divider" /> <h3> Meat/Fish </h3>
+                        <div className="meat-ingr" style={ingrStyle}>
                             <div class="row">
                                 {this.state.meatDivs}
                             </div>
@@ -272,8 +374,8 @@ export default class IngrSearch extends React.Component {
                 </Carousel.Item>
                 <Carousel.Item>
                     <div className='dairyOptions' >
-                        <div class="divider" /> <h5> Dairy </h5>
-                        <div className="dairy-ingr">
+                        <div class="divider" /> <h3> Dairy </h3>
+                        <div className="dairy-ingr" style={ingrStyle}>
                             <div class="row">
                                 {this.state.dairyDivs}
                             </div>
@@ -282,8 +384,8 @@ export default class IngrSearch extends React.Component {
                 </Carousel.Item>
                 <Carousel.Item>
                     <div className='grainOptions' >
-                        <div class="divider" /> <h5> Grain </h5>
-                        <div className="grain-ingr">
+                        <div class="divider" /> <h3> Grain </h3>
+                        <div className="grain-ingr" style={ingrStyle}>
                             <div class="row">
                                 {this.state.grainDivs}
                             </div>
@@ -292,8 +394,8 @@ export default class IngrSearch extends React.Component {
                 </Carousel.Item>
                 <Carousel.Item>
                     <div className='otherOptions' >
-                        <div class="divider" /> <h5> Other </h5>
-                        <div className="other-ingr">
+                        <div class="divider" /> <h3> Other </h3>
+                        <div className="other-ingr" style={ingrStyle}>
                             <div class="row">
                                 {this.state.otherDivs}
                             </div>
@@ -308,6 +410,7 @@ export default class IngrSearch extends React.Component {
     render() {
         const buttonStyle = {
             backgroundColor: "#E98074",
+            width: "300px"
         };
 
         return (
@@ -332,10 +435,6 @@ export default class IngrSearch extends React.Component {
                             {this.state.recQuickAdd}
                         </div>
                         <br></br>
-                        <div className="h6">Here are some suggested recipes ...</div>
-                        <div className="headers">
-                            <div className="header"><strong>Title</strong></div>
-                        </div>
                     </div>
                     <div className="results-container" id="results">
                         {this.state.recRecipes}
