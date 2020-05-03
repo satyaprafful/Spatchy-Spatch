@@ -34,15 +34,33 @@ function getDBConnect()
 /* -------------------------------------------------- */
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
+
+
 function getHighProtein(req, res) {
   var connection = getDBConnect();
   var inputRatio = req.params.proteinRatio;
-
+  var isVegan = req.params.isVegan;
+  var isNutFree = req.params.isNutFree;
+  var isDairyFree = req.params.isDairyFree;
+  var isVegetarian = req.params.isVegetarian;
+  var isGlutenFree = req.params.isGlutenFree;
 
   var query = `
+  WITH Eatable AS (
+    SELECT R.RID 
+    FROM (IngrDiet D JOIN RIngredients I ON D.ingrID = I.ingrID)
+        JOIN Recipe R ON R.RID = I.RID
+    GROUP BY R.RID
+    HAVING SUM(D.isVegan) >= COUNT(*) * '${isVegan} AND 
+          SUM(D.isNutFree) >= COUNT(*) * '${isNutFree} AND
+          SUM(D.isDairyFree) >= COUNT(*) * '${isDairyFree} AND
+          SUM(D.isVegetarian) >= COUNT(*) * '${isVegetarian} AND
+          SUM(D.isGlutenFree) >= COUNT(*) * '${isGlutenFree} AND
+  )
   SELECT *
   FROM Recipe R
-  WHERE R.protein/(R.calories + 1) >= '${inputRatio}' AND R.protein >= 5
+  WHERE R.protein/(R.calories + 1) >= '${inputRatio}' AND R.protein >= 5 
+      AND R.rID in Eatable
   ORDER BY R.rating DESC
   LIMIT 10`;
 
@@ -486,7 +504,7 @@ function getRecommendedRecipes(req, res) {
     FROM Similar JOIN Recipe r ON Similar.rID = r.rID
     WHERE ingrCount > 1/2 * (SELECT COUNT(*)
           FROM InputIngr)
-      AND r.rID <>  v
+      AND r.rID <>   '${recipeID}'
     ORDER BY catCount DESC, ingrCount DESC, rating DESC
     LIMIT 5;`;
 

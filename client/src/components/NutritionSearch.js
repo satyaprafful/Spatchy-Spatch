@@ -11,8 +11,6 @@ export default class NutritionSearch extends React.Component {
       recipes: [],
       user: null
     };
-
-    // this.proteinSearch = this.proteinSearch.bind(this);
   }
 
   componentDidMount()
@@ -26,12 +24,28 @@ export default class NutritionSearch extends React.Component {
       console.log(err);
     }).then(userInfo => {
       console.log(userInfo); //delete this
+      userInfo = this.convertBools(userInfo);
       this.setState({
         user : userInfo
       });
     }, err => {
       console.log(err);
     });
+  }
+
+  convertBools(userInfo)
+  {
+    userInfo.isVegan = userInfo.isVegan ? 1 : 0;
+    userInfo.isNutFree = userInfo.isNutFree ? 1 : 0;
+    userInfo.isDairyFree = userInfo.isDairyFree ? 1 : 0;
+    userInfo.isVegetarian = userInfo.isVegetarian ? 1 : 0;
+    userInfo.isGlutenFree = userInfo.isGlutenFree ? 1 : 0;
+    return userInfo;
+  }
+
+  dietaryRestrictions()
+  {
+    return "/" + this.state.user.isVegan + "/" + this.state.user.isNutFree + "/" + this.state.user.isDairyFree+ "/" + this.state.user.isVegetarian+ "/" + this.state.user.isGlutenFree;
   }
   
   parseActivityLevel(input)
@@ -63,8 +77,6 @@ export default class NutritionSearch extends React.Component {
       var age = 21; // this is hard-coded bc the user isn't set up yet (in yrs)
       var height = 66; // this is hard-coded bc the user isn't set up yet (inches)
     }
-    
-
     var calPerDay = 0;
     // Harris-Benedict BMR equation
     if (isWoman)
@@ -82,6 +94,7 @@ export default class NutritionSearch extends React.Component {
     if (this.state.user != null)
     {
       var weight = this.state.user.weight; // this is hard-coded bc the user isn't set up yet  (lbs)
+      console.log(weight);
     }
 
     var proteinPerDay = weight * .7; // .7 = gram protein/lb body weight/day
@@ -190,7 +203,8 @@ export default class NutritionSearch extends React.Component {
 
   proteinSearch()
   {
-    fetch("http://localhost:8081/protein/" + this.getUserProteinRatio(),
+    console.log(this.getUserProteinRatio());
+    fetch("http://localhost:8081/protein/" + this.getUserProteinRatio() + this.dietaryRestrictions(),
       {
         method: "GET"
       }).then(res => {
