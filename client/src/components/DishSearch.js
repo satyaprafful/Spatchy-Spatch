@@ -368,7 +368,7 @@ export default class DishSearch extends React.Component {
             <Col>
                 <form>
                     <input type="text" name="dish" size="37" placeholder="Pesto Pasta, Chicken Burgers, Pancakes ..." value={this.state.dishSearch} onChange={this.dishHandleChange}/>
-                    <button class="btn btn-primary btn-light" onClick={this.dishHandleSubmit} style={buttonStyle}>Search!</button>
+                    <button class="btn btn-primary btn-light" style={buttonStyle} type="button" onClick={this.dishHandleSubmit}>Search!</button>
                 </form>
             </Col>
         </Row>

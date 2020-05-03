@@ -152,21 +152,6 @@ export default class Home extends React.Component {
       });
   }
 
-  populatePosterArray(results) {
-    // var poster_array = this.state.movies.map(movie => {
-    //   let newObj = {};
-    //   var website = "https://www.imdb.com/title/" + movie["imdbID"];
-    //   newObj.src = movie["Poster"] ? movie["Poster"] : "http://www.4motiondarlington.org/wp-content/uploads/2013/06/No-image-found.jpg"
-    //   newObj.thumbnail = movie["Poster"] ? movie["Poster"] : "http://www.4motiondarlington.org/wp-content/uploads/2013/06/No-image-found.jpg"
-    //   newObj['thumbnailWidth'] = 300
-    //   newObj['thumbnailHeight'] = 330
-    //   newObj['tags'] = [{value: <a href={website} target="_blank">{"Link"}</a>, title: movie["Genre"]}]
-    //   newObj['caption'] = movie["Title"] + ", " + movie["Year"]
-    //   return newObj
-    // });
-    // return poster_array; 
-  }
-
   getRandomTheme() {
     var theme = themes[Math.floor(Math.random() * themes.length)];
     this.setState({ theme_word: theme })
