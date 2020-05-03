@@ -40,9 +40,10 @@ export default class RecipePage extends React.Component {
         console.log(recipesList); //delete this
 
         recipesList.map((recipeObj, i) => {
+          
           this.setState({
             title : recipeObj.title,
-            ingr_desc : recipeObj.ingr_desc,
+            ingr_desc : recipeObj.ingr_descr,
             rating : recipeObj.rating,
             recipe_descr : recipeObj.recipe_descr,
             directions : recipeObj.directions
@@ -88,7 +89,7 @@ export default class RecipePage extends React.Component {
     if (raw === undefined || raw == null)
       return;
     var ingrArr = raw.substring(1,raw.length-1).split(",")
-
+    console.log(raw);
     return ingrArr.map((tuple, i) => {
         var curr = ingrArr[i];
         curr = curr.replace(/\'/g, "");
@@ -111,41 +112,53 @@ export default class RecipePage extends React.Component {
       // as colimns I think
     return (
 
-      <div className="Full Recipe" style={{backgroundColor: "#EAE7DC", height: "100vh"}}>
+      <div className="Full Recipe" style={{backgroundColor: "#EAE7DC", minHeight:"100vh", height: "100%"}}>
 
       <PageNavbar active="Nutrition Search" />
       <div id="recipe">
-            <Row>
-                <Col>
-                    <strong>Recipe Name</strong>: {this.state.title}
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                <strong>Rating:</strong> {this.state.rating}
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                <strong>Description:</strong> {this.state.recipe_descr}
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <strong>Ingredients:</strong> {this.parseIngredients(this.state.ingr_desc)}
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    Directions: {this.parseIngredients(this.state.directions)}
-                </Col>
-            </Row>
+        <div class="row">
+          <div class="col-12">
+            <strong>Recipe Name</strong>: {this.state.title}
+          </div>
+        </div>
+        <br></br>
+        <div class="row">
+          <div class="col-6">
+            <strong>Rating:</strong> 
+          </div>
+          <div class="col-6">
+            {this.state.rating}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <strong>Description:</strong> 
+          </div>
+          <div class="col-6">
+            {this.state.recipe_descr}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <strong>Ingredients:</strong> 
+          </div>
+          <div class="col-6">
+            {this.parseIngredients(this.state.ingr_desc)}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <strong>Directions:</strong> 
+          </div>
+          <div class="col-6">
+            {this.parseIngredients(this.state.directions)}
+          </div>
+        </div>
       </div>
       <br></br>
       <strong>Like this recipe? Here are more like it</strong>
       <div className="results-container" id="results">
-      
-                {this.state.recDivs}
+            {this.state.recDivs}
           </div>        
       </div>
     );

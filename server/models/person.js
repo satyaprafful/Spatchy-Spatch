@@ -14,7 +14,7 @@ var PersonSchema = new Schema({
     isLactose: {type: Boolean},
     isNut: {type: Boolean},
     isGluten: {type: Boolean},
-    isWeight: {type: Number},
+    weight: {type: Number},
     heightFeet: {type: Number},
     heightInches: {type: Number},
     activityLevel: {type: String},

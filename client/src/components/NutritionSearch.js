@@ -256,7 +256,7 @@ export default class NutritionSearch extends React.Component {
         <input id="Low calorie recipes" type="button" value="Low calorie recipes" onClick={() => this.calorieSearch() } />
         <br></br>
         <input id="Low sodium recipes" type="button" value="Low sodium recipes" onClick={() => this.sodiumSearch() } /> */}
-        <div className="results-container" id="results">
+        <div className="results-container" id="results" style={{backgroundColor: "#EAE7DC"}}>
                 {this.state.recipes}
           </div>
       </div>

@@ -4,6 +4,7 @@ var routes = require("./routes.js");
 const cors = require('cors');
 
 const app = express();
+var session = require('express-session')
 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(bodyParser.json());

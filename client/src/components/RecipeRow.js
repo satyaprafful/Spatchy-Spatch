@@ -35,7 +35,7 @@ export default class RecipeRow extends React.Component {
 				<Row><Col>
                     <Accordion>
                         <Card>
-                        <Card.Header>
+                        <Card.Header >
                             <Accordion.Toggle as={Card.Header} eventKey="0">
                                 {(this.props.index+1) + ". " + this.props.title}
                             </Accordion.Toggle>

@@ -320,8 +320,12 @@ export default class DishSearch extends React.Component {
     }
 
   render() {    
+    const buttonStyle = {
+      backgroundColor: "#E98074",
+    };
+
     return (
-      <div className="DishSearch">
+      <div className="DishSearch"  style={{ backgroundColor: "#EAE7DC", minHeight: "100vh", height: "100%" }}>
         <PageNavbar active="Dish Search" />
         <br></br>
       <Container>
@@ -364,7 +368,7 @@ export default class DishSearch extends React.Component {
             <Col>
                 <form>
                     <input type="text" name="dish" size="37" placeholder="Pesto Pasta, Chicken Burgers, Pancakes ..." value={this.state.dishSearch} onChange={this.dishHandleChange}/>
-                    <button type="button" onClick={this.dishHandleSubmit}>Search!</button>
+                    <button class="btn btn-primary btn-light" onClick={this.dishHandleSubmit} style={buttonStyle}>Search!</button>
                 </form>
             </Col>
         </Row>

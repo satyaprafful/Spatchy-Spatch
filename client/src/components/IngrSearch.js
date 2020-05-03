@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
 import RecipeRow from './RecipeRow';
 import {Container, Row, Col, Accordion, Card, Button, Form} from 'react-bootstrap';
+import Carousel from 'react-bootstrap/Carousel'
 
   const divStyle = {
       display: 'flex',
@@ -29,6 +30,7 @@ export default class IngrSearch extends React.Component {
     this.submitIngr = this.submitIngr.bind(this);
     this.submitBudget = this.submitBudget.bind(this);
     this.findQuickAdd = this.findQuickAdd.bind(this);
+    this.ControlledCarousel = this.ControlledCarousel.bind(this);
 
 	}
 
@@ -172,6 +174,7 @@ export default class IngrSearch extends React.Component {
 
 
   componentDidMount() {
+      
         const vegIngrList = [['artichoke', 6], ['arugula', 7], ['asparagus', 9], ['avocado', 11], ['bean', 20], ['beet', 206], ['blueberry', 23], ['broccoli', 27], ['cabbage', 31], ['carrot', 36], ['cauliflower', 207], ['celery', 38], ['corn', 58]];
         const meatIngrList = [['bacon', 12], ['beef', 21], ['chicken', 41], ['chicken breast', 209], ['chicken leg', 42], ['chuck roast', 48], ['ground beef', 213], ['ground chuck', 85], ['ham', 88], ['lamb', 99], ['pork', 141], ['prosciutto', 220], ['rib roast', 151]];
         const dairyIngrList = [['asiago', 8], ['blue cheese', 22], ['burrata', 29], ['butter', 30], ['camembert', 32], ['cheddar', 39], ['cheddar cheese', 208], ['colby', 55], ['cottage cheese', 59], ['cream cheese', 62], ['crème fraîche', 212], ['feta', 72], ['fontina', 75]];
@@ -180,42 +183,42 @@ export default class IngrSearch extends React.Component {
         const grainIngrList = [['baguette', 204], ['bread', 26], ['couscous', 211], ['cracker', 60], ['linguini', 104], ['macaroni', 105], ['noodle', 117], ['oats', 217], ['pasta', 130], ['penne', 136], ['ravioli', 150], ['rice', 152], ['rigatoni', 154], ['spaghetti', 174]];
 
 		let fruitDivs = fruitIngrList.map((tuple, i) => {
-            return  <div>
-                    <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}/>
+            return  <div class="col-6">
+                        <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}/>
                     <label> {tuple[0]} </label>
                     </div>
 		})
 
 		let vegDivs = vegIngrList.map((tuple, i) => {
-            return  <div>
+            return  <div class="col-6">
                     <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}/>
                     <label> {tuple[0]} </label>
                     </div>
 		})
 
 		let meatDivs = meatIngrList.map((tuple, i) => {
-            return  <div>
+            return  <div class="col-6">
                     <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}/>
                     <label> {tuple[0]} </label>
                     </div>
 		})
 
 		let dairyDivs = dairyIngrList.map((tuple, i) => {
-            return  <div>
+            return  <div class="col-6">
                     <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}/>
                     <label> {tuple[0]} </label>
                     </div>
 		})
 
 		let grainDivs = grainIngrList.map((tuple, i) => {
-            return  <div>
+            return  <div class="col-6">
                     <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}/>
                     <label> {tuple[0]} </label>
                     </div>
 		})
 
 		let otherDivs = otherIngrList.map((tuple, i) => {
-            return  <div>
+            return  <div class="col-6">
                     <input type="checkbox" id={tuple[0]} key={i} onChange={this.handleIngrIDChange} name="ingr" value={tuple[1]}/>
                     <label> {tuple[0]} </label>
                     </div>
@@ -229,71 +232,109 @@ export default class IngrSearch extends React.Component {
 			dairyDivs: dairyDivs,
 			otherDivs: otherDivs
 		});
-}
+    }
 
+    ControlledCarousel() {
+        const [index, setIndex] = useState(0);
+    
+        const handleSelect = (selectedIndex, e) => {
+            setIndex(selectedIndex);
+        };
+    
+        return (
+            <Carousel activeIndex={index} onSelect={handleSelect}>
+            <Carousel.Item>
+                <div className='fruitOptions'>
+                    <div class="divider"  /> <h5> Fruit </h5>
+                    <div className="fruit-ingr">
+                        <div class="row">
+                            {this.state.fruitDivs}
+                        </div>
+                    </div>
+                </div>
+            </Carousel.Item>
+            <Carousel.Item>
+                <div className='vegOptions' >
+                    <div class="divider" /> <h5> Vegetables </h5>
+                    <div className="veg-ingr">
+                        <div class="row">
+                            {this.state.vegDivs}
+                        </div>
+                    </div>
+                </div>
+            </Carousel.Item>
+            <Carousel.Item>
+                <div className='meatOptions' >
+                    <div class="divider" /> <h5> Meat/Fish </h5>
+                    <div className="meat-ingr">
+                        <div class="row">
+                            {this.state.meatDivs}
+                        </div>
+                    </div>
+                </div>
+            </Carousel.Item>
+            <Carousel.Item>
+                <div className='dairyOptions' >
+                    <div class="divider" /> <h5> Dairy </h5>
+                    <div className="dairy-ingr">
+                        <div class="row">
+                            {this.state.dairyDivs}
+                        </div>
+                    </div>
+                </div>
+            </Carousel.Item>
+            <Carousel.Item>
+                <div className='grainOptions' >
+                    <div class="divider" /> <h5> Grain </h5>
+                    <div className="grain-ingr">
+                        <div class="row">
+                            {this.state.grainDivs}
+                        </div>
+                    </div>
+              </div>
+            </Carousel.Item>
+            <Carousel.Item>
+                <div className='otherOptions' >
+                    <div class="divider" /> <h5> Other </h5>
+                    <div className="other-ingr">
+                        <div class="row">
+                            {this.state.otherDivs}
+                        </div>
+                    </div>
+                </div>
+            </Carousel.Item>
+            </Carousel>
+        );
+    }
+  
 
-
-  render() {
-
+    render() {
+        const buttonStyle = {
+            backgroundColor: "#E98074",
+          };
+        
 		return (
-			<div className="IngrSearch">
+			<div className="IngrSearch" style={{backgroundColor: "#EAE7DC", minHeight:"100vh", height: "100%"}}>
 				<PageNavbar active="Ingredient Search" />
                 <br></br>
-			<Container>
-			    <div className="h1">IngrSearch</div>
-                    <legend><h3>Choose your ingredients: </h3> </legend>
-                        <div className='ingrOptions' style={divStyle} >
-                            <div className='fruitOptions'>
-                                <div class="divider"  /> <h5> Fruit </h5>
-                                    <div className="fruit-ingr">
-                                        {this.state.fruitDivs}
-                                    </div>
-                            </div>
-                            <div className='vegOptions' >
-                                <div class="divider" /> <h5> Vegetables </h5>
-                                    <div className="veg-ingr">
-                                        {this.state.vegDivs}
-                                    </div>
-                            </div>
-                            <div className='meatOptions' >
-                                <div class="divider" /> <h5> Meat/Fish </h5>
-                                    <div className="meat-ingr">
-                                        {this.state.meatDivs}
-                                    </div>
-
-                            </div>
-                            <div className='dairyOptions' >
-                                <div class="divider" /> <h5> Dairy </h5>
-                                    <div className="dairy-ingr">
-                                        {this.state.dairyDivs}
-                                    </div>
-                          </div>
-                          <div className='grainOptions' >
-                                <div class="divider" /> <h5> Grain </h5>
-                                    <div className="grain-ingr">
-                                        {this.state.grainDivs}
-                                    </div>
-                          </div>
-                          <div className='otherOptions' >
-                                <div class="divider" /> <h5> Other </h5>
-                                    <div className="other-ingr">
-                                        {this.state.otherDivs}
-                                    </div>
-                                </div>
-                            </div>
+			    <Container>
+			        <div className="h1">IngrSearch</div>
+                        <legend><h3>Choose your ingredients: </h3> </legend>
+                    <this.ControlledCarousel/ >
                         <br></br>
                         <Row>
                             <Col>
-                                <button id="submitBtn" className="submit-btn" onClick={this.submitIngr}>Search All Recipes</button>
+                                <button id="submitBtn" className="btn btn-lg" style={buttonStyle} onClick={this.submitIngr}>Search All Recipes</button>
                             </Col>
                             <Col>
-                                <button id="budgetBtn" className="budget-btn" onClick={this.submitBudget}>Search Budget-Friendly Recipes</button>
+                                <button id="budgetBtn" className="btn btn-lg " style={buttonStyle} onClick={this.submitBudget}>Search Budget-Friendly Recipes</button>
                             </Col>
                         </Row>
                     <div className="header-container">
                         <div className="quickadd-container" id="quickadd">
                             {this.state.recQuickAdd}
                         </div>
+                        <br></br>
                         <div className="h6">Here are some suggested recipes ...</div>
                         <div className="headers">
                             <div className="header"><strong>Title</strong></div>
