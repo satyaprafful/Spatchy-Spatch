@@ -360,15 +360,9 @@ function loginUser(req, res) {
   });
 };
 
-//TODO: ADD ERROR HANDLING FOR WHEN PASSWORD IS WRONG
 function returnUser(req, res) {
-<<<<<<< HEAD
   if (!currentUser) {
     currentUser = new Person({
-=======
-  if (!req.session) {
-    var newPerson = new Person ({
->>>>>>> 9614fd7fd13d1d5e5dd1c1d047daef30f029f177
       username: "test",
       password: "test",
       isVegan: true,
@@ -382,7 +376,6 @@ function returnUser(req, res) {
       activityLevel: "low",
       age: 21
     });
-<<<<<<< HEAD
     res.send(JSON.stringify(currentUser));
   } else {
     res.send(JSON.stringify(currentUser));
@@ -414,29 +407,6 @@ function editUser(req, res) {
       }
     }
   );
-=======
-    res.send(JSON.stringify({newPerson}));
-  }
-  if(req.session.user === undefined) {
-    console.log("probably shouldn't be here")
-    var newPerson = new Person ({
-      username: test,
-      password: test,
-      isVegan: true,
-      isVegetarian: false,
-      isLactose: true,
-      isNut: true,
-      isGluten: false,
-      weight: 20,
-      heightFeet: 11111,
-      heightInches:  100,
-      activityLevel:  "high",
-      age:  99
-    });
-    res.send(JSON.stringify({newPerson}));
-  }
-	res.send(JSON.stringify(req.session.user));
->>>>>>> 9614fd7fd13d1d5e5dd1c1d047daef30f029f177
 };
 
 
