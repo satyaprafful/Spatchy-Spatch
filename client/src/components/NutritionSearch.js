@@ -26,7 +26,6 @@ export default class NutritionSearch extends React.Component {
       console.log(userInfo); //delete this
       if (userInfo != null)
       {
-        userInfo = userInfo.newPerson
         userInfo = this.convertBools(userInfo);
       }
       this.setState({
@@ -56,7 +55,7 @@ export default class NutritionSearch extends React.Component {
   {
     if (input == 'low')
       return 1;
-    if (input == 'medium')
+    if (input == 'moderate')
       return 3;
     if (input == 'high')
       return 5;
@@ -244,7 +243,7 @@ export default class NutritionSearch extends React.Component {
 
         <PageNavbar active="Nutrition Search" />
         <div className="h1">Nutrition Search</div>
-        <legend><h4><i>Find recipes according to specific diets</i></h4> </legend>
+        <legend><h4><i>Find recipes according to specific diets </i><br></br></h4> </legend>For more customized results, make sure that your profile is updated<br></br>
 
         <br></br>
         <div class="row">
