@@ -11,8 +11,6 @@ export default class NutritionSearch extends React.Component {
       recipes: [],
       user: null
     };
-
-    // this.proteinSearch = this.proteinSearch.bind(this);
   }
 
   componentDidMount()
@@ -26,12 +24,32 @@ export default class NutritionSearch extends React.Component {
       console.log(err);
     }).then(userInfo => {
       console.log(userInfo); //delete this
+      if (userInfo != null)
+      {
+        userInfo = userInfo.newPerson
+        userInfo = this.convertBools(userInfo);
+      }
       this.setState({
         user : userInfo
       });
     }, err => {
       console.log(err);
     });
+  }
+
+  convertBools(userInfo)
+  {
+    userInfo.isVegan = userInfo.isVegan ? 1 : 0;
+    userInfo.isNut = userInfo.isNut ? 1 : 0;
+    userInfo.isDairy = userInfo.isDairy ? 1 : 0;
+    userInfo.isVegetarian = userInfo.isVegetarian ? 1 : 0;
+    userInfo.isGluten = userInfo.isGluten ? 1 : 0;
+    return userInfo;
+  }
+
+  dietaryRestrictions()
+  {
+    return "/" + this.state.user.isVegan + "/" + this.state.user.isNut + "/" + this.state.user.isDairy + "/" + this.state.user.isVegetarian+ "/" + this.state.user.isGluten;
   }
   
   parseActivityLevel(input)
@@ -49,11 +67,12 @@ export default class NutritionSearch extends React.Component {
   {
     if (this.state.user != null)
     {
-      var weight = this.state.user.weight; // this is hard-coded bc the user isn't set up yet  (lbs)
-      var activity = this.parseActivityLevel(this.state.user.activity); // this is hard-coded bc the user isn't set up yet (scale 1-5)
+      var user = this.state.user;
+      var weight = user.weight; // this is hard-coded bc the user isn't set up yet  (lbs)
+      var activity = this.parseActivityLevel(user.activityLevel); // this is hard-coded bc the user isn't set up yet (scale 1-5)
       var isWoman = true;
-      var age = this.state.user.age; // this is hard-coded bc the user isn't set up yet (in yrs)
-      var height = this.state.user.heightFeet * 12 + this.state.user.heightFeetInches; 
+      var age = user.age; // this is hard-coded bc the user isn't set up yet (in yrs)
+      var height = user.heightFeet * 12 + user.heightInches; 
     }
     else
     {
@@ -63,8 +82,6 @@ export default class NutritionSearch extends React.Component {
       var age = 21; // this is hard-coded bc the user isn't set up yet (in yrs)
       var height = 66; // this is hard-coded bc the user isn't set up yet (inches)
     }
-    
-
     var calPerDay = 0;
     // Harris-Benedict BMR equation
     if (isWoman)
@@ -73,17 +90,13 @@ export default class NutritionSearch extends React.Component {
       calPerDay = 66.47 + (6.24 * weight) + (12.7 * height) - (6.755 * age);
     // above calculation is BMR, now take into account activity level
     calPerDay = calPerDay  *  (1.025 + .175 * activity);
+    console.log(activity)
     return calPerDay;
   }
 
   getUserProteinRatio()
   {
-    var weight = 135; // this is hard-coded bc the user isn't set up yet  (lbs)
-    if (this.state.user != null)
-    {
-      var weight = this.state.user.weight; // this is hard-coded bc the user isn't set up yet  (lbs)
-    }
-
+    var weight = this.state.user != null ? this.state.user.weight : 135
     var proteinPerDay = weight * .7; // .7 = gram protein/lb body weight/day
     var proteinRatio = proteinPerDay/this.getUserCalPerDay(); 
     return proteinRatio;
@@ -190,7 +203,8 @@ export default class NutritionSearch extends React.Component {
 
   proteinSearch()
   {
-    fetch("http://localhost:8081/protein/" + this.getUserProteinRatio(),
+    console.log("http://localhost:8081/protein/" + this.getUserProteinRatio() + this.dietaryRestrictions());
+    fetch("http://localhost:8081/protein/" + this.getUserProteinRatio() + this.dietaryRestrictions(),
       {
         method: "GET"
       }).then(res => {
@@ -256,7 +270,7 @@ export default class NutritionSearch extends React.Component {
         <input id="Low calorie recipes" type="button" value="Low calorie recipes" onClick={() => this.calorieSearch() } />
         <br></br>
         <input id="Low sodium recipes" type="button" value="Low sodium recipes" onClick={() => this.sodiumSearch() } /> */}
-        <div className="results-container" id="results" style={{backgroundColor: "#EAE7DC"}}>
+        <div className="results-container" id="results">
                 {this.state.recipes}
           </div>
       </div>
