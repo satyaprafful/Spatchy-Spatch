@@ -32,15 +32,33 @@ function getDBConnect() {
 /* -------------------------------------------------- */
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
+
+
 function getHighProtein(req, res) {
   var connection = getDBConnect();
   var inputRatio = req.params.proteinRatio;
-
+  var isVegan = req.params.isVegan;
+  var isNutFree = req.params.isNutFree;
+  var isDairyFree = req.params.isDairyFree;
+  var isVegetarian = req.params.isVegetarian;
+  var isGlutenFree = req.params.isGlutenFree;
 
   var query = `
+  WITH Eatable AS (
+    SELECT R.rID 
+    FROM (IngrDiet D JOIN RIngredients I ON D.ingrID = I.ingrID)
+        JOIN Recipe R ON R.RID = I.RID
+    GROUP BY R.RID
+    HAVING SUM(D.isVegan) >= COUNT(*) * '${isVegan}' AND 
+          SUM(D.isNutFree) >= COUNT(*) * '${isNutFree}' AND
+          SUM(D.isDairyFree) >= COUNT(*) * '${isDairyFree}' AND
+          SUM(D.isVegetarian) >= COUNT(*) * '${isVegetarian}' AND
+          SUM(D.isGlutenFree) >= COUNT(*) * '${isGlutenFree}' 
+  )
   SELECT *
   FROM Recipe R
-  WHERE R.protein/(R.calories + 1) >= '${inputRatio}' AND R.protein >= 5
+  WHERE R.protein/(R.calories + 1) >= '${inputRatio}' AND R.protein >= 5 
+      AND R.rID in (SELECT * FROM Eatable)
   ORDER BY R.rating DESC
   LIMIT 10`;
 
@@ -344,8 +362,13 @@ function loginUser(req, res) {
 
 //TODO: ADD ERROR HANDLING FOR WHEN PASSWORD IS WRONG
 function returnUser(req, res) {
+<<<<<<< HEAD
   if (!currentUser) {
     currentUser = new Person({
+=======
+  if (!req.session) {
+    var newPerson = new Person ({
+>>>>>>> 9614fd7fd13d1d5e5dd1c1d047daef30f029f177
       username: "test",
       password: "test",
       isVegan: true,
@@ -359,6 +382,7 @@ function returnUser(req, res) {
       activityLevel: "low",
       age: 21
     });
+<<<<<<< HEAD
     res.send(JSON.stringify(currentUser));
   } else {
     res.send(JSON.stringify(currentUser));
@@ -390,6 +414,29 @@ function editUser(req, res) {
       }
     }
   );
+=======
+    res.send(JSON.stringify({newPerson}));
+  }
+  if(req.session.user === undefined) {
+    console.log("probably shouldn't be here")
+    var newPerson = new Person ({
+      username: test,
+      password: test,
+      isVegan: true,
+      isVegetarian: false,
+      isLactose: true,
+      isNut: true,
+      isGluten: false,
+      weight: 20,
+      heightFeet: 11111,
+      heightInches:  100,
+      activityLevel:  "high",
+      age:  99
+    });
+    res.send(JSON.stringify({newPerson}));
+  }
+	res.send(JSON.stringify(req.session.user));
+>>>>>>> 9614fd7fd13d1d5e5dd1c1d047daef30f029f177
 };
 
 
@@ -492,7 +539,7 @@ function getRecommendedRecipes(req, res) {
     FROM Similar JOIN Recipe r ON Similar.rID = r.rID
     WHERE ingrCount > 1/2 * (SELECT COUNT(*)
           FROM InputIngr)
-      AND r.rID <>  '${recipeID}'
+      AND r.rID <> '${recipeID}'
     ORDER BY catCount DESC, ingrCount DESC, rating DESC
     LIMIT 5;`;
 

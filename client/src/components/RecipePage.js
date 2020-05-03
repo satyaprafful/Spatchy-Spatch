@@ -14,10 +14,25 @@ export default class RecipePage extends React.Component {
       rating : null,
       recipe_descr : null,
       directions : null,
-      recDivs : null
+      recDivs : null,
+      rID : null
     };
-
+    window.addEventListener('locationchange', function(){
+        console.log('location changed!');
+    })
     // this.proteinSearch = this.proteinSearch.bind(this);
+  }
+
+  componentDidUpdate()
+  {
+    // this.componentDidMount()
+    var urlWords = window.location.href.split('/')
+    var rID = urlWords[urlWords.length - 1];
+    if (rID != this.state.rID)
+    {
+      this.componentDidMount()
+      this.render()
+    }
   }
 
   componentDidMount()
@@ -27,6 +42,9 @@ export default class RecipePage extends React.Component {
     {
       // display the recipe recipes
       var rID = urlWords[urlWords.length - 1];
+      this.setState({
+        rID : rID
+      });
 
         // low calories = <350 cal per serving
       fetch("http://localhost:8081/recipe/full/" + rID,
@@ -46,7 +64,7 @@ export default class RecipePage extends React.Component {
             ingr_desc : recipeObj.ingr_descr,
             rating : recipeObj.rating,
             recipe_descr : recipeObj.recipe_descr,
-            directions : recipeObj.directions
+            directions : this.deparse(recipeObj.directions)
           });
         });
       }, err => {
@@ -69,6 +87,7 @@ export default class RecipePage extends React.Component {
               ingr_desc = {recipeObj.ingr_descr} 
               recipe_descr = {recipeObj.recipe_descr} 
               rating = {recipeObj.rating} 
+              rID = {recipeObj.rID} 
               index = {i}
           />
         );
@@ -82,6 +101,14 @@ export default class RecipePage extends React.Component {
         console.log(err);
       });
     }
+  }
+
+  deparse(parsed)
+  {
+    var dirArr = parsed.substring(1,parsed.length-1).split(",")
+    var output = ""
+    dirArr.forEach(element => {output = output.concat(element);});
+    return output;
   }
 
   parseIngredients(raw)

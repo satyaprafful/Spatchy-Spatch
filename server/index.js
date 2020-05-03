@@ -4,7 +4,6 @@ var routes = require("./routes.js");
 const cors = require('cors');
 
 const app = express();
-var session = require('express-session')
 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(bodyParser.json());
@@ -17,7 +16,7 @@ var currentUser = null;
 
 /* ---- Nutrition Queries ---- */
 // sends min protein/cal, gets back recipes
-app.get('/protein/:proteinRatio', (req, res) => { 
+app.get('/protein/:proteinRatio/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:isGlutenFree', (req, res) => { 
 	routes.getHighProtein(req,res)}
 ); 
 
