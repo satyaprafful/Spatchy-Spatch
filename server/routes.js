@@ -141,21 +141,21 @@ function getValRecipes(req, res) {
    }
 
     var query = `
-        WITH Available AS (
-            SELECT IP.ingrID
-            FROM IngrPrices IP
-            WHERE ${whereClause} OR IP.isHousehold = 1
-        )
-        SELECT *
-        FROM Recipe R JOIN RIngredients RI JOIN IngrPrices IP ON R.rID = RI.rID AND RI.ingrID = IP.ingrID
-        WHERE NOT EXISTS (
-            SELECT *
-            FROM RIngredients RI LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
-            WHERE RI.rID = R.rID AND A.ingrID IS NULL
-        )
-        GROUP BY R.rID
-        ORDER BY COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, R.rating DESC
-        LIMIT 10
+      WITH Available AS (
+        SELECT IP.ingrID
+        FROM IngrPrices IP
+        WHERE ${whereClause} OR IP.isHousehold = 1
+      )
+      SELECT R.rID, R.title, R.rating, R.recipe_descr, R.ingr_descr
+      FROM Recipe R INNER JOIN RIngredients RI INNER JOIN IngrPrices IP ON R.rID = RI.rID AND RI.ingrID = IP.ingrID
+      WHERE NOT EXISTS (
+        SELECT RI.ingrID
+        FROM RIngredients RI LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
+        WHERE RI.rID = R.rID AND A.ingrID IS NULL
+      )
+      GROUP BY R.rID
+      ORDER BY COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, R.rating DESC
+      LIMIT 10
     ;`;
 
 
@@ -190,26 +190,26 @@ function getBudgetRecipes(req, res) {
    }
 
     var query = `
-        WITH Available AS (
-            SELECT IP.ingrID
-            FROM IngrPrices IP
-            WHERE ${whereClause} OR IP.isHousehold = 1
-        ), ValidRecipes AS (
-            SELECT R.rID, R.title, R.rating, R.recipe_descr, R.ingr_descr
-            FROM Recipe R JOIN RIngredients RI JOIN IngrPrices IP ON R.rID = RI.rID AND RI.ingrID = IP.ingrID
-            WHERE NOT EXISTS (
-                SELECT *
-                FROM RIngredients RI LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
-                WHERE RI.rID = R.rID AND A.ingrID IS NULL
-            )
-            GROUP BY R.rID
+      WITH Available AS (
+        SELECT IP.ingrID
+        FROM IngrPrices IP
+        WHERE ${whereClause} OR IP.isHousehold = 1
+      ), ValidRecipes AS (
+        SELECT R.rID, R.title, R.rating, R.recipe_descr, R.ingr_descr
+        FROM Recipe R 
+        WHERE NOT EXISTS (
+          SELECT RI.ingrID
+          FROM RIngredients RI LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
+          WHERE RI.rID = R.rID AND A.ingrID IS NULL
         )
-        SELECT DISTINCT VR.title, SUM(IP.price) as recipe_cost, VR.rating, VR.recipe_descr, VR.ingr_descr
-        FROM RIngredients RI JOIN IngrPrices IP JOIN ValidRecipes VR ON RI.ingrID = IP.ingrID AND VR.rID = RI.rID
-        GROUP BY VR.rID
-        HAVING recipe_cost > 0
-        ORDER BY recipe_cost, COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, VR.rating DESC
-        LIMIT 10
+        GROUP BY R.rID
+      )
+      SELECT DISTINCT VR.title, SUM(IP.price) as recipe_cost, VR.rating, VR.recipe_descr, VR.ingr_descr
+      FROM RIngredients RI INNER JOIN IngrPrices IP INNER JOIN ValidRecipes VR ON RI.ingrID = IP.ingrID AND VR.rID = RI.rID
+      GROUP BY VR.rID
+      HAVING recipe_cost > 0
+      ORDER BY recipe_cost, COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, VR.rating DESC
+      LIMIT 10
     ;`;
 
 
@@ -243,19 +243,19 @@ function getClosestIngr(req, res) {
    }
 
     var query = `
-        WITH Available AS (
-          SELECT IP.ingrID
-          FROM IngrPrices IP
-          WHERE ${whereClause} OR IP.isHousehold = 1
+      WITH Available AS (
+            SELECT IP.ingrID
+            FROM IngrPrices IP
+            WHERE ${whereClause} OR IP.isHousehold = 1
       ), RecipeToNeededIngr AS (
-          SELECT R.rID, RI.ingrID, IP.name, COUNT(RI.ingrID) as num
-          FROM Recipe R JOIN RIngredients RI JOIN IngrPrices IP ON R.rID = RI.rID AND RI.ingrID = IP.ingrID LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
-          WHERE A.ingrID IS NULL
-          GROUP BY R.rID
+        SELECT R.rID, IP.ingrID, IP.name
+        FROM Recipe R INNER JOIN RIngredients RI INNER JOIN IngrPrices IP ON R.rID = RI.rID AND RI.ingrID = IP.ingrID LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
+        WHERE A.ingrID IS NULL
+        GROUP BY R.rID
+        HAVING COUNT(RI.ingrID) = 1
       )
       SELECT RNI.ingrID, RNI.name, COUNT(RNI.rID) AS count
       FROM RecipeToNeededIngr RNI
-      WHERE num = 1
       GROUP BY RNI.ingrID
       ORDER BY count DESC
       LIMIT 3
