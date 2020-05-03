@@ -111,18 +111,18 @@ export default class Home extends React.Component {
         console.log(err);
       }).then(userInfo => {
         this.setState({
-          // CHANGE THIS FROM FAKE PERSON!!!!
-          user: userInfo.fakePerson,
-          isVegan: userInfo.fakePerson.isVegan,
-          isVegetarian: userInfo.fakePerson.isVegetarian,
-          isLactose: userInfo.fakePerson.isLactose,
-          isNut: userInfo.fakePerson.isNut,
-          isGluten: userInfo.fakePerson.isGluten,
-          weight: userInfo.fakePerson.weight,
-          heightFeet: userInfo.fakePerson.heightFeet,
-          heightInches: userInfo.fakePerson.heightInches,
-          activityLevel: userInfo.fakePerson.activityLevel,
-          age: userInfo.fakePerson.age,
+          user: userInfo.newPerson,
+          isVegan: userInfo.newPerson.isVegan,
+          isVegetarian: userInfo.newPerson.isVegetarian,
+          isLactose: userInfo.newPerson.isLactose,
+          isNut: userInfo.newPerson.isNut,
+          isGluten: userInfo.newPerson.isGluten,
+          weight: userInfo.newPerson.weight,
+          heightFeet: userInfo.newPerson.heightFeet,
+          heightInches: userInfo.newPerson.heightInches,
+          activityLevel: userInfo.newPerson.activityLevel,
+          age: userInfo.newPerson.age,
+                                 
         });
         console.log(userInfo);
         var userInfoDiv = <div>
