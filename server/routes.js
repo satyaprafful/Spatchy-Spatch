@@ -486,7 +486,7 @@ function getRecommendedRecipes(req, res) {
     FROM Similar JOIN Recipe r ON Similar.rID = r.rID
     WHERE ingrCount > 1/2 * (SELECT COUNT(*)
           FROM InputIngr)
-      AND r.rID <>  v
+      AND r.rID <>  '${recipeID}'
     ORDER BY catCount DESC, ingrCount DESC, rating DESC
     LIMIT 5;`;
 
