@@ -61,10 +61,10 @@ export default class RecipePage extends React.Component {
           
           this.setState({
             title : recipeObj.title,
-            ingr_desc : this.deparse(recipeObj.ingr_descr),
+            ingr_desc : recipeObj.ingr_descr,
             rating : recipeObj.rating,
             recipe_descr : recipeObj.recipe_descr,
-            directions : recipeObj.directions
+            directions : this.deparse(recipeObj.directions)
           });
         });
       }, err => {
@@ -105,8 +105,10 @@ export default class RecipePage extends React.Component {
 
   deparse(parsed)
   {
-    console.log(parsed);
-    return parsed;
+    var dirArr = parsed.substring(1,parsed.length-1).split(",")
+    var output = ""
+    dirArr.forEach(element => {output = output.concat(element);});
+    return output;
   }
 
   parseIngredients(raw)

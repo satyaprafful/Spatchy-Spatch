@@ -28,7 +28,6 @@ export default class RecipeRow extends React.Component {
 	}
 
 	render() {
-		console.log(this.props.rID)
 		var pathnameV = `/RecipePage/${this.props.rID}`;
 		return (
 			<div className="recipeResults">
