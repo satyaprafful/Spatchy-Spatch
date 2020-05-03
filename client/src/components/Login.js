@@ -1,8 +1,9 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
+import { Container, Row, Col, Accordion, Card, Button, Form } from 'react-bootstrap';
 import { Redirect } from "react-router-dom";
-
+import Select from 'react-select';
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -21,7 +22,14 @@ export default class Login extends React.Component {
       heightFeet: 0,
       heightInches: 0,
       activityLevel: "",
-      age: 0
+      age: 0,
+      statesList: [],
+      citiesList: [],
+      selected_city: "",
+      selected_state: "",
+      incorrectCombo: false,
+      nonInput: false,
+      alreadyExists: false
     }
 
     this.toggleView = this.toggleView.bind(this);
@@ -39,11 +47,44 @@ export default class Login extends React.Component {
     this.handleHeightInchesChange = this.handleHeightInchesChange.bind(this);
     this.handleActivityLevelChange = this.handleActivityLevelChange.bind(this);
     this.handleAgeChange = this.handleAgeChange.bind(this);
+    this.getCities = this.getCities.bind(this) 
   }
 
-  signup(){
-    console.log(this.state);
-    fetch("http://localhost:8081/signup",
+  componentDidMount(){
+    fetch("http://localhost:8081/states/",
+      {
+        method: "GET"
+      }).then(res => {
+        return res.json();
+      }, err => {
+        console.log(err);
+      }).then(resultList => {
+        console.log(resultList); 
+        let statesList = resultList.map((state, i) => {
+          const container = {};
+
+          container.value = state.rest_state;
+          container.label = state.rest_state;
+          return container;
+        });
+
+        ///This saves our HTML representation of the data into the state, which we can call in our render function
+        this.setState({
+          statesList : statesList
+        });
+      }, err => {
+        // Print the error if there is one.
+        console.log(err);
+      });
+}
+
+  signup() {
+    if(!this.state.userEmail || !this.state.userPassword) {
+      this.setState({
+        nonInput: true
+      });
+    } else {
+      fetch("http://localhost:8081/signup",
       {
         method: "POST",
         headers: {
@@ -51,7 +92,7 @@ export default class Login extends React.Component {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          username: this.state.userEmail, 
+          username: this.state.userEmail,
           password: this.state.userPassword,
           isVegan: this.state.isVegan,
           isVegetarian: this.state.isVegetarian,
@@ -60,21 +101,36 @@ export default class Login extends React.Component {
           isGluten: this.state.isGluten,
           weight: this.state.weight,
           heightFeet: this.state.heightFeet,
-          heightInches:  this.state.heightInches,
-          activityLevel:  this.state.activityLevel,
-          age:  this.state.age
+          heightInches: this.state.heightInches,
+          activityLevel: this.state.activityLevel,
+          age: this.state.age,
+          city: this.state.selected_city,
+          state: this.state.selected_state
         })
       }).then(res => {
-        console.log(res.json());
-
-      }
-    );
+        return res.json();
+      }).then(response => {
+        if (response.result === 'p') {
+          this.setState({
+            redirect: "/Home"
+          });
+        } else {
+          this.setState({
+            nonInput: false,
+            alreadyExists: true
+          })
+        }
+      });
+    }   
   }
 
-  login(){
-    console.log(this.state.userEmail);
-    console.log(this.state.userPassword);
-    fetch("http://localhost:8081/login",
+  login() {
+    if(!this.state.userEmail || !this.state.userPassword) {
+      this.setState({
+        nonInput: true
+      });
+    } else {
+      fetch("http://localhost:8081/login",
       {
         method: "POST",
         headers: {
@@ -82,129 +138,268 @@ export default class Login extends React.Component {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          username: this.state.userEmail, 
+          username: this.state.userEmail,
           password: this.state.userPassword
         })
       }).then(res => {
         return res.json();
       }).then(response => {
-        if(response.result === 'p'){
+        if (response.result === 'p') {
           console.log("hello")
           this.setState({
-            redirect:"/Ingredient Search"
+            redirect: "/Home"
           });
         } else {
-          console.log("fail");
+          this.setState({
+            nonInput: false,
+            incorrectCombo: true
+          })
         }
       });
+    }
   }
 
   handleEmailChange(event) {
-    this.setState({userEmail: event.target.value});
+    this.setState({ userEmail: event.target.value });
   }
 
   handlePasswordChange(event) {
-    this.setState({userPassword: event.target.value});
+    this.setState({ userPassword: event.target.value });
   }
 
-  changeVegan() {this.setState({isVegan: !this.state.isVegan})}
+  changeVegan() { this.setState({ isVegan: !this.state.isVegan }) }
 
-  changeVegetarian() {this.setState({isVegetarian: !this.state.isVegetarian})}
+  changeVegetarian() { this.setState({ isVegetarian: !this.state.isVegetarian }) }
 
-  changeLactose() {this.setState({isLactose: !this.state.isLactose})}
-  
-  changeNut() {this.setState({isNut: !this.state.isNut})}
+  changeLactose() { this.setState({ isLactose: !this.state.isLactose }) }
 
-  changeGluten() {this.setState({isGluten: !this.state.isGluten})}
+  changeNut() { this.setState({ isNut: !this.state.isNut }) }
 
-  handleWeightChange(event) {this.setState({weight: event.target.value})}
+  changeGluten() { this.setState({ isGluten: !this.state.isGluten }) }
 
-  handleHeightFeetChange(event) {this.setState({heightFeet: event.target.value})}
+  handleWeightChange(event) { this.setState({ weight: event.target.value }) }
 
-  handleHeightInchesChange(event) {this.setState({heightInches: event.target.value})}
+  handleHeightFeetChange(event) { this.setState({ heightFeet: event.target.value }) }
 
-  handleActivityLevelChange(event) {this.setState({activityLevel: event.target.value})}
+  handleHeightInchesChange(event) { this.setState({ heightInches: event.target.value }) }
 
-  handleAgeChange(event) {this.setState({age: event.target.value})}
+  handleActivityLevelChange(event) { this.setState({ activityLevel: event.target.value }) }
 
-  toggleView() {this.setState(prevState => ({showSignup: !prevState.showSignup}))}
+  handleAgeChange(event) { this.setState({ age: event.target.value }) }
 
-  render() {    
+  toggleView() { this.setState(prevState => ({ showSignup: !prevState.showSignup })) }
+
+  getCities(city){
+    var url_query = "http://localhost:8081/cities/"+ city
+    console.log(this.state.selected_state);
+    console.log(city);
+
+    fetch( url_query,
+    {
+      method: "GET"
+    }).then(res => {
+      return res.json();
+    }, err => {
+      console.log(err);
+    }).then(resultList => {
+      console.log(resultList); 
+      let cityList = resultList.map((city, i) => {
+        const container = {};
+
+        container.value = city.rest_city;
+        container.label = city.rest_city;
+        return container;
+      });
+
+      ///This saves our HTML representation of the data into the state, which we can call in our render function
+      this.setState({
+        cityList : cityList
+      });
+    }, err => {
+      // Print the error if there is one.
+      console.log(err);
+    });
+  }
+
+  render() {
+    const buttonStyle = {
+      backgroundColor: "#E98074",
+    };
+
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />
     }
+
+    const ColoredLine = ({ color }) => (
+      <hr
+          style={{
+              color: color,
+              backgroundColor: color,
+              height: 1
+          }}
+      />
+  );
+
     return (
-      <div className="Login" >
-        <PageNavbar active="Login" />
-        <div className="LoginInfo" hidden={this.state.showSignup}>
+      <div className="Login" style={{ backgroundColor: "#EAE7DC", minHeight: "100vh", height: "100%" }}>
+        <br></br>
+        <div className="h1" style={{fontFamily:"Permanent Marker", fontSize:"75px"}}>Spitchy Spatchy</div>
+        <div className="LoginInfo" style={{paddingLeft:"30%", paddingRight:"30%"}} hidden={this.state.showSignup}>
           <br></br>
-          This is the Login page
+          
           <form>
             <div class="form-group">
-              <label for="exampleInputEmail1">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value={this.state.userEmail} onChange={this.handleEmailChange}/>
+              <div class="row">
+                <div class="col-6">
+                  <label for="exampleInputEmail1"><strong>Email address:</strong></label>
+                </div>
+                <div class="col-6">
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value={this.state.userEmail} onChange={this.handleEmailChange} />
+                </div>
+              </div>
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" value={this.state.userPassword} onChange={this.handlePasswordChange}/>
+            <div class="row">
+                <div class="col-6">
+                  <label for="exampleInputPassword1"><strong>Password: </strong></label>
+                </div>
+                <div class="col-6">
+                  <input type="password" class="form-control" id="exampleInputPassword1" value={this.state.userPassword} onChange={this.handlePasswordChange} />
+                </div>
+              </div>
             </div>
           </form>
-          <button class="btn btn-primary" onClick={this.login}>Login</button>
-          <small id="emailHelp" class="form-text text-muted">Dont have an email? 
+          <div hidden={!this.state.incorrectCombo}><small>Uh Oh, Looks like that email/password combo is incorrect</small></div>
+          <div hidden={!this.state.nonInput}><small>Both fields must be filled out!</small></div>
+          <button class="btn btn-primary-dark" style={buttonStyle} onClick={this.login}>Login</button>
+          <small id="emailHelp" class="form-text text-muted">Dont have an email?
             <button type="button" class="btn btn-link btn-sm" onClick={this.toggleView}>Signup</button>
-           </small> 
+          </small>
         </div>
 
-        <div className="SignupInfo" hidden={!this.state.showSignup}>
+        <div className="SignupInfo" style={{paddingLeft:"30%", paddingRight:"30%"}} hidden={!this.state.showSignup}>
           <br></br>
-          This is the Signup page
           <form>
-            <div class="form-group">
-              <label for="exampleInputEmail1">Email address</label>
-              <input type="email" class="form-control" id="signupEmail" aria-describedby="emailHelp" value={this.state.userEmail} onChange={this.handleEmailChange}/>
+          <div class="form-group">
+              <div class="row">
+                <div class="col-6">
+                  <label for="exampleInputEmail1"><strong>Email address:</strong></label>
+                </div>
+                <div class="col-6">
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value={this.state.userEmail} onChange={this.handleEmailChange} />
+                </div>
+              </div>
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Password</label>
-              <input type="password" class="form-control" id="signupPassword" value={this.state.userPassword} onChange={this.handlePasswordChange}/>
+            <div class="row">
+                <div class="col-6">
+                  <label for="exampleInputPassword1"><strong>Password: </strong></label>
+                </div>
+                <div class="col-6">
+                  <input type="password" class="form-control" id="exampleInputPassword1" value={this.state.userPassword} onChange={this.handlePasswordChange} />
+                </div>
+              </div>
             </div>
-
-            Mark Which Ones you Are:
-              <label class="btn btn-secondary active">
-                <input type="checkbox" defaultChecked={this.state.isVegan} onChange={this.changeVegan} autocomplete="off"/> Vegan
-              </label>
-              <label class="btn btn-secondary active">
-                <input type="checkbox" defaultChecked={this.state.isVegetarian} onChange={this.changeVegetarian} autocomplete="off"/> Vegetarian
-              </label>
-              <label class="btn btn-secondary active">
-                <input type="checkbox" defaultChecked={this.state.isLactose} onChange={this.changeLactose} autocomplete="off"/> Lactose Intolerant
-              </label>
-              <label class="btn btn-secondary active">
-                <input type="checkbox" defaultChecked={this.state.isNut} onChange={this.changeNut} autocomplete="off"/> Nut Allergies
-              </label>
-              <label class="btn btn-secondary active">
-                <input type="checkbox" defaultChecked={this.state.isGluten} onChange={this.changeGluten} autocomplete="off"/> Gluten Free
-              </label>
-              <br/>
-
-            Input Data:
-            <div class="form-group">
-              <label>Weight</label>
-              <input type="number" class="form-control" value={this.state.weight} onChange={this.handleWeightChange}/>
-              <label>Height Feet</label>
-              <input type="number" class="form-control" value={this.state.heightFeet} onChange={this.handleHeightFeetChange}/>
-              <label>Height Inches</label>
-              <input type="number" pattern="[0-9]*" class="form-control" value={this.state.heightInches} onChange={this.handleHeightInchesChange}/>
-              <label>Activity Level (low, moderate, high)</label>
-              <input type="text" class="form-control" value={this.state.activityLevel} onChange={this.handleActivityLevelChange}/>
-              <label>Age</label>
-              <input type="number" pattern="[0-9]*" class="form-control" value={this.state.age} onChange={this.handleAgeChange}/>
+            <div hidden={!this.state.nonInput}><small>Both fields must be filled out!</small></div>
+            <div hidden={!this.state.alreadyExists}><small>Email is already in use!</small></div>
+        <ColoredLine color =  "#E98074"/>
+        Mark your Diet: 
+            <label class="btn active btn-block">
+              <input type="checkbox" defaultChecked={this.state.isVegan} onChange={this.changeVegan} autocomplete="off" /> Vegan
+          </label>
+            <label class="btn active btn-block">
+              <input type="checkbox" defaultChecked={this.state.isVegetarian} onChange={this.changeVegetarian} autocomplete="off" /> Vegetarian
+          </label>
+            <label class="btn active btn-block">
+              <input type="checkbox" defaultChecked={this.state.isLactose} onChange={this.changeLactose} autocomplete="off" /> Lactose Intolerant
+          </label>
+            <label class="btn active btn-block">
+              <input type="checkbox" defaultChecked={this.state.isNut} onChange={this.changeNut} autocomplete="off" /> Nut Allergies
+          </label>
+            <label class="btn active btn-block">
+              <input type="checkbox" defaultChecked={this.state.isGluten} onChange={this.changeGluten} autocomplete="off" /> Gluten Free
+          </label>
+          <ColoredLine color =  "#E98074"/>
+            <Row>
+              <Col>Which State are you in?</Col>
+              <Col>
+                <Select
+                  options={this.state.statesList}
+                  defaultValue={{ value: this.state.selected_state }}
+                  onChange={(e => {
+                    this.setState({
+                      selected_state: e.label,
+                    });
+                    { this.getCities(e.label) }
+                  })}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>Choose the cities near you!</Col>
+              <Col>
+                <Select
+                  options={this.state.cityList}
+                  defaultValue={{ label: this.state.selected_city, value: this.state.selected_city }}
+                  onChange={e => {
+                    this.setState({
+                      selected_city: e.label
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <ColoredLine color =  "#E98074"/>
+                Health:
+                <div class="row">
+              <div class="col-6">
+                <label>Weight</label>
+              </div>
+              <div class="col-6">
+                <input type="number" class="form-control" value={this.state.weight} onChange={this.handleWeightChange} />
+              </div>
             </div>
+            <div class="row">
+              <div class="col-6">
+                <label>Height Feet</label>
+              </div>
+              <div class="col-6">
+                <input type="number" class="form-control" value={this.state.heightFeet} onChange={this.handleHeightFeetChange} />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <label>Height Inches</label>
+              </div>
+              <div class="col-6">
+                <input type="number" class="form-control" value={this.state.heightInches} onChange={this.handleHeightInchesChange} />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <label>Activity Level (low, moderate, high)</label>
+              </div>
+              <div class="col-6">
+                <input type="text" class="form-control" value={this.state.activityLevel} onChange={this.handleActivityLevelChange} />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <label>Age</label>
+              </div>
+              <div class="col-6">
+                <input type="number" pattern="[0-9]*" class="form-control" value={this.state.age} onChange={this.handleAgeChange} />
+              </div>
+            </div>
+            <br></br>
           </form>
 
-          <button class="btn btn-primary" onClick={this.signup}>Submit</button>
-            <button type="button" class="btn btn-link btn-sm" onClick={this.toggleView}>Go Back</button>
-        </div>
+        <button class="btn btn-primary-dark"  style={buttonStyle} onClick={this.signup}>Sign Up</button>
+        <small id="emailHelp" class="form-text text-muted">Already Have an Account?
+        <button type="button" class="btn btn-link btn-sm" onClick={this.toggleView}>Go Back</button>
+          </small>
       </div>
+      </div >
     );
   }
 }

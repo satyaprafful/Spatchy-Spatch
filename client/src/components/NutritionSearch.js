@@ -223,15 +223,14 @@ export default class NutritionSearch extends React.Component {
   render() {   
     const buttonStyle = {
       backgroundColor: "#E98074",
-      color: "#D8C3A5"
     };
 
     return (
       <div className="Nutrition Search" style={{backgroundColor: "#EAE7DC", height: "100vh"}}>
 
         <PageNavbar active="Nutrition Search" />
-        {/* <div className="h1"  style={{color: "#E98074"}}>Nutrition Search</div> */}
-        <div className="h1"  style={{color: "#E85A4F"}}>Nutrition Search</div>
+        <div className="h1">Nutrition Search</div>
+        <legend><h4><i>Find recipes according to specific diets</i></h4> </legend>
 
         <br></br>
         <div class="row">

@@ -1,25 +1,23 @@
 var mysql = require('mysql');
 var Person = require('./models/person.js');
 const mongoose = require('mongoose');
-var session = require('express-session')
 
 
 /*  put this in a function bc right now being janky and connecting
   * to the DB before each query and ending the connection after.
   * Should figure out better way, instead, to close connections.
   */
-function getDBConnect()
-{
+function getDBConnect() {
   var connection = mysql.createConnection({
-    host     : 'database2.calom4x7svhj.us-east-1.rds.amazonaws.com',
-    user     : 'admin',
-    password : 'admin123',
-    port     : 3306,
-    database : 'database2',
-    insecureAuth : true
+    host: 'database2.calom4x7svhj.us-east-1.rds.amazonaws.com',
+    user: 'admin',
+    password: 'admin123',
+    port: 3306,
+    database: 'database2',
+    insecureAuth: true
   });
 
-  connection.connect(function(err) {
+  connection.connect(function (err) {
     if (err) {
       console.error('Database connection failed: ' + err.stack);
       return;
@@ -46,13 +44,13 @@ function getHighProtein(req, res) {
   ORDER BY R.rating DESC
   LIMIT 10`;
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
     }
   });
-  
+
   connection.end();
 };
 
@@ -67,13 +65,13 @@ function getHighFat(req, res) {
   ORDER BY R.rating DESC
   LIMIT 10`;
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
     }
   });
-  
+
   connection.end();
 };
 
@@ -88,13 +86,13 @@ function getLowSodium(req, res) {
   ORDER BY R.rating DESC
   LIMIT 10`;
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
     }
   });
-  
+
   connection.end();
 };
 
@@ -109,13 +107,13 @@ function getLowCal(req, res) {
   ORDER BY R.rating DESC
   LIMIT 10`;
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
     }
   });
-  
+
   connection.end();
 };
 
@@ -129,18 +127,17 @@ function getValRecipes(req, res) {
 
   for (var key in values) {
     if (values.hasOwnProperty(key)) {
-        if (values.hasOwnProperty(key))
-        {
-            whereClause += "IP.ingrID = " + values[key] + " OR ";
-        }
+      if (values.hasOwnProperty(key)) {
+        whereClause += "IP.ingrID = " + values[key] + " OR ";
+      }
     }
   }
 
   if (whereClause.substring(whereClause.length - 4) == " OR ") {
-        whereClause = whereClause.substring(0, whereClause.length - 4);
-   }
+    whereClause = whereClause.substring(0, whereClause.length - 4);
+  }
 
-    var query = `
+  var query = `
       WITH Available AS (
         SELECT IP.ingrID
         FROM IngrPrices IP
@@ -159,7 +156,7 @@ function getValRecipes(req, res) {
     ;`;
 
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -178,18 +175,17 @@ function getBudgetRecipes(req, res) {
 
   for (var key in values) {
     if (values.hasOwnProperty(key)) {
-        if (values.hasOwnProperty(key))
-        {
-            whereClause += "IP.ingrID = " + values[key] + " OR ";
-        }
+      if (values.hasOwnProperty(key)) {
+        whereClause += "IP.ingrID = " + values[key] + " OR ";
+      }
     }
   }
 
   if (whereClause.substring(whereClause.length - 4) == " OR ") {
-        whereClause = whereClause.substring(0, whereClause.length - 4);
-   }
+    whereClause = whereClause.substring(0, whereClause.length - 4);
+  }
 
-    var query = `
+  var query = `
       WITH Available AS (
         SELECT IP.ingrID
         FROM IngrPrices IP
@@ -213,7 +209,7 @@ function getBudgetRecipes(req, res) {
     ;`;
 
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -231,18 +227,17 @@ function getClosestIngr(req, res) {
 
   for (var key in values) {
     if (values.hasOwnProperty(key)) {
-        if (values.hasOwnProperty(key))
-        {
-            whereClause += "IP.ingrID = " + values[key] + " OR ";
-        }
+      if (values.hasOwnProperty(key)) {
+        whereClause += "IP.ingrID = " + values[key] + " OR ";
+      }
     }
   }
 
   if (whereClause.substring(whereClause.length - 4) == " OR ") {
-        whereClause = whereClause.substring(0, whereClause.length - 4);
-   }
+    whereClause = whereClause.substring(0, whereClause.length - 4);
+  }
 
-    var query = `
+  var query = `
       WITH Available AS (
             SELECT IP.ingrID
             FROM IngrPrices IP
@@ -262,7 +257,7 @@ function getClosestIngr(req, res) {
     ;`;
 
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -276,80 +271,81 @@ function getClosestIngr(req, res) {
 
 /* -------------------------- Login/User Routes --------------------- */
 function signupUser(req, res) {
-  console.log(req.body.username);
-  console.log(req.body.password);
-	var newPerson = new Person ({
-		username: req.body.username,
-		password: req.body.password,
-    isVegan: req.body.isVegan,
-    isVegetarian: req.body.isVegetarian,
-    isLactose: req.body.isLactose,
-    isNut: req.body.isNut,
-    isGluten: req.body.isGluten,
-    weight: req.body.weight,
-    heightFeet: req.body.heightFeet,
-    heightInches:  req.body.heightInches,
-    activityLevel:  req.body.activityLevel,
-    age:  req.body.age
-	});
-//   const schemas = [];
-//   mongoose.modelNames().forEach(function(modelName){
-//     schemas.push(mongoose.model(modelName).schema.obj);
-//   })
+  Person.findOne({ username: req.body.username }, function (err, user) {
+    if (err) {
+      res.write('uh oh: ' + err);
+      console.log(err);
+      res.end();
+    }
+    else {
+      if (!user) {
+        var newPerson = new Person({
+          username: req.body.username,
+          password: req.body.password,
+          isVegan: req.body.isVegan,
+          isVegetarian: req.body.isVegetarian,
+          isLactose: req.body.isLactose,
+          isNut: req.body.isNut,
+          isGluten: req.body.isGluten,
+          weight: req.body.weight,
+          heightFeet: req.body.heightFeet,
+          heightInches: req.body.heightInches,
+          activityLevel: req.body.activityLevel,
+          age: req.body.age,
+          city: req.city,
+          state: req.state
+        });
+        newPerson.save((err) => {
+          if (err) {
+            res.write('uh oh: ' + err);
+            console.log(err);
+            res.end();
+          }
+          else {
+            console.log("it worked");
+            currentUser = newPerson;
+            console.log(newPerson);
+            res.send(JSON.stringify({ result: 'p' }))
+          }
+        });
+      } else {
+        res.send(JSON.stringify({ result: 'f' }))
+      }
+    }
+  });
 
-// console.log(schemas);
-
-//TODO: ADD ERROR HANDLING FOR WHEN USERNAME ALREADY EXISTS
-	newPerson.save( (err) => {
-		if (err) {
-			res.type('html').status(200);
-			res.write('uh oh: ' + err);
-			console.log(err);
-			res.end();
-		}
-		else {
-      console.log("it worked");
-      req.session.user=newPerson;
-      console.log(newPerson);
-			res.json(newPerson);
-		}
-	});
-  // Person.find({}, function(err, users){
-  //   var userMap = {};
-
-  //   users.forEach(function(user) {
-  //     console.log(user);
-  //   });
-  // })
 };
 
-//TODO: ADD ERROR HANDLING FOR WHEN PASSWORD IS WRONG
 function loginUser(req, res) {
-	var username = req.body.username;
-	var password = req.body.password;
-	Person.findOne({username: username}, function(err, user){
-		if (err) {
-			res.type('html').status(200);
-			res.write('uh oh: ' + err);
-			console.log(err);
-			res.end();
-		}
-		else {
-      if(user.password !== password) {
-        res.send(JSON.stringify({result: 'f'}));
+  var username = req.body.username;
+  var password = req.body.password;
+  Person.findOne({ username: username }, function (err, user) {
+    if (err) {
+      res.type('html').status(200);
+      res.write('uh oh: ' + err);
+      console.log(err);
+      res.end();
+    }
+    else {
+      if (!user) {
+        res.send(JSON.stringify({ result: 'f' }));
       } else {
-        console.log(user);
-        req.session.user=user;
-        res.send(JSON.stringify({result: 'p'}));
+        if (user.password !== password) {
+          res.send(JSON.stringify({ result: 'f' }));
+        } else {
+          console.log(user);
+          currentUser = user;
+          res.send(JSON.stringify({ result: 'p' }));
+        }
       }
-		}
-	});
+    }
+  });
 };
 
 //TODO: ADD ERROR HANDLING FOR WHEN PASSWORD IS WRONG
 function returnUser(req, res) {
-  if (!req.session) {
-    var fakePerson = new Person ({
+  if (!currentUser) {
+    currentUser = new Person({
       username: "test",
       password: "test",
       isVegan: true,
@@ -359,31 +355,41 @@ function returnUser(req, res) {
       isGluten: false,
       weight: 150,
       heightFeet: 5,
-      heightInches:  4,
-      activityLevel:  "low",
-      age:  21
+      heightInches: 4,
+      activityLevel: "low",
+      age: 21
     });
-    res.send(JSON.stringify({fakePerson}));
+    res.send(JSON.stringify(currentUser));
+  } else {
+    res.send(JSON.stringify(currentUser));
   }
-  if(req.session.user === undefined) {
-    console.log("probably shouldn't be here")
-    var fakePerson = new Person ({
-      username: test,
-      password: test,
-      isVegan: true,
-      isVegetarian: false,
-      isLactose: true,
-      isNut: true,
-      isGluten: false,
-      weight: 20,
-      heightFeet: 11111,
-      heightInches:  100,
-      activityLevel:  "high",
-      age:  99
-    });
-    res.send(JSON.stringify({fakePerson}));
-  }
-	res.send(JSON.stringify(req.session.user));
+};
+
+function editUser(req, res) {
+  console.log(req)
+  Person.findOneAndUpdate({ username: currentUser.username }, {
+    $set: {
+      isVegan: req.body.isVegan,
+      isVegetarian: req.body.isVegetarian,
+      isLactose: req.body.isLactose,
+      isNut: req.body.isNut,
+      isGluten: req.body.isGluten,
+      weight: req.body.weight,
+      heightFeet: req.body.heightFeet,
+      heightInches: req.body.heightInches,
+      activityLevel: req.body.activityLevel,
+      age: req.body.age,
+      city: req.body.city,
+      state: req.body.state
+    }}, {new: true}, function(err, newUser) {
+      if(err) {
+        console.log("uh oh");
+      } else {
+        currentUser = newUser;
+        res.send(currentUser);
+      }
+    }
+  );
 };
 
 
@@ -394,7 +400,7 @@ function getStates(req, res) {
 
   var query = `Select DISTINCT(rest_state) FROM Restaurant`;
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       console.log("HELLo");
@@ -410,7 +416,7 @@ function getCities(req, res) {
   var state = req.params.state;
   var query = `Select DISTINCT(rest_city) FROM Restaurant WHERE rest_state = '${state}'`;
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       console.log(rows);
@@ -429,7 +435,7 @@ function getRestaurantsBasic(req, res) {
                ORDER BY RAND()
                LIMIT 2`;
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       console.log(rows);
@@ -451,7 +457,7 @@ function getDishSearch(req, res) {
                 WHERE REGEXP_LIKE(d.dish_name, '${search}')
                 LIMIT 10`;
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       console.log(rows);
@@ -490,7 +496,7 @@ function getRecommendedRecipes(req, res) {
     ORDER BY catCount DESC, ingrCount DESC, rating DESC
     LIMIT 5;`;
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       console.log(rows);
@@ -506,7 +512,7 @@ function getFullRecipe(req, res) {
 
   var query = `SELECT * FROM Recipe WHERE rID = '${rID}';`;
 
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       console.log(rows);
@@ -529,10 +535,11 @@ module.exports = {
   signupUser: signupUser,
   loginUser: loginUser,
   returnUser: returnUser,
+  editUser: editUser,
   getStates: getStates,
   getCities: getCities,
   getRestaurantsBasic: getRestaurantsBasic,
   getDishSearch: getDishSearch,
   getRecommendedRecipes: getRecommendedRecipes,
-  getFullRecipe: getFullRecipe 
+  getFullRecipe: getFullRecipe
 }

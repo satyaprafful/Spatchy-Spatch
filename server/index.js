@@ -10,6 +10,7 @@ app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
+var currentUser = null;
 /* ---------------------------------------------------------------- */
 /* ------------------- Route handler registration ----------------- */
 /* ---------------------------------------------------------------- */
@@ -55,7 +56,7 @@ app.get('/quickadd/', (req, res) => {
 	routes.getClosestIngr(req,res)}
 );
 
-/* ---- Login Routes ---- */
+/* ---- User Routes ---- */
 app.post('/signup', (req, res) => {
 	routes.signupUser(req, res)}
 );
@@ -66,6 +67,10 @@ app.post('/login', (req, res) => {
 
 app.get('/curruser', (req, res) => {
 	routes.returnUser(req, res)}
+);
+
+app.post('/edituser', (req, res) => {
+	routes.editUser(req, res)}
 );
 
 /* ---- Dishes/Restaurant Queries ---- */

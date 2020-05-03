@@ -5,6 +5,7 @@ import Gallery from 'react-grid-gallery';
 import { Container, Row, Col, Accordion, Card, Button, Form } from 'react-bootstrap';
 import { TwitterTimelineEmbed } from 'react-twitter-embed';
 import '../App.css';
+import Select from 'react-select';
 
 
 export default class Home extends React.Component {
@@ -26,6 +27,10 @@ export default class Home extends React.Component {
       heightInches: 0,
       activityLevel: "",
       age: 0,
+      statesList: [],
+      citiesList: [],
+      selected_state: '',
+      selected_city: '',
       formDiv: <div></div>,
       hideForm: true
     }
@@ -42,10 +47,145 @@ export default class Home extends React.Component {
     this.handleHeightInchesChange = this.handleHeightInchesChange.bind(this);
     this.handleActivityLevelChange = this.handleActivityLevelChange.bind(this);
     this.handleAgeChange = this.handleAgeChange.bind(this);
+    this.getCities = this.getCities.bind(this)
+    this.editInfo = this.editInfo.bind(this);
     // this.getRandomTwitterFeed = this.getRandomTwitterFeed.bind(this);
   }
 
+  getCities(city) {
+    var url_query = "http://localhost:8081/cities/" + city
+    console.log(this.state.selected_state);
+    console.log(city);
+
+    fetch(url_query,
+      {
+        method: "GET"
+      }).then(res => {
+        return res.json();
+      }, err => {
+        console.log(err);
+      }).then(resultList => {
+        console.log(resultList);
+        let cityList = resultList.map((city, i) => {
+          const container = {};
+
+          container.value = city.rest_city;
+          container.label = city.rest_city;
+          return container;
+        });
+
+        ///This saves our HTML representation of the data into the state, which we can call in our render function
+        this.setState({
+          cityList: cityList
+        });
+      }, err => {
+        // Print the error if there is one.
+        console.log(err);
+      });
+  }
+
   componentDidMount() {
+    fetch("http://localhost:8081/states/",
+      {
+        method: "GET"
+      }).then(res => {
+        return res.json();
+      }, err => {
+        console.log(err);
+      }).then(resultList => {
+        console.log(resultList);
+        let statesList = resultList.map((state, i) => {
+          const container = {};
+
+          container.value = state.rest_state;
+          container.label = state.rest_state;
+          return container;
+        });
+
+        ///This saves our HTML representation of the data into the state, which we can call in our render function
+        this.setState({
+          statesList: statesList
+        });
+      }, err => {
+        // Print the error if there is one.
+        console.log(err);
+      }).then(() => {
+        fetch("http://localhost:8081/curruser",
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(userInfo => {
+          this.setState({
+            user: userInfo,
+            isVegan: userInfo.isVegan,
+            isVegetarian: userInfo.isVegetarian,
+            isLactose: userInfo.isLactose,
+            isNut: userInfo.isNut,
+            isGluten: userInfo.isGluten,
+            weight: userInfo.weight,
+            heightFeet: userInfo.heightFeet,
+            heightInches: userInfo.heightInches,
+            activityLevel: userInfo.activityLevel,
+            age: userInfo.age,
+            selected_city: userInfo.city,
+            selected_state: userInfo.state
+          });
+          console.log(userInfo);
+          this.setState({
+            cityList: this.getCities(userInfo.state)
+          })
+          return this.state.cityList
+        }, err => {
+          console.log(err);
+        }).then(cityList => {
+          console.log(cityList);
+          var userInfoDiv = <div>
+          Diet:
+          <br></br>
+          <label class="btn active btn-block">
+            <input type="checkbox" defaultChecked={this.state.isVegan} onChange={this.changeVegan} autocomplete="off" /> Vegan
+          </label>
+          <label class="btn active btn-block">
+            <input type="checkbox" defaultChecked={this.state.isVegetarian} onChange={this.changeVegetarian} autocomplete="off" /> Vegetarian
+          </label>
+          <label class="btn active btn-block">
+            <input type="checkbox" defaultChecked={this.state.isLactose} onChange={this.changeLactose} autocomplete="off" /> Lactose Intolerant
+          </label>
+          <label class="btn active btn-block">
+            <input type="checkbox" defaultChecked={this.state.isNut} onChange={this.changeNut} autocomplete="off" /> Nut Allergies
+          </label>
+          <label class="btn active btn-block">
+            <input type="checkbox" defaultChecked={this.state.isGluten} onChange={this.changeGluten} autocomplete="off" /> Gluten Free
+          </label>
+          <Row>
+                    <Col>Which State are you in?</Col>
+                    <Col>
+                      <Select
+                        options={this.state.statesList}
+                        defaultValue={{  label: this.state.selected_state, value: this.state.selected_state }}
+                        onChange={(e => {
+                          this.setState({
+                            selected_state: e.label,
+                          });
+                          { this.getCities(e.label) }
+                        })}
+                      />
+                    </Col>
+                  </Row>
+        </div>
+        this.setState({
+          formDiv: userInfoDiv
+        });
+        }, err => {
+          console.log(err);
+        });
+      }, err => {
+        console.log(err);
+      });
+    
     // --> Get user information (name  + city). Update Welcome Name + City for Query + Latest Word
     var url_query = "https://developers.zomato.com/api/v2.1/cities?q=" + "Philadelphia"
     fetch(url_query,
@@ -102,54 +242,6 @@ export default class Home extends React.Component {
           }).then((arr) => this.setState({ posters: arr }));
       });
 
-    fetch("http://localhost:8081/curruser",
-      {
-        method: "GET"
-      }).then(res => {
-        return res.json();
-      }, err => {
-        console.log(err);
-      }).then(userInfo => {
-        this.setState({
-          // CHANGE THIS FROM FAKE PERSON!!!!
-          user: userInfo.fakePerson,
-          isVegan: userInfo.fakePerson.isVegan,
-          isVegetarian: userInfo.fakePerson.isVegetarian,
-          isLactose: userInfo.fakePerson.isLactose,
-          isNut: userInfo.fakePerson.isNut,
-          isGluten: userInfo.fakePerson.isGluten,
-          weight: userInfo.fakePerson.weight,
-          heightFeet: userInfo.fakePerson.heightFeet,
-          heightInches: userInfo.fakePerson.heightInches,
-          activityLevel: userInfo.fakePerson.activityLevel,
-          age: userInfo.fakePerson.age,
-        });
-        console.log(userInfo);
-        var userInfoDiv = <div>
-          Diet:
-          <br></br>
-          <label class="btn active btn-block">
-            <input type="checkbox" defaultChecked={this.state.isVegan} onChange={this.changeVegan} autocomplete="off" /> Vegan
-          </label>
-          <label class="btn active btn-block">
-            <input type="checkbox" defaultChecked={this.state.isVegetarian} onChange={this.changeVegetarian} autocomplete="off" /> Vegetarian
-          </label>
-          <label class="btn active btn-block">
-            <input type="checkbox" defaultChecked={this.state.isLactose} onChange={this.changeLactose} autocomplete="off" /> Lactose Intolerant
-          </label>
-          <label class="btn active btn-block">
-            <input type="checkbox" defaultChecked={this.state.isNut} onChange={this.changeNut} autocomplete="off" /> Nut Allergies
-          </label>
-          <label class="btn active btn-block">
-            <input type="checkbox" defaultChecked={this.state.isGluten} onChange={this.changeGluten} autocomplete="off" /> Gluten Free
-          </label>
-        </div>
-        this.setState({
-          formDiv: userInfoDiv
-        });
-      }, err => {
-        console.log(err);
-      });
   }
 
   getRandomTheme() {
@@ -175,7 +267,7 @@ export default class Home extends React.Component {
       })
     );
   }
-  
+
   changeVegan() { this.setState({ isVegan: !this.state.user.isVegan }) }
 
   changeVegetarian() { this.setState({ isVegetarian: !this.state.isVegetarian }) }
@@ -197,6 +289,97 @@ export default class Home extends React.Component {
   handleAgeChange(event) { this.setState({ age: event.target.value }) }
 
   showForm() { console.log("running"); { this.setState({ hideForm: !this.state.hideForm }) } }
+
+  editInfo(e) {
+    e.preventDefault();
+    console.log(this.state);
+    fetch("http://localhost:8081/edituser",
+      {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          isVegan: this.state.isVegan,
+          isVegetarian: this.state.isVegetarian,
+          isLactose: this.state.isLactose,
+          isNut: this.state.isNut,
+          isGluten: this.state.isGluten,
+          weight: this.state.weight,
+          heightFeet: this.state.heightFeet,
+          heightInches: this.state.heightInches,
+          activityLevel: this.state.activityLevel,
+          age: this.state.age,
+          city: this.state.selected_city,
+          state: this.state.selected_state
+        })
+      }).then(res => {
+        console.log(res.json());
+        return res.json();
+      }, err => {
+        console.log(err)
+      }).then(userInfo => {
+        this.setState({
+          user: userInfo,
+          isVegan: userInfo.isVegan,
+          isVegetarian: userInfo.isVegetarian,
+          isLactose: userInfo.isLactose,
+          isNut: userInfo.isNut,
+          isGluten: userInfo.isGluten,
+          weight: userInfo.weight,
+          heightFeet: userInfo.heightFeet,
+          heightInches: userInfo.heightInches,
+          activityLevel: userInfo.activityLevel,
+          age: userInfo.age,
+          city: userInfo.city,
+          state: userInfo.state
+        });
+        console.log(userInfo);
+        this.setState ({
+          citiesList: this.getCities(userInfo.state)
+        })
+        var userInfoDiv = <div>
+          Diet:
+          <br></br>
+          <label class="btn active btn-block">
+            <input type="checkbox" defaultChecked={this.state.isVegan} onChange={this.changeVegan} autocomplete="off" /> Vegan
+          </label>
+          <label class="btn active btn-block">
+            <input type="checkbox" defaultChecked={this.state.isVegetarian} onChange={this.changeVegetarian} autocomplete="off" /> Vegetarian
+          </label>
+          <label class="btn active btn-block">
+            <input type="checkbox" defaultChecked={this.state.isLactose} onChange={this.changeLactose} autocomplete="off" /> Lactose Intolerant
+          </label>
+          <label class="btn active btn-block">
+            <input type="checkbox" defaultChecked={this.state.isNut} onChange={this.changeNut} autocomplete="off" /> Nut Allergies
+          </label>
+          <label class="btn active btn-block">
+            <input type="checkbox" defaultChecked={this.state.isGluten} onChange={this.changeGluten} autocomplete="off" /> Gluten Free
+          </label>
+          <Row>
+                    <Col>Which State are you in?</Col>
+                    <Col>
+                      <Select
+                        options={this.state.statesList}
+                        defaultValue={{ value: this.state.selected_state }}
+                        onChange={(e => {
+                          this.setState({
+                            selected_state: e.label,
+                          });
+                          { this.getCities(e.label) }
+                        })}
+                      />
+                    </Col>
+                  </Row>
+        </div>
+        this.setState({
+          formDiv: userInfoDiv
+        });
+      }, err => {
+        console.log(err)
+      });
+  }
 
   render() {
     const buttonStyle = {
@@ -252,6 +435,21 @@ export default class Home extends React.Component {
                 <br></br>
                 <form hidden={this.state.hideForm}>
                   {this.state.formDiv}
+
+                  <Row>
+                    <Col>Choose the cities near you!</Col>
+                    <Col>
+                      <Select
+                        options={this.state.cityList}
+                        defaultValue={{ label: this.state.selected_city, value: this.state.selected_city }}
+                        onChange={e => {
+                          this.setState({
+                            selected_city: e.label
+                          }); 
+                        }}
+                      />
+                    </Col>
+                  </Row>
                 Health:
                 <div class="row">
                     <div class="col-6">
@@ -293,8 +491,9 @@ export default class Home extends React.Component {
                       <input type="number" pattern="[0-9]*" class="form-control" value={this.state.age} onChange={this.handleAgeChange} />
                     </div>
                   </div>
+                  <br></br>
+                  <button class="btn btn-primary-dark" style={buttonStyle} onClick={this.editInfo}>Submit</button>
                 </form>
-                {/* <button class="btn btn-primary" onClick={this.editInfo}>Submit</button> */}
               </Col>
               <Col>
                 <Container>

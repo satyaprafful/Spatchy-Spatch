@@ -327,6 +327,9 @@ export default class DishSearch extends React.Component {
     return (
       <div className="DishSearch"  style={{ backgroundColor: "#EAE7DC", minHeight: "100vh", height: "100%" }}>
         <PageNavbar active="Dish Search" />
+        <div className="h1">Dish Search</div>
+        <legend><h4><i>Find restaurants serving your favorite dishes</i></h4> </legend>
+        
         <br></br>
       <Container>
         <Row>
@@ -391,7 +394,7 @@ const ColoredLine = ({ color }) => (
     <hr
         style={{
             color: color,
-            backgroundColor: color,
+            backgroundColor: "#E98074",
             height: 1
         }}
     />
