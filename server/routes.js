@@ -47,20 +47,20 @@ function getHighProtein(req, res) {
 
   var query = `
   WITH Eatable AS (
-    SELECT R.RID 
+    SELECT R.rID 
     FROM (IngrDiet D JOIN RIngredients I ON D.ingrID = I.ingrID)
         JOIN Recipe R ON R.RID = I.RID
     GROUP BY R.RID
-    HAVING SUM(D.isVegan) >= COUNT(*) * '${isVegan} AND 
-          SUM(D.isNutFree) >= COUNT(*) * '${isNutFree} AND
-          SUM(D.isDairyFree) >= COUNT(*) * '${isDairyFree} AND
-          SUM(D.isVegetarian) >= COUNT(*) * '${isVegetarian} AND
-          SUM(D.isGlutenFree) >= COUNT(*) * '${isGlutenFree} AND
+    HAVING SUM(D.isVegan) >= COUNT(*) * '${isVegan}' AND 
+          SUM(D.isNutFree) >= COUNT(*) * '${isNutFree}' AND
+          SUM(D.isDairyFree) >= COUNT(*) * '${isDairyFree}' AND
+          SUM(D.isVegetarian) >= COUNT(*) * '${isVegetarian}' AND
+          SUM(D.isGlutenFree) >= COUNT(*) * '${isGlutenFree}' 
   )
   SELECT *
   FROM Recipe R
   WHERE R.protein/(R.calories + 1) >= '${inputRatio}' AND R.protein >= 5 
-      AND R.rID in Eatable
+      AND R.rID in (SELECT * FROM Eatable)
   ORDER BY R.rating DESC
   LIMIT 10`;
 
@@ -367,7 +367,7 @@ function loginUser(req, res) {
 //TODO: ADD ERROR HANDLING FOR WHEN PASSWORD IS WRONG
 function returnUser(req, res) {
   if (!req.session) {
-    var fakePerson = new Person ({
+    var newPerson = new Person ({
       username: "test",
       password: "test",
       isVegan: true,
@@ -381,11 +381,11 @@ function returnUser(req, res) {
       activityLevel:  "low",
       age:  21
     });
-    res.send(JSON.stringify({fakePerson}));
+    res.send(JSON.stringify({newPerson}));
   }
   if(req.session.user === undefined) {
     console.log("probably shouldn't be here")
-    var fakePerson = new Person ({
+    var newPerson = new Person ({
       username: test,
       password: test,
       isVegan: true,
@@ -399,7 +399,7 @@ function returnUser(req, res) {
       activityLevel:  "high",
       age:  99
     });
-    res.send(JSON.stringify({fakePerson}));
+    res.send(JSON.stringify({newPerson}));
   }
 	res.send(JSON.stringify(req.session.user));
 };
@@ -504,7 +504,7 @@ function getRecommendedRecipes(req, res) {
     FROM Similar JOIN Recipe r ON Similar.rID = r.rID
     WHERE ingrCount > 1/2 * (SELECT COUNT(*)
           FROM InputIngr)
-      AND r.rID <>   '${recipeID}'
+      AND r.rID <> '${recipeID}'
     ORDER BY catCount DESC, ingrCount DESC, rating DESC
     LIMIT 5;`;
 
