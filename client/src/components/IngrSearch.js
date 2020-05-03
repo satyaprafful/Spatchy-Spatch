@@ -9,7 +9,7 @@ import Carousel from 'react-bootstrap/Carousel'
 const ingrStyle = {
     position: 'absolute', 
     left: '18%',
-    height: "520px",
+    height: "490px",
     width: "800px",
     textAlign: "left",
     position: 'relative'
@@ -123,9 +123,17 @@ export default class IngrSearch extends React.Component {
 
 
     submitIngr() {
-        this.findQuickAdd();
 
-        fetch("http://localhost:8081/ingredients/" + this.parseIngrList(),
+        if (this.state.ingrList.length == 0) {
+            var recipesDiv = [];
+            recipesDiv.push(<div className="h3">Please select at least one ingredient!</div>);
+            this.setState({
+                recRecipes: recipesDiv,
+                recQuickAdd: []
+            });
+        } else {
+            this.findQuickAdd();
+            fetch("http://localhost:8081/ingredients/" + this.parseIngrList(),
             {
                 method: "GET"
             }).then(res => {
@@ -159,13 +167,24 @@ export default class IngrSearch extends React.Component {
                 // Print the error if there is one.
                 console.log(err);
             });
+        }
+
+        
     }
 
 
     submitBudget() {
-        this.findQuickAdd();
 
-        fetch("http://localhost:8081/budget/" + this.parseIngrList(),
+        if (this.state.ingrList.length == 0) {
+            var recipesDiv = [];
+            recipesDiv.push(<div className="h3">Please select at least one ingredient!</div>);
+            this.setState({
+                recRecipes: recipesDiv,
+                recQuickAdd: []
+            });
+        } else {
+            this.findQuickAdd();
+            fetch("http://localhost:8081/budget/" + this.parseIngrList(),
             {
                 method: "GET"
             }).then(res => {
@@ -200,6 +219,8 @@ export default class IngrSearch extends React.Component {
                 // Print the error if there is one.
                 console.log(err);
             });
+        }
+
     }
 
 
@@ -419,7 +440,6 @@ export default class IngrSearch extends React.Component {
                 <Container>
                         <div className="h1">Ingredient Search</div>
                     <legend><h4><i>Find recipes based off of ingredients you have</i></h4> </legend>
-                    <br></br>
                     <this.ControlledCarousel />
                     <Row>
                         <Col>
