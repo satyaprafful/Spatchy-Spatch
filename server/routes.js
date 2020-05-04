@@ -305,7 +305,7 @@ function getBudgetRecipes(req, res) {
       SELECT DISTINCT VR.title, SUM(IP.price) as recipe_cost, VR.rating, VR.recipe_descr, VR.ingr_descr
       FROM RIngredients RI INNER JOIN IngrPrices IP INNER JOIN ValidRecipes VR ON RI.ingrID = IP.ingrID AND VR.rID = RI.rID
       GROUP BY VR.rID
-      HAVING recipe_cost > 0
+      HAVING recipe_cost > 1
       ORDER BY recipe_cost, COUNT(IP.ingrID) - SUM(IP.isHousehold) DESC, VR.rating DESC
     ;`;
 
