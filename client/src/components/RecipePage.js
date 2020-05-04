@@ -15,12 +15,12 @@ export default class RecipePage extends React.Component {
       recipe_descr : null,
       directions : null,
       recDivs : null,
-      rID : null
+      rID : null,
+      user: null
     };
     window.addEventListener('locationchange', function(){
         console.log('location changed!');
     })
-    // this.proteinSearch = this.proteinSearch.bind(this);
   }
 
   componentDidUpdate()
@@ -37,70 +37,105 @@ export default class RecipePage extends React.Component {
 
   componentDidMount()
   {
-    var urlWords = window.location.href.split('/')
-    if (urlWords.length > 0)
+    console.log("mounted")
+    fetch("http://localhost:8081/curruser",
     {
-      // display the recipe recipes
-      var rID = urlWords[urlWords.length - 1];
+      method: "GET"
+    }).then(res => {
+      return res.json();
+    }, err => {
+      console.log(err);
+    }).then(userInfo => {
+      console.log(userInfo); //delete this
+      console.log("got user")
+      if (userInfo != null)
+      {
+        userInfo = this.convertBools(userInfo);
+      }
       this.setState({
-        rID : rID
+        user : userInfo
       });
+    }, err => {
+      console.log(err);
+    }).then(() => {
 
-        // low calories = <350 cal per serving
-      fetch("http://localhost:8081/recipe/full/" + rID,
+      var urlWords = window.location.href.split('/')
+      if (urlWords.length > 0)
       {
-        method: "GET"
-      }).then(res => {
-        return res.json();
-      }, err => {
-        console.log(err);
-      }).then(recipesList => {
-        console.log(recipesList); //delete this
-
-        recipesList.map((recipeObj, i) => {
-          
-          this.setState({
-            title : recipeObj.title,
-            ingr_desc : recipeObj.ingr_descr,
-            rating : recipeObj.rating,
-            recipe_descr : recipeObj.recipe_descr,
-            directions : this.deparse(recipeObj.directions)
-          });
-        });
-      }, err => {
-        // Print the error if there is one.
-        console.log(err);
-      });
-
-      // get suggested recipes
-      fetch("http://localhost:8081/recipe/recommend/" + rID,
-      {
-        method: "GET"
-      }).then(res => {
-        return res.json();
-      }, err => {
-        console.log(err);
-      }).then(recipesList => {
-
-        let recipesDiv = recipesList.map((recipeObj, i) => 
-          <RecipeRow title = {recipeObj.title}
-              ingr_desc = {recipeObj.ingr_descr} 
-              recipe_descr = {recipeObj.recipe_descr} 
-              rating = {recipeObj.rating} 
-              rID = {recipeObj.rID} 
-              index = {i}
-          />
-        );
-
-        ///This saves our HTML representation of the data into the state, which we can call in our render function
+        // display the recipe recipes
+        var rID = urlWords[urlWords.length - 1];
         this.setState({
-          recDivs : recipesDiv
+          rID : rID
         });
-      }, err => {
-        // Print the error if there is one.
-        console.log(err);
-      });
-    }
+
+        fetch("http://localhost:8081/recipe/full/" + rID,
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(recipesList => {
+          console.log(recipesList); //delete this
+
+          recipesList.map((recipeObj, i) => {
+            
+            this.setState({
+              title : recipeObj.title,
+              ingr_desc : recipeObj.ingr_descr,
+              rating : recipeObj.rating,
+              recipe_descr : recipeObj.recipe_descr,
+              directions : this.deparse(recipeObj.directions)
+            });
+          });
+        }, err => {
+          // Print the error if there is one.
+          console.log(err);
+        });
+        fetch("http://localhost:8081/recipe/recommend/" + rID + this.dietaryRestrictions(),
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(recipesList => {
+
+          let recipesDiv = recipesList.map((recipeObj, i) => 
+            <RecipeRow title = {recipeObj.title}
+                ingr_desc = {recipeObj.ingr_descr} 
+                recipe_descr = {recipeObj.recipe_descr} 
+                rating = {recipeObj.rating} 
+                rID = {recipeObj.rID} 
+                index = {i}
+            />
+          );
+
+          ///This saves our HTML representation of the data into the state, which we can call in our render function
+          this.setState({
+            recDivs : recipesDiv
+          });
+        }, err => {
+          // Print the error if there is one.
+          console.log(err);
+        });
+      }
+    });
+  }
+  convertBools(userInfo)
+  {
+    userInfo.isVegan = userInfo.isVegan ? 1 : 0;
+    userInfo.isNut = userInfo.isNut ? 1 : 0;
+    userInfo.isLactose = userInfo.isLactose ? 1 : 0;
+    userInfo.isVegetarian = userInfo.isVegetarian ? 1 : 0;
+    userInfo.isGluten = userInfo.isGluten ? 1 : 0;
+    return userInfo;
+  }
+
+  dietaryRestrictions()
+  {
+    console.log(this.state);
+    return "/" + this.state.user.isVegan + "/" + this.state.user.isNut + "/" + this.state.user.isLactose + "/" + this.state.user.isVegetarian+ "/" + this.state.user.isGluten;
   }
 
   deparse(parsed)
