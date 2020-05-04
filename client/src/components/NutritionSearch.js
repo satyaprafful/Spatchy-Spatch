@@ -40,7 +40,7 @@ export default class NutritionSearch extends React.Component {
   {
     userInfo.isVegan = userInfo.isVegan ? 1 : 0;
     userInfo.isNut = userInfo.isNut ? 1 : 0;
-    userInfo.isDairy = userInfo.isDairy ? 1 : 0;
+    userInfo.isLactose = userInfo.isLactose ? 1 : 0;
     userInfo.isVegetarian = userInfo.isVegetarian ? 1 : 0;
     userInfo.isGluten = userInfo.isGluten ? 1 : 0;
     return userInfo;
@@ -48,7 +48,7 @@ export default class NutritionSearch extends React.Component {
 
   dietaryRestrictions()
   {
-    return "/" + this.state.user.isVegan + "/" + this.state.user.isNut + "/" + this.state.user.isDairy + "/" + this.state.user.isVegetarian+ "/" + this.state.user.isGluten;
+    return "/" + this.state.user.isVegan + "/" + this.state.user.isNut + "/" + this.state.user.isLactose + "/" + this.state.user.isVegetarian+ "/" + this.state.user.isGluten;
   }
   
   parseActivityLevel(input)
@@ -89,7 +89,6 @@ export default class NutritionSearch extends React.Component {
       calPerDay = 66.47 + (6.24 * weight) + (12.7 * height) - (6.755 * age);
     // above calculation is BMR, now take into account activity level
     calPerDay = calPerDay  *  (1.025 + .175 * activity);
-    console.log(activity)
     return calPerDay;
   }
 
@@ -104,7 +103,7 @@ export default class NutritionSearch extends React.Component {
   fatSearch()
   {
     // keto = 75% cal from fat. Fat = 9 cal/gram. .75/9 = 0.0833 = gram fat/total cal
-    fetch("http://localhost:8081/nutrition/fat/" + 0.0833,
+    fetch("http://localhost:8081/nutrition/fat/" + 0.0833 + this.dietaryRestrictions(),
     {
       method: "GET"
     }).then(res => {
@@ -112,7 +111,6 @@ export default class NutritionSearch extends React.Component {
     }, err => {
       console.log(err);
     }).then(recipesList => {
-      console.log(recipesList); //delete this
 
       let recipesDiv = recipesList.map((recipeObj, i) => 
         <RecipeRow title = {recipeObj.title}
@@ -137,7 +135,7 @@ export default class NutritionSearch extends React.Component {
   sodiumSearch()
   {
     // low sodium = 140mg/serving
-    fetch("http://localhost:8081/nutrition/sodium/" + 140,
+    fetch("http://localhost:8081/nutrition/sodium/" + 140 + this.dietaryRestrictions(),
     {
       method: "GET"
     }).then(res => {
@@ -145,8 +143,6 @@ export default class NutritionSearch extends React.Component {
     }, err => {
       console.log(err);
     }).then(recipesList => {
-      console.log(recipesList); //delete this
-
       let recipesDiv = recipesList.map((recipeObj, i) => 
         <RecipeRow title = {recipeObj.title}
             ingr_desc = {recipeObj.ingr_descr} 
@@ -170,7 +166,7 @@ export default class NutritionSearch extends React.Component {
   calorieSearch()
   {
     // low calories = <350 cal per serving
-    fetch("http://localhost:8081/nutrition/cal/" + 350,
+    fetch("http://localhost:8081/nutrition/cal/" + 350 + this.dietaryRestrictions(),
     {
       method: "GET"
     }).then(res => {
@@ -178,7 +174,6 @@ export default class NutritionSearch extends React.Component {
     }, err => {
       console.log(err);
     }).then(recipesList => {
-      console.log(recipesList); //delete this
 
       let recipesDiv = recipesList.map((recipeObj, i) => 
         <RecipeRow title = {recipeObj.title}
@@ -202,7 +197,6 @@ export default class NutritionSearch extends React.Component {
 
   proteinSearch()
   {
-    console.log("http://localhost:8081/protein/" + this.getUserProteinRatio() + this.dietaryRestrictions());
     fetch("http://localhost:8081/protein/" + this.getUserProteinRatio() + this.dietaryRestrictions(),
       {
         method: "GET"
@@ -211,7 +205,6 @@ export default class NutritionSearch extends React.Component {
       }, err => {
         console.log(err);
       }).then(recipesList => {
-        console.log(recipesList); //delete this
 
         let recipesDiv = recipesList.map((recipeObj, i) => 
           <RecipeRow title = {recipeObj.title}

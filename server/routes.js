@@ -75,8 +75,24 @@ function getHighProtein(req, res) {
 function getHighFat(req, res) {
   var connection = getDBConnect();
   var inputRatio = req.params.fatRatio;
+  var isVegan = req.params.isVegan;
+  var isNutFree = req.params.isNutFree;
+  var isDairyFree = req.params.isDairyFree;
+  var isVegetarian = req.params.isVegetarian;
+  var isGlutenFree = req.params.isGlutenFree;
 
   var query = `
+  WITH Eatable AS (
+    SELECT R.rID 
+    FROM (IngrDiet D JOIN RIngredients I ON D.ingrID = I.ingrID)
+        JOIN Recipe R ON R.RID = I.RID
+    GROUP BY R.RID
+    HAVING SUM(D.isVegan) >= COUNT(*) * '${isVegan}' AND 
+          SUM(D.isNutFree) >= COUNT(*) * '${isNutFree}' AND
+          SUM(D.isDairyFree) >= COUNT(*) * '${isDairyFree}' AND
+          SUM(D.isVegetarian) >= COUNT(*) * '${isVegetarian}' AND
+          SUM(D.isGlutenFree) >= COUNT(*) * '${isGlutenFree}' 
+  )
   SELECT *
   FROM Recipe R
   WHERE R.fat/(R.calories + 1) >= '${inputRatio}'
@@ -96,8 +112,24 @@ function getHighFat(req, res) {
 function getLowSodium(req, res) {
   var connection = getDBConnect();
   var limit = req.params.sodiumLimit;
+  var isVegan = req.params.isVegan;
+  var isNutFree = req.params.isNutFree;
+  var isDairyFree = req.params.isDairyFree;
+  var isVegetarian = req.params.isVegetarian;
+  var isGlutenFree = req.params.isGlutenFree;
 
   var query = `
+  WITH Eatable AS (
+    SELECT R.rID 
+    FROM (IngrDiet D JOIN RIngredients I ON D.ingrID = I.ingrID)
+        JOIN Recipe R ON R.RID = I.RID
+    GROUP BY R.RID
+    HAVING SUM(D.isVegan) >= COUNT(*) * '${isVegan}' AND 
+          SUM(D.isNutFree) >= COUNT(*) * '${isNutFree}' AND
+          SUM(D.isDairyFree) >= COUNT(*) * '${isDairyFree}' AND
+          SUM(D.isVegetarian) >= COUNT(*) * '${isVegetarian}' AND
+          SUM(D.isGlutenFree) >= COUNT(*) * '${isGlutenFree}' 
+  )
   SELECT * 
   FROM Recipe R
   WHERE R.sodium < '${limit}'
@@ -117,8 +149,24 @@ function getLowSodium(req, res) {
 function getLowCal(req, res) {
   var connection = getDBConnect();
   var limit = req.params.calLimit;
+  var isVegan = req.params.isVegan;
+  var isNutFree = req.params.isNutFree;
+  var isDairyFree = req.params.isDairyFree;
+  var isVegetarian = req.params.isVegetarian;
+  var isGlutenFree = req.params.isGlutenFree;
 
   var query = `
+  WITH Eatable AS (
+    SELECT R.rID 
+    FROM (IngrDiet D JOIN RIngredients I ON D.ingrID = I.ingrID)
+        JOIN Recipe R ON R.RID = I.RID
+    GROUP BY R.RID
+    HAVING SUM(D.isVegan) >= COUNT(*) * '${isVegan}' AND 
+          SUM(D.isNutFree) >= COUNT(*) * '${isNutFree}' AND
+          SUM(D.isDairyFree) >= COUNT(*) * '${isDairyFree}' AND
+          SUM(D.isVegetarian) >= COUNT(*) * '${isVegetarian}' AND
+          SUM(D.isGlutenFree) >= COUNT(*) * '${isGlutenFree}' 
+  )
   SELECT * 
   FROM Recipe R
   WHERE R.calories < '${limit}' AND R.calories > 100
@@ -487,6 +535,12 @@ function getDishSearch(req, res) {
 function getRecommendedRecipes(req, res) {
   var connection = getDBConnect();
   var recipeID = req.params.rID;
+  var isVegan = req.params.isVegan;
+  var isNutFree = req.params.isNutFree;
+  var isDairyFree = req.params.isDairyFree;
+  var isVegetarian = req.params.isVegetarian;
+  var isGlutenFree = req.params.isGlutenFree;
+
   var query = `WITH InputIngr AS (
       SELECT ingrID
       FROM RIngredients 
@@ -497,19 +551,28 @@ function getRecommendedRecipes(req, res) {
       FROM RCategories 
       WHERE rID =  '${recipeID}'
     ),
+    EatableIngr AS (
+      SELECT r.ingrID, r.rID
+      FROM IngrDiet D JOIN RIngredients r ON D.ingrID = r.ingrID
+      WHERE D.isVegan >= '${isVegan}' AND 
+            D.isNutFree >= '${isNutFree}' AND
+            D.isDairyFree >= '${isDairyFree}' AND
+            D.isVegetarian >= '${isVegetarian}' AND
+            D.isGlutenFree >= '${isGlutenFree}'
+    ),
     Similar AS (
-      SELECT ingr.rID, COUNT(DISTINCT ingr.ingrID) AS ingrCount, COUNT(DISTINCT c.category) AS catCount
-      FROM (RIngredients ingr JOIN InputIngr inputI ON ingr.ingrID = inputI.ingrID)
+      SELECT e.rID, COUNT(e.ingrID) AS ingrCount, COUNT(c.category) AS catCount
+      FROM (EatableIngr e JOIN InputIngr inputI ON e.ingrID = inputI.ingrID) 
         JOIN 
-          (RCategories c JOIN InputCats inputC ON c.category = inputC.category)
-         ON ingr.rID = c.rID
-      GROUP BY ingr.rID
+          (RCategories c USE INDEX(cat_rid) JOIN InputCats inputC ON c.category = inputC.category)
+         ON e.rID = c.rID
+      WHERE e.rID <>  '${recipeID}'
+      GROUP BY e.rID
     )
     SELECT r.rID, r.title, r.ingr_descr, r.directions, r.rating, ingr_descr
     FROM Similar JOIN Recipe r ON Similar.rID = r.rID
     WHERE ingrCount > 1/2 * (SELECT COUNT(*)
-          FROM InputIngr)
-      AND r.rID <> '${recipeID}'
+                              FROM InputIngr)
     ORDER BY catCount DESC, ingrCount DESC, rating DESC
     LIMIT 5;`;
 
