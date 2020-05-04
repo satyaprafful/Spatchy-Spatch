@@ -448,7 +448,7 @@ function getRestaurantsBasic(req, res) {
   var query = `SELECT * FROM Restaurant 
                WHERE rest_state = '${state}' AND rest_city = '${city}'
                ORDER BY RAND()
-               LIMIT 2`;
+               LIMIT 10`;
 
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);

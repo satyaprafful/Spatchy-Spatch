@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
 import Select from 'react-select'
 
-
 export default class DishSearch extends React.Component {
   constructor(props) {
     super(props);
@@ -161,7 +160,19 @@ export default class DishSearch extends React.Component {
         }).then(resultList => {
           let restList = resultList.map((rest, i) => {
               let cuisine = (rest.rest_cuisine == "N/A" ? '' : " || " + rest.rest_cuisine.substring(1, rest.rest_cuisine.length - 1));
-            //   let website = (rest.rest_website == "N/A" ? "N/A" : 'allmenus.com/' + rest.rest_website.substring(9))
+              let website = ''
+              if (rest.rest_website === "N/A"){
+                website = "N/A"
+              }
+              else if (rest.rest_website.substring(8,10) === "pa") {
+                website = 'http://allmenus.com/' + rest.rest_website.substring(8)
+              }
+              else if (rest.rest_website.substring(4,10) === "google") {
+                website = 'http:///' + rest.rest_website
+              }
+              else {
+                website = rest.rest_website
+              }
                 let src1 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg"
                 let src2 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg"
 
@@ -175,7 +186,7 @@ export default class DishSearch extends React.Component {
                             </Accordion.Toggle>
                         </Card.Header>
                         <Accordion.Collapse eventKey="0">
-                            <Card.Body>
+                            <Card.Body style={dishStyle}>
                                 <Row>
                                     <Col>
                                     Restaurant Address: {rest.rest_address}
@@ -183,7 +194,7 @@ export default class DishSearch extends React.Component {
                                 </Row>
                                 <Row>
                                     <Col>
-                                      Restaurant Website:  {rest.rest_website == "N/A" ? "N/A" :  <a href={rest.rest_website} target="_blank">{" Go to Link"}</a>}
+                                      Restaurant Website:  {website == "N/A" ? "N/A" :  <a href={website} target="_blank">{" Go to Link"}</a>}
                                     </Col>
                                 </Row> 
                                 <Row>
@@ -236,7 +247,16 @@ export default class DishSearch extends React.Component {
           console.log(resultList); 
           let restList = resultList.map((rest, i) => {
               let dish_name= (rest.dish_name == "N/A" ? '' : " || " + rest.dish_name);
-            //   let website = (rest.rest_website == "N/A" ? "N/A" : 'allmenus.com/' + rest.rest_website.substring(9))
+              let website = ''
+              if (rest.rest_website === "N/A"){
+                website = "N/A"
+              }
+              else if (rest.rest_website.substring(8,10) === "pa") {
+                website = 'http://allmenus.com/' + rest.rest_website.substring(8)
+              }
+              else {
+                website = rest.rest_website
+              }
             let src1 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg";
             let src2 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg";
             return (
@@ -249,7 +269,7 @@ export default class DishSearch extends React.Component {
                             </Accordion.Toggle>
                         </Card.Header>
                         <Accordion.Collapse eventKey="0">
-                            <Card.Body>
+                            <Card.Body style={dishStyle}>
                                 <Row>
                                     <Col>
                                         <strong>Dish Name</strong>: {rest.dish_name}
@@ -280,7 +300,7 @@ export default class DishSearch extends React.Component {
                                 </Row>
                                 <Row>
                                     <Col>
-                                    <strong>Restaurant Website:</strong>  {rest.rest_website == "N/A" ? "N/A" :  <a href={rest.rest_website} target="_blank">{" Go to Link"}</a>}
+                                    <strong>Restaurant Website: </strong>  {website == "N/A" ? "N/A" :  <a href={website} target="_blank">{" Go to Link"}</a>}
                                     </Col>
                                 </Row> 
                                 <Row>
@@ -405,3 +425,8 @@ function getRandomInt(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
   }
+
+  const dishStyle = {
+    textAlign: "left",
+    fontSize: "12pt"
+};
