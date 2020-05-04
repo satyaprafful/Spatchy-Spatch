@@ -236,7 +236,8 @@ export default class IngrSearch extends React.Component {
 
   dietaryRestrictions()
   {
-    console.log(this.state.user)
+    if (this.state.user == null || this.state.user === undefined)
+      return "/0/0/0/0/0";
     return this.state.user.isVegan + "/" + this.state.user.isNut + "/" + this.state.user.isLactose + "/" + this.state.user.isVegetarian+ "/" + this.state.user.isGluten + "/" ;
   }
 

@@ -48,6 +48,8 @@ export default class NutritionSearch extends React.Component {
 
   dietaryRestrictions()
   {
+    if (this.state.user == null || this.state.user === undefined)
+      return "/0/0/0/0/0"
     return "/" + this.state.user.isVegan + "/" + this.state.user.isNut + "/" + this.state.user.isLactose + "/" + this.state.user.isVegetarian+ "/" + this.state.user.isGluten;
   }
   
@@ -103,6 +105,7 @@ export default class NutritionSearch extends React.Component {
   fatSearch()
   {
     // keto = 75% cal from fat. Fat = 9 cal/gram. .75/9 = 0.0833 = gram fat/total cal
+    console.log("http://localhost:8081/nutrition/fat/" + 0.0833 + this.dietaryRestrictions())
     fetch("http://localhost:8081/nutrition/fat/" + 0.0833 + this.dietaryRestrictions(),
     {
       method: "GET"

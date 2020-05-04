@@ -21,7 +21,7 @@ app.get('/protein/:proteinRatio/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:
 ); 
 
 // sends min fat/cal, gets back recipes
-app.get('/nutrition/fat/:fatRaio/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:isGlutenFree', (req, res) => { 
+app.get('/nutrition/fat/:fatRatio/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:isGlutenFree', (req, res) => { 
 	routes.getHighFat(req,res)}
 ); 
 
