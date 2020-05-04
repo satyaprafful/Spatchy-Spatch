@@ -243,7 +243,7 @@ export default class Login extends React.Component {
     return (
       <div className="Login" style={{ backgroundColor: "#EAE7DC", minHeight: "100vh", height: "100%" }}>
         <br></br>
-        <div className="h1" style={{fontFamily:"Permanent Marker", fontSize:"75px"}}>Spitchy Spatchy</div>
+        <div className="h1" style={{fontFamily:"Permanent Marker", fontSize:"75px"}}>Spatchy Spatch</div>
         <div className="LoginInfo" style={{paddingLeft:"30%", paddingRight:"30%"}} hidden={this.state.showSignup}>
           <br></br>
           

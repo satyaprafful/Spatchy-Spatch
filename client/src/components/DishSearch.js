@@ -133,8 +133,8 @@ export default class DishSearch extends React.Component {
           }
           else {
             let ret_arr = [];
-            ret_arr.push("https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg");
-            ret_arr.push("https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg");
+            let src1 = "https://loremflickr.com/300/300/food?random=" + getRandomInt(1,1000);
+            let src2 = "https://loremflickr.com/300/300/food?random=" + getRandomInt(1,1000);
             this.setState({
               image_results : ret_arr
             }); 
@@ -173,9 +173,9 @@ export default class DishSearch extends React.Component {
               else {
                 website = rest.rest_website
               }
-                let src1 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg"
-                let src2 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg"
-
+              let src1 = "https://loremflickr.com/300/300/food?random=" + getRandomInt(1,1000);
+              let src2 = "https://loremflickr.com/300/300/food?random=" + getRandomInt(1,1000);
+  
             return (
                 <Row><Col>
                     <Accordion>
@@ -257,9 +257,9 @@ export default class DishSearch extends React.Component {
               else {
                 website = rest.rest_website
               }
-            let src1 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg";
-            let src2 = "https://i.picsum.photos/id/" + getRandomInt(10, 500) + "/300/300.jpg";
-            return (
+              let src1 = "https://loremflickr.com/300/300/food?random=" + getRandomInt(1,1000);
+              let src2 = "https://loremflickr.com/300/300/food?random=" + getRandomInt(1,1000);
+              return (
                 <Row><Col>
                     <Accordion>
                         <Card>
