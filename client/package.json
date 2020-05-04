@@ -22,6 +22,7 @@
     "react-search-field": "^1.0.0",
     "react-select": "^3.1.0",
     "react-select-search": "^1.0.2",
+    "react-toasts": "^3.0.6",
     "react-twitter-embed": "^3.0.3"
   },
   "scripts": {

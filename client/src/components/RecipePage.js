@@ -176,7 +176,7 @@ export default class RecipePage extends React.Component {
 
       <div className="Full Recipe" style={{backgroundColor: "#EAE7DC", minHeight:"100vh", height: "100%"}}>
 
-      <PageNavbar active="Nutrition Search" />
+      <PageNavbar active="" />
       <div id="recipe">
         <div class="row">
           <div class="col-12">

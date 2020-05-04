@@ -303,7 +303,7 @@ export default class Login extends React.Component {
             <div hidden={!this.state.nonInput}><small>Both fields must be filled out!</small></div>
             <div hidden={!this.state.alreadyExists}><small>Email is already in use!</small></div>
         <ColoredLine color =  "#E98074"/>
-        Mark your Diet: 
+        <strong>Mark your Diet:</strong> 
             <label class="btn active btn-block">
               <input type="checkbox" defaultChecked={this.state.isVegan} onChange={this.changeVegan} autocomplete="off" /> Vegan
           </label>
@@ -350,7 +350,7 @@ export default class Login extends React.Component {
               </Col>
             </Row>
             <ColoredLine color =  "#E98074"/>
-                Health:
+                <strong>Health:</strong>
                 <div class="row">
               <div class="col-6">
                 <label>Weight</label>

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
 import Gallery from 'react-grid-gallery';
-import { Container, Row, Col, Accordion, Card, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Accordion, Card, Button, Form, Alert } from 'react-bootstrap';
 import { TwitterTimelineEmbed } from 'react-twitter-embed';
 import '../App.css';
 import Select from 'react-select';
+import {ToastsContainer, ToastsStore, ToastsContainerPosition} from 'react-toasts';
 
 
 export default class Home extends React.Component {
@@ -14,8 +15,8 @@ export default class Home extends React.Component {
     this.state = {
       posters: [],
       theme_word: '',
-      feed_username: ' ',
-      username: "Satya",
+      username: "Foodie!",
+      feed_username: '', 
       user: null,
       isVegan: false,
       isVegetarian: false,
@@ -49,7 +50,9 @@ export default class Home extends React.Component {
     this.handleAgeChange = this.handleAgeChange.bind(this);
     this.getCities = this.getCities.bind(this)
     this.editInfo = this.editInfo.bind(this);
-    // this.getRandomTwitterFeed = this.getRandomTwitterFeed.bind(this);
+    this.getRandomTwitterFeed = this.getRandomTwitterFeed.bind(this);
+    this.APICacheGet = this.APICacheGet.bind(this);
+    this.APICachePut = this.APICachePut.bind(this);
   }
 
   getCities(city) {
@@ -82,6 +85,34 @@ export default class Home extends React.Component {
         // Print the error if there is one.
         console.log(err);
       });
+  }
+
+  APICacheGet(theme){
+    if (!sessionStorage.getItem(theme)){
+      return false; 
+    }
+    else{
+      var cached_arr = JSON.parse(sessionStorage.getItem(theme))
+      var new_arr = [];
+      var index; 
+      for (index = 0; index < cached_arr.length; ++index) {
+        let restObj = {};
+        let website = cached_arr[index].tags[0].value.props.href;
+        restObj.src = cached_arr[index].src
+        restObj.thumbnail = cached_arr[index].src
+        restObj['thumbnailWidth'] = 500
+        restObj['thumbnailHeight'] = 550
+        restObj['caption'] = cached_arr[index].caption
+        restObj['tags'] = [{ value: <a href={website} target="_blank">{"Link"}</a>, title: cached_arr[index].tags[0].title}]
+        new_arr.push(restObj); 
+      }
+      return new_arr;
+    }
+  }
+
+  APICachePut(theme, result){
+    var result_string = JSON.stringify(result);
+    sessionStorage.setItem(theme, result_string);
   }
 
   componentDidMount() {
@@ -186,7 +217,7 @@ export default class Home extends React.Component {
         console.log(err);
       });
     
-    // --> Get user information (name  + city). Update Welcome Name + City for Query + Latest Word
+    // --> Get user information for City Name 
     var url_query = "https://developers.zomato.com/api/v2.1/cities?q=" + "Philadelphia"
     fetch(url_query,
       {
@@ -202,59 +233,75 @@ export default class Home extends React.Component {
         // Print the error if there is one.
         console.log(err);
       }).then(zomato_city_id => {
-        var rest_query = 'https://developers.zomato.com/api/v2.1/search?entity_id=' + zomato_city_id + '&entity_type=city&q=' + this.getRandomTheme() + "&sort=rating"
-        fetch(rest_query,
-          {
-            method: "GET",
-            headers: { 'user-key': '254acae745cffad9bc4ac35c4612c722' }
-          }).then(res => {
-            return res.json();
-          }, err => {
-            console.log(err);
-          }).then(resultList2 => {
-            var index;
-            let out_array = [];
-            var rest_array = resultList2.restaurants;
-            for (index = 0; index < rest_array.length; ++index) {
-              let thumb = rest_array[index].restaurant.thumb
-              let feat_image = rest_array[index].restaurant.featured_image
-              if (thumb == "" && feat_image == "") {
-                continue;
+        let curr_theme = this.getRandomTheme();
+        if (this.APICacheGet(curr_theme)){
+          console.log("Using Cache!")
+          var cached_arr = this.APICacheGet(curr_theme)
+          this.setState({ posters: cached_arr})
+        }
+        else{
+          console.log("Making API request!")
+          var rest_query = 'https://developers.zomato.com/api/v2.1/search?entity_id=' + zomato_city_id + '&entity_type=city&q=' + curr_theme + "&sort=rating"
+          fetch(rest_query,
+            {
+              method: "GET",
+              headers: { 'user-key': '254acae745cffad9bc4ac35c4612c722' }
+            }).then(res => {
+              return res.json();
+            }, err => {
+              console.log(err);
+            }).then(resultList2 => {
+              var index;
+              let out_array = [];
+              var rest_array = resultList2.restaurants;
+              for (index = 0; index < rest_array.length; ++index) {
+                let thumb = rest_array[index].restaurant.thumb
+                let feat_image = rest_array[index].restaurant.featured_image
+                if (thumb == "" && feat_image == "") {
+                  continue;
+                }
+                let img_url = thumb ? thumb : feat_image
+                let restObj = {};
+                let website = rest_array[index].restaurant.url
+                restObj.src = img_url
+                restObj.thumbnail = img_url
+                restObj['thumbnailWidth'] = 500
+                restObj['thumbnailHeight'] = 550
+                restObj['caption'] = rest_array[index].restaurant.name
+                restObj['tags'] = [{ value: <a href={website} target="_blank">{"Link"}</a>, title: rest_array[index].restaurant.cuisines }]
+                out_array.push(restObj);
+                if (out_array.length == 14) {
+                  break;
+                }
               }
-              let img_url = thumb ? thumb : feat_image
-              let restObj = {};
-              let website = rest_array[index].restaurant.url
-              restObj.src = img_url
-              restObj.thumbnail = img_url
-              restObj['thumbnailWidth'] = 500
-              restObj['thumbnailHeight'] = 550
-              restObj['caption'] = rest_array[index].restaurant.name
-              restObj['tags'] = [{ value: <a href={website} target="_blank">{"Link"}</a>, title: rest_array[index].restaurant.cuisines }]
-              out_array.push(restObj);
-              if (out_array.length == 14) {
-                break;
-              }
-            }
-            return out_array
-          }, err => {
-            // Print the error if there is one.
-            console.log(err);
-          }).then((arr) => this.setState({ posters: arr }));
+              return out_array
+            }, err => {
+              // Print the error if there is one.
+              console.log(err);
+            }).then((arr) => {
+              this.APICachePut(curr_theme, arr)
+              console.log("REGULAR CALL");
+              console.log(arr);
+              this.setState({ posters: arr })
+            });
+        }
+
       });
 
   }
 
+  
   getRandomTheme() {
     var theme = themes[Math.floor(Math.random() * themes.length)];
     this.setState({ theme_word: theme })
     return theme;
   }
 
-  // getRandomTwitterFeed(){
-  //   var feed = feeds[Math.floor(Math.random() * feeds.length)];
-  //   this.setState({feed_username : feed})
-  //   return feed;
-  // }
+  getRandomTwitterFeed(){
+    var feed = feeds[Math.floor(Math.random() * feeds.length)];
+    this.setState({feed_username : feed})
+    return feed;
+  }
 
   setCustomTags(i) {
     return (
@@ -379,6 +426,8 @@ export default class Home extends React.Component {
       }, err => {
         console.log(err)
       });
+      this.showForm()
+      ToastsStore.success("Successfully updated your information!")
   }
 
   render() {
@@ -406,7 +455,7 @@ export default class Home extends React.Component {
             <Row>
               <Col>
                 <Container>
-                  Explore <strong>{this.state.theme_word}</strong> today?
+                  Explore <strong>{this.state.theme_word}</strong> maybe?
               </Container>
                 <br></br>
                 <Container>
@@ -494,6 +543,7 @@ export default class Home extends React.Component {
                   <br></br>
                   <button class="btn btn-primary-dark" style={buttonStyle} onClick={this.editInfo}>Submit</button>
                 </form>
+                <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.BOTTOM_CENTER}/>
               </Col>
               <Col>
                 <Container>
@@ -503,7 +553,7 @@ export default class Home extends React.Component {
                 <div className="selfCenter standardWidth">
                   <TwitterTimelineEmbed
                     sourceType="profile"
-                    screenName="tastykitchen"
+                    screenName={this.getRandomTwitterFeed}
                     options={{ height: 1315 }}
                   />
                 </div>
@@ -546,3 +596,4 @@ const customTagStyle = {
 };
 
 const themes = ['Italian', 'Spanish', 'Chinese', 'Mexican', 'American']
+const feeds = ['tastykitchen', 'bonappetit', 'epicurious', 'Fooddotcom']
