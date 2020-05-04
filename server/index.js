@@ -21,17 +21,17 @@ app.get('/protein/:proteinRatio/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:
 ); 
 
 // sends min fat/cal, gets back recipes
-app.get('/nutrition/fat/:fatRaio', (req, res) => { 
+app.get('/nutrition/fat/:fatRaio/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:isGlutenFree', (req, res) => { 
 	routes.getHighFat(req,res)}
 ); 
 
 // sends max sodium, gets back recipes
-app.get('/nutrition/sodium/:sodiumLimit', (req, res) => { 
+app.get('/nutrition/sodium/:sodiumLimit/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:isGlutenFree', (req, res) => { 
 	routes.getLowSodium(req,res)}
 ); 
 
 // sends max cal, gets back recipes
-app.get('/nutrition/cal/:calLimit', (req, res) => { 
+app.get('/nutrition/cal/:calLimit/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:isGlutenFree', (req, res) => { 
 	routes.getLowCal(req,res)}
 );
 
@@ -47,7 +47,7 @@ app.get('/budget/', (req, res) => {
 app.get('/recipe/full/:rID', (req, res) => {
 	routes.getFullRecipe(req,res)}
 );
-app.get('/recipe/recommend/:rID', (req, res) => {
+app.get('/recipe/recommend/:rID/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:isGlutenFree', (req, res) => {
 	routes.getRecommendedRecipes(req,res)}
 );
 
