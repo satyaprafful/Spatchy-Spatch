@@ -32,7 +32,8 @@ export default class PageNavbar extends React.Component {
 			margin: "0 auto",
 			display: "block",
 			textAlign: "center",
-			backgroundColor: "#EAE7DC"
+			backgroundColor: "#BCD0DA", 
+			fontSize: "15pt"
 		}
 
 		const navItemStyle = {

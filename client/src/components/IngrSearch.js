@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
 import RecipeRow from './RecipeRow';
 import { Container, Row, Col, Accordion, Card, Button, Form } from 'react-bootstrap';
-import Carousel from 'react-bootstrap/Carousel'
+import Carousel from 'react-bootstrap/Carousel';
 
 
 const ingrStyle = {
@@ -469,8 +469,9 @@ export default class IngrSearch extends React.Component {
             width: "300px"
         };
 
+        var backgroundURL = require("../resources/background1-clean.png");
         return (
-            <div className="IngrSearch" style={{ backgroundColor: "#EAE7DC", minHeight: "100vh", height: "100%" }}>
+            <div className="IngrSearch" style={{ backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: '950px', backgroundRepeat: "no-repeat", minHeight: "100vh", height: "100%" }}>
                 <PageNavbar active="Ingredient Search" />
                 <Container>
                         <div className="h1">Ingredient Search</div>

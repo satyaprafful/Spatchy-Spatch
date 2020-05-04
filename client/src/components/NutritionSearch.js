@@ -231,8 +231,9 @@ export default class NutritionSearch extends React.Component {
       backgroundColor: "#E98074",
     };
 
+    var backgroundURL = require("../resources/background5.jpeg");
     return (
-      <div className="Nutrition Search" style={{backgroundColor: "#EAE7DC", height: "100vh"}}>
+      <div className="Nutrition Search" style={{backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: 'cover', minHeight: "100vh", height: "100%"}}>
 
         <PageNavbar active="Nutrition Search" />
         <div className="h1">Nutrition Search</div>
@@ -261,7 +262,7 @@ export default class NutritionSearch extends React.Component {
         <input id="Low calorie recipes" type="button" value="Low calorie recipes" onClick={() => this.calorieSearch() } />
         <br></br>
         <input id="Low sodium recipes" type="button" value="Low sodium recipes" onClick={() => this.sodiumSearch() } /> */}
-        <div className="results-container" id="results">
+        <div className="results-container" id="results" style={{width: "1400px", position: "relative", left: "6%"}}>
                 {this.state.recipes}
           </div>
       </div>

@@ -446,9 +446,11 @@ export default class Home extends React.Component {
       return i;
     });
 
+    var backgroundURL = require("../resources/background8-clean2.png");
+
     return (
       <div>
-        <div className="Home" style={{ backgroundColor: "#EAE7DC", minHeight: "100vh", height: "100%" }}>
+        <div className="Home" style={{  backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: 'cover', backgroundRepeat: "no-repeat", minHeight: "100vh", height: "100%" }}>
           <PageNavbar active="Home" />
           <br></br>
           <Container>

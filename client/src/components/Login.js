@@ -240,8 +240,10 @@ export default class Login extends React.Component {
       />
   );
 
+  var backgroundURL = require("../resources/background7.jpeg");
+
     return (
-      <div className="Login" style={{ backgroundColor: "#EAE7DC", minHeight: "100vh", height: "100%" }}>
+      <div className="Login" style={{  backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: 'cover', backgroundRepeat: "no-repeat", minHeight: "100vh", height: "100%" }}>
         <br></br>
         <div className="h1" style={{fontFamily:"Permanent Marker", fontSize:"75px"}}>Spatchy Spatch</div>
         <div className="LoginInfo" style={{paddingLeft:"30%", paddingRight:"30%"}} hidden={this.state.showSignup}>
