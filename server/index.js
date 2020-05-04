@@ -36,11 +36,11 @@ app.get('/nutrition/cal/:calLimit/:isVegan/:isNutFree/:isDairyFree/:isVegetarian
 );
 
 /* ---- Ingredient Queries ---- */
-app.get('/ingredients/', (req, res) => {
+app.get('/ingredients/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:isGlutenFree/', (req, res) => {
 	routes.getValRecipes(req,res)}
 );
 
-app.get('/budget/', (req, res) => {
+app.get('/budget/:isVegan/:isNutFree/:isDairyFree/:isVegetarian/:isGlutenFree/', (req, res) => {
 	routes.getBudgetRecipes(req,res)}
 );
 

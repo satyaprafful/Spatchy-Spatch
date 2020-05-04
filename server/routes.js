@@ -96,6 +96,7 @@ function getHighFat(req, res) {
   SELECT *
   FROM Recipe R
   WHERE R.fat/(R.calories + 1) >= '${inputRatio}'
+  AND R.rID IN (SELECT * FROM Eatable)
   ORDER BY R.rating DESC
   LIMIT 10`;
 
@@ -133,6 +134,7 @@ function getLowSodium(req, res) {
   SELECT * 
   FROM Recipe R
   WHERE R.sodium < '${limit}'
+    AND R.rID IN (SELECT * FROM Eatable)
   ORDER BY R.rating DESC
   LIMIT 10`;
 
@@ -170,6 +172,7 @@ function getLowCal(req, res) {
   SELECT * 
   FROM Recipe R
   WHERE R.calories < '${limit}' AND R.calories > 100
+      AND R.rID IN (SELECT * FROM Eatable)
   ORDER BY R.rating DESC
   LIMIT 10`;
 
@@ -188,6 +191,11 @@ function getLowCal(req, res) {
 function getValRecipes(req, res) {
   var connection = getDBConnect();
   var values = req.query;
+  var isVegan = req.params.isVegan;
+  var isNutFree = req.params.isNutFree;
+  var isDairyFree = req.params.isDairyFree;
+  var isVegetarian = req.params.isVegetarian;
+  var isGlutenFree = req.params.isGlutenFree;
 
   var whereClause = "";
 
@@ -202,16 +210,28 @@ function getValRecipes(req, res) {
   if (whereClause.substring(whereClause.length - 4) == " OR ") {
     whereClause = whereClause.substring(0, whereClause.length - 4);
   }
+  console.log(whereClause);
 
   var query = `
       WITH Available AS (
         SELECT IP.ingrID
         FROM IngrPrices IP
         WHERE ${whereClause} OR IP.isHousehold = 1
+      ),Eatable AS (
+        SELECT R.rID 
+        FROM (IngrDiet D JOIN RIngredients I ON D.ingrID = I.ingrID)
+            JOIN Recipe R ON R.RID = I.RID
+        GROUP BY R.RID
+        HAVING SUM(D.isVegan) >= COUNT(*) * '${isVegan}' AND 
+              SUM(D.isNutFree) >= COUNT(*) * '${isNutFree}' AND
+              SUM(D.isDairyFree) >= COUNT(*) * '${isDairyFree}' AND
+              SUM(D.isVegetarian) >= COUNT(*) * '${isVegetarian}' AND
+              SUM(D.isGlutenFree) >= COUNT(*) * '${isGlutenFree}' 
       )
       SELECT R.rID, R.title, R.rating, R.recipe_descr, R.ingr_descr
       FROM Recipe R INNER JOIN RIngredients RI INNER JOIN IngrPrices IP ON R.rID = RI.rID AND RI.ingrID = IP.ingrID
-      WHERE NOT EXISTS (
+      WHERE R.rID IN (SELECT * FROM Eatable)
+        AND NOT EXISTS (
         SELECT RI.ingrID
         FROM RIngredients RI LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
         WHERE RI.rID = R.rID AND A.ingrID IS NULL
@@ -235,6 +255,11 @@ function getValRecipes(req, res) {
 function getBudgetRecipes(req, res) {
   var connection = getDBConnect();
   var values = req.query;
+  var isVegan = req.params.isVegan;
+  var isNutFree = req.params.isNutFree;
+  var isDairyFree = req.params.isDairyFree;
+  var isVegetarian = req.params.isVegetarian;
+  var isGlutenFree = req.params.isGlutenFree;
 
   var whereClause = "";
 
@@ -255,10 +280,22 @@ function getBudgetRecipes(req, res) {
         SELECT IP.ingrID
         FROM IngrPrices IP
         WHERE ${whereClause} OR IP.isHousehold = 1
-      ), ValidRecipes AS (
+      ),Eatable AS (
+        SELECT R.rID 
+        FROM (IngrDiet D JOIN RIngredients I ON D.ingrID = I.ingrID)
+            JOIN Recipe R ON R.RID = I.RID
+        GROUP BY R.RID
+        HAVING SUM(D.isVegan) >= COUNT(*) * '${isVegan}' AND 
+              SUM(D.isNutFree) >= COUNT(*) * '${isNutFree}' AND
+              SUM(D.isDairyFree) >= COUNT(*) * '${isDairyFree}' AND
+              SUM(D.isVegetarian) >= COUNT(*) * '${isVegetarian}' AND
+              SUM(D.isGlutenFree) >= COUNT(*) * '${isGlutenFree}' 
+      ),
+       ValidRecipes AS (
         SELECT R.rID, R.title, R.rating, R.recipe_descr, R.ingr_descr
         FROM Recipe R 
-        WHERE NOT EXISTS (
+        WHERE R.rID in (SELECT * FROM Eatable)
+          AND NOT EXISTS (
           SELECT RI.ingrID
           FROM RIngredients RI LEFT OUTER JOIN Available A ON RI.ingrID = A.ingrID
           WHERE RI.rID = R.rID AND A.ingrID IS NULL
