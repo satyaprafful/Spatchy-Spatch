@@ -34,7 +34,8 @@ export default class IngrSearch extends React.Component {
             meatDivs: [],
             grainDivs: [],
             dairyDivs: [],
-            otherDivs: []
+            otherDivs: [],
+            user : null
         }
 
         this.handleIngrIDChange = this.handleIngrIDChange.bind(this);
@@ -123,7 +124,6 @@ export default class IngrSearch extends React.Component {
 
 
     submitIngr() {
-
         if (this.state.ingrList.length == 0) {
             var recipesDiv = [];
             recipesDiv.push(<div className="h3">Please select at least one ingredient!</div>);
@@ -133,10 +133,11 @@ export default class IngrSearch extends React.Component {
             });
         } else {
             this.findQuickAdd();
-            fetch("http://localhost:8081/ingredients/" + this.parseIngrList(),
+            fetch("http://localhost:8081/ingredients/" + this.dietaryRestrictions() + this.parseIngrList(),
             {
                 method: "GET"
             }).then(res => {
+                console.log("http://localhost:8081/ingredients/" +this.dietaryRestrictions(), + this.parseIngrList())
                 return res.json();
             }, err => {
                 console.log(err);
@@ -174,7 +175,7 @@ export default class IngrSearch extends React.Component {
 
 
     submitBudget() {
-
+        console.log("submit budget");
         if (this.state.ingrList.length == 0) {
             var recipesDiv = [];
             recipesDiv.push(<div className="h3">Please select at least one ingredient!</div>);
@@ -184,7 +185,7 @@ export default class IngrSearch extends React.Component {
             });
         } else {
             this.findQuickAdd();
-            fetch("http://localhost:8081/budget/" + this.parseIngrList(),
+            fetch("http://localhost:8081/budget/" +this.dietaryRestrictions() + this.parseIngrList(),
             {
                 method: "GET"
             }).then(res => {
@@ -192,7 +193,7 @@ export default class IngrSearch extends React.Component {
             }, err => {
                 console.log(err);
             }).then(recipesList => {
-
+                console.log("got resipes");
                 console.log(recipesList); //delete this
 
                 var numRecipes = recipesList.length;
@@ -223,6 +224,21 @@ export default class IngrSearch extends React.Component {
 
     }
 
+  convertBools(userInfo)
+  {
+    userInfo.isVegan = userInfo.isVegan ? 1 : 0;
+    userInfo.isNut = userInfo.isNut ? 1 : 0;
+    userInfo.isLactose = userInfo.isLactose ? 1 : 0;
+    userInfo.isVegetarian = userInfo.isVegetarian ? 1 : 0;
+    userInfo.isGluten = userInfo.isGluten ? 1 : 0;
+    return userInfo;
+  }
+
+  dietaryRestrictions()
+  {
+    console.log(this.state.user)
+    return this.state.user.isVegan + "/" + this.state.user.isNut + "/" + this.state.user.isLactose + "/" + this.state.user.isVegetarian+ "/" + this.state.user.isGluten + "/" ;
+  }
 
     componentDidMount() {
 
@@ -344,6 +360,25 @@ export default class IngrSearch extends React.Component {
                 </div>
 		})
 
+        fetch("http://localhost:8081/curruser",
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(userInfo => {
+          console.log(userInfo); //delete this
+          if (userInfo != null)
+          {
+            userInfo = this.convertBools(userInfo);
+          }
+          this.setState({
+            user : userInfo
+          });
+        }, err => {
+          console.log(err);
+        });
         this.setState({
             fruitDivs: fruitDivs,
             vegDivs: vegDivs,
