@@ -170,16 +170,18 @@ export default class RecipePage extends React.Component {
       backgroundColor: "#E98074",
       color: "#D8C3A5"
     };
+    var backgroundURL = require("../resources/background1-clean.png");
+
 // @ CHRIS: it would be dope if we could somehow make these commended recipes 
       // as colimns I think
     return (
 
-      <div className="Full Recipe" style={{backgroundColor: "#EAE7DC", minHeight:"100vh", height: "100%"}}>
+      <div className="Full Recipe" style={{backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: '950px', backgroundRepeat: "no-repeat", minHeight:"100vh", height: "100%"}}>
 
       <PageNavbar active="" />
       <div id="recipe">
         <div class="row">
-          <div class="col-12">
+          <div class="col-12" style={{fontSize:"25pt", fontWeight: "bold"}}>
             <strong>Recipe Name</strong>: {this.state.title}
           </div>
         </div>
@@ -219,7 +221,7 @@ export default class RecipePage extends React.Component {
       </div>
       <br></br>
       <strong>Like this recipe? Here are more like it</strong>
-      <div className="results-container" id="results">
+      <div className="results-container" id="results" style={{width: "1400px", position: "relative", left: "6%"}}>
             {this.state.recDivs}
           </div>        
       </div>
