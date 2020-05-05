@@ -347,7 +347,7 @@ export default class DishSearch extends React.Component {
     var backgroundURL = require("../resources/background8-clean.png");
 
     return (
-      <div className="DishSearch"  style={{ backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: '950px', backgroundRepeat: "no-repeat",  minHeight: "100vh", height: "100%" }}>
+      <div className="DishSearch"  style={{ backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: '50%', backgroundRepeat: "no-repeat",  minHeight: "100vh", height: "100%" }}>
         <PageNavbar active="Dish Search" />
         <div className="h1">Dish Search</div>
         <legend><h4><i>Find restaurants serving your favorite dishes</i></h4> </legend>

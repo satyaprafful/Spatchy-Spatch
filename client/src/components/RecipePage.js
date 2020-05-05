@@ -176,7 +176,7 @@ export default class RecipePage extends React.Component {
       // as colimns I think
     return (
 
-      <div className="Full Recipe" style={{backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: '950px', backgroundRepeat: "no-repeat", minHeight:"100vh", height: "100%"}}>
+      <div className="Full Recipe" style={{backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: '60%', backgroundRepeat: "no-repeat", minHeight:"100vh", height: "100%"}}>
 
       <PageNavbar active="" />
       <div id="recipe">

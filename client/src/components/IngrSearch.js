@@ -472,7 +472,7 @@ export default class IngrSearch extends React.Component {
 
         var backgroundURL = require("../resources/background1-clean.png");
         return (
-            <div className="IngrSearch" style={{ backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: '950px', backgroundRepeat: "no-repeat", minHeight: "100vh", height: "100%" }}>
+            <div className="IngrSearch" style={{ backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: '60%', backgroundRepeat: "no-repeat", minHeight: "100vh", height: "100%" }}>
                 <PageNavbar active="Ingredient Search" />
                 <Container>
                         <div className="h1">Ingredient Search</div>
