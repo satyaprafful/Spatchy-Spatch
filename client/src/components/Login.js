@@ -240,7 +240,7 @@ export default class Login extends React.Component {
       />
   );
 
-  var backgroundURL = require("../resources/background7.jpeg");
+  var backgroundURL = require("../resources/background1-clean.png");
 
     return (
       <div className="Login" style={{  backgroundColor: "#dde7ec", backgroundImage: `url(${backgroundURL})`, backgroundSize: 'cover', backgroundRepeat: "no-repeat", minHeight: "100vh", height: "100%" }}>
@@ -323,7 +323,7 @@ export default class Login extends React.Component {
           </label>
           <ColoredLine color =  "#E98074"/>
             <Row>
-              <Col>Which State are you in?</Col>
+              <Col><strong>Which State are you in?</strong></Col>
               <Col>
                 <Select
                   options={this.state.statesList}
@@ -338,7 +338,7 @@ export default class Login extends React.Component {
               </Col>
             </Row>
             <Row>
-              <Col>Choose the cities near you!</Col>
+              <Col><strong>Choose the cities near you!</strong></Col>
               <Col>
                 <Select
                   options={this.state.cityList}
@@ -355,7 +355,7 @@ export default class Login extends React.Component {
                 <strong>Health:</strong>
                 <div class="row">
               <div class="col-6">
-                <label>Weight</label>
+                <label><strong>Weight</strong></label>
               </div>
               <div class="col-6">
                 <input type="number" class="form-control" value={this.state.weight} onChange={this.handleWeightChange} />
@@ -363,7 +363,7 @@ export default class Login extends React.Component {
             </div>
             <div class="row">
               <div class="col-6">
-                <label>Height Feet</label>
+                <label><strong>Height Feet</strong></label>
               </div>
               <div class="col-6">
                 <input type="number" class="form-control" value={this.state.heightFeet} onChange={this.handleHeightFeetChange} />
@@ -371,7 +371,7 @@ export default class Login extends React.Component {
             </div>
             <div class="row">
               <div class="col-6">
-                <label>Height Inches</label>
+                <label><strong>Height Inches</strong></label>
               </div>
               <div class="col-6">
                 <input type="number" class="form-control" value={this.state.heightInches} onChange={this.handleHeightInchesChange} />
@@ -379,7 +379,7 @@ export default class Login extends React.Component {
             </div>
             <div class="row">
               <div class="col-6">
-                <label>Activity Level (low, moderate, high)</label>
+                <label><strong>Activity Level (low, moderate, high)</strong></label>
               </div>
               <div class="col-6">
                 <input type="text" class="form-control" value={this.state.activityLevel} onChange={this.handleActivityLevelChange} />
@@ -387,7 +387,7 @@ export default class Login extends React.Component {
             </div>
             <div class="row">
               <div class="col-6">
-                <label>Age</label>
+                <label><strong>Age</strong></label>
               </div>
               <div class="col-6">
                 <input type="number" pattern="[0-9]*" class="form-control" value={this.state.age} onChange={this.handleAgeChange} />
