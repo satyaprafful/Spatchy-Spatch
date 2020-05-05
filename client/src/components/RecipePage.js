@@ -170,7 +170,7 @@ export default class RecipePage extends React.Component {
       backgroundColor: "#E98074",
       color: "#D8C3A5"
     };
-    var backgroundURL = require("../resources/background1-clean.png");
+    var backgroundURL = require("../resources/background1-clean3.png");
 
 // @ CHRIS: it would be dope if we could somehow make these commended recipes 
       // as colimns I think
